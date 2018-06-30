@@ -1,4 +1,4 @@
-package org.sapphon.personal.upyougo.integration;
+package org.sapphon.personal.upwise.integration;
 
 import org.junit.Before;
 import org.junit.Test;

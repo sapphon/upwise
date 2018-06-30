@@ -1,13 +1,11 @@
-package org.sapphon.personal.upyougo.factory;
+package org.sapphon.personal.upwise.factory;
 
-import org.sapphon.personal.upyougo.IWisdom;
-import org.sapphon.personal.upyougo.Wisdom;
-import org.sapphon.personal.upyougo.repository.jpa.WisdomJpa;
-import org.sapphon.personal.upyougo.time.TimeLord;
+import org.sapphon.personal.upwise.IWisdom;
+import org.sapphon.personal.upwise.Wisdom;
+import org.sapphon.personal.upwise.repository.jpa.WisdomJpa;
+import org.sapphon.personal.upwise.time.TimeLord;
 
 import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.Date;
 
 public class WisdomFactory {
     public static IWisdom createWisdom(String content, String utterer, String submitter, Timestamp time){

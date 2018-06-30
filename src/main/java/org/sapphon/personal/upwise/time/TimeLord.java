@@ -1,4 +1,4 @@
-package org.sapphon.personal.upyougo.time;
+package org.sapphon.personal.upwise.time;
 
 import java.sql.Timestamp;
 import java.time.Instant;

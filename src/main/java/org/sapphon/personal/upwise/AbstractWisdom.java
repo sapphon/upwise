@@ -1,4 +1,4 @@
-package org.sapphon.personal.upyougo;
+package org.sapphon.personal.upwise;
 
 import javax.persistence.MappedSuperclass;
 import java.sql.Timestamp;

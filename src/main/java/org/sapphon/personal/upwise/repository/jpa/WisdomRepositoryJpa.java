@@ -1,4 +1,4 @@
-package org.sapphon.personal.upyougo.repository.jpa;
+package org.sapphon.personal.upwise.repository.jpa;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

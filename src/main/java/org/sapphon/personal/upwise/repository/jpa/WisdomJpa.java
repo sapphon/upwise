@@ -1,6 +1,6 @@
-package org.sapphon.personal.upyougo.repository.jpa;
+package org.sapphon.personal.upwise.repository.jpa;
 
-import org.sapphon.personal.upyougo.AbstractWisdom;
+import org.sapphon.personal.upwise.AbstractWisdom;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

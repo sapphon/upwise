@@ -1,4 +1,4 @@
-package org.sapphon.personal.upyougo.controller;
+package org.sapphon.personal.upwise.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

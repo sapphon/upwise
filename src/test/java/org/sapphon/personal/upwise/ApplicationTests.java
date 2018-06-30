@@ -1,4 +1,4 @@
-package org.sapphon.personal.upyougo;
+package org.sapphon.personal.upwise;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

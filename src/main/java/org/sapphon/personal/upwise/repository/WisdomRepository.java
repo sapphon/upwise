@@ -1,8 +1,8 @@
-package org.sapphon.personal.upyougo.repository;
+package org.sapphon.personal.upwise.repository;
 
-import org.sapphon.personal.upyougo.IWisdom;
-import org.sapphon.personal.upyougo.factory.WisdomFactory;
-import org.sapphon.personal.upyougo.repository.jpa.WisdomRepositoryJpa;
+import org.sapphon.personal.upwise.IWisdom;
+import org.sapphon.personal.upwise.factory.WisdomFactory;
+import org.sapphon.personal.upwise.repository.jpa.WisdomRepositoryJpa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

@@ -1,4 +1,4 @@
-package org.sapphon.personal.upyougo.controller;
+package org.sapphon.personal.upwise.controller;
 
 
 import org.junit.Test;

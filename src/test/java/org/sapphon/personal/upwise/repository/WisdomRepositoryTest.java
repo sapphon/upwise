@@ -1,19 +1,17 @@
-package org.sapphon.personal.upyougo.repository;
+package org.sapphon.personal.upwise.repository;
 
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
-import org.sapphon.personal.upyougo.IWisdom;
-import org.sapphon.personal.upyougo.TestHelper;
-import org.sapphon.personal.upyougo.factory.WisdomFactory;
-import org.sapphon.personal.upyougo.time.TimeLord;
+import org.sapphon.personal.upwise.IWisdom;
+import org.sapphon.personal.upwise.factory.WisdomFactory;
+import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

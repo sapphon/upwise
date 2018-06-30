@@ -39,7 +39,7 @@ if(environment == 'fordnetwork'){
 
 group = 'org.sapphon'
 version = '0.0.1-SNAPSHOT'
-archivesBaseName = 'up-you-go'
+archivesBaseName = 'upwise'
 sourceCompatibility = 1.8
 
 repositories {

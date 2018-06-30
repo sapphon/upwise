@@ -1,4 +1,4 @@
-package org.sapphon.personal.upyougo;
+package org.sapphon.personal.upwise;
 
 import java.util.List;
 import static org.junit.Assert.*;
