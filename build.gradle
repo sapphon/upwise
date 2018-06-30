@@ -1,0 +1,91 @@
+buildscript {
+	ext {
+		environment = 'local'	/* alternative is 'fordnetwork'*/
+		springBootVersion = '2.0.3.RELEASE'
+	}
+	if(environment == 'fordnetwork'){
+		System.setProperty('http.proxyHost', 'proxyvipfmcc.nb.ford.com')
+		System.setProperty('http.proxyPort', '83')
+		System.setProperty('http.nonProxyHosts', '*.ford.com|localhost')
+		System.setProperty('https.proxyHost', 'proxyvipfmcc.nb.ford.com')
+		System.setProperty('https.proxyPort', '83')
+		System.setProperty('https.nonProxyHosts', '*.ford.com|localhost')
+	}
+	repositories {
+		mavenCentral()
+		maven { url "https://oss.sonatype.org/content/repositories/releases" }
+		if(environment == 'fordnetwork') {
+			maven { url "http://www.nexus.ford.com/repository/external-proxy-group/" }
+			maven { url "https://wwwqa.nexus.ford.com/repository/ford_community/" }
+		}
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("com.github.pivotalservices:ya-cf-app-gradle-plugin:2.3.0-rc.1")
+		if(environment == 'fordnetwork') {
+			classpath("com.ford.quartermaster:quartermaster-plugin:1.1-SNAPSHOT")
+		}
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+if(environment == 'fordnetwork'){
+	apply plugin: 'quartermaster-plugin'
+}
+
+
+group = 'org.sapphon'
+version = '0.0.1-SNAPSHOT'
+archivesBaseName = 'up-you-go'
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+	if(environment == 'fordnetwork') {
+		maven { url "http://www.nexus.ford.com/repository/external-proxy-group/" }
+		maven { url "http://www.nexus.ford.com/content/groups/public/" }
+	}
+}
+
+
+dependencies {
+	compile('org.springframework.boot:spring-boot-starter')
+	compile('org.springframework.boot:spring-boot-starter-actuator')
+	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+	compile('org.springframework.boot:spring-boot-starter-data-rest')
+	compile('org.springframework.boot:spring-boot-starter-jdbc')
+	//compile('org.springframework.boot:spring-boot-starter-security')	//	Didn't wanna sign in to test
+	compile('org.springframework.boot:spring-boot-starter-web')
+	//compile('com.ford.cloudnative:activedirectory-spring-oauth2-client:1.1.2-RELEASE')	//Need a real app for this
+	//compile('com.ford.cloudnative:activedirectory-spring-oauth2-service:1.1.1-RELEASE')	//Need a real app for this
+	compile('io.springfox:springfox-swagger-ui:2.6.1')
+	compile('io.springfox:springfox-swagger2:2.6.1')
+	compile('org.apache.commons:commons-lang3:3.6')
+	compile('org.springframework.session:spring-session-core')
+	compile("com.h2database:h2")
+	runtime('org.springframework.boot:spring-boot-devtools')
+	runtime('com.microsoft.sqlserver:mssql-jdbc')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+	testCompile('io.rest-assured:rest-assured:3.0.7')
+	testCompile('org.springframework.restdocs:spring-restdocs-mockmvc')
+}
+
+apply plugin: 'cf-app'
+cfConfig {
+
+	// See GettingStarted.md for information on updating these values
+	ccHost = "api.yourpcf.cf.ford.com" // Change
+	space = "YOUR_SPACE" // Change
+	org = "YOUR_ORG" // Change
+
+	name = archivesBaseName
+	host = archivesBaseName
+	domain = "apps-your-pcf.cf.ford.com" // Change
+	memory = 512
+	instances = 1
+	buildpack = "java_buildpack_offline"
+	filePath = "build/libs/" + archivesBaseName + "-" + version + ".jar"
+}
