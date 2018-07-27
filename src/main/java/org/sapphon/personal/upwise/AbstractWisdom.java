@@ -22,7 +22,7 @@ public abstract class AbstractWisdom implements IWisdom {
 
     @Override
     public String toString(){
-        return "WISDOM: '" + wisdomContent + "', said " + attribution + " according to " + addedByUsername + "'s statement at " + timeAdded + "";
+        return "WISDOM: '" + wisdomContent + "', said " + attribution + " at " + timeAdded + " according to " + addedByUsername;
     }
 
 	@Override
@@ -43,6 +43,7 @@ public abstract class AbstractWisdom implements IWisdom {
 		}
 		if(this == obj) return true;
 		AbstractWisdom other = (AbstractWisdom) obj;
+		if(other == null) return false;
 		return this.wisdomContent.equals(other.wisdomContent) &&
 				this.attribution.equals(other.attribution) &&
 				this.addedByUsername.equals(other.addedByUsername) &&

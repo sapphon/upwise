@@ -1,7 +1,8 @@
 package org.sapphon.personal.upwise.repository;
 
 import org.sapphon.personal.upwise.IWisdom;
-import org.sapphon.personal.upwise.factory.WisdomFactory;
+import org.sapphon.personal.upwise.factory.DomainObjectFactory;
+import org.sapphon.personal.upwise.repository.jpa.WisdomJpa;
 import org.sapphon.personal.upwise.repository.jpa.WisdomRepositoryJpa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository("wisdomRepo")
 public class WisdomRepository {
@@ -18,8 +20,13 @@ public class WisdomRepository {
 
     protected WisdomRepository(){}
 
-    public void save(IWisdom toSave){
-        jpaWisdomRepo.save(WisdomFactory.createWisdomJpa(toSave));
+    public IWisdom save(IWisdom toSave){
+        return this.saveImpl(toSave);
+    }
+
+    WisdomJpa saveImpl(IWisdom toSave){
+        Optional<WisdomJpa> wisdomFound = this.findWisdom(toSave);
+        return wisdomFound.orElseGet(() -> jpaWisdomRepo.save(DomainObjectFactory.createWisdomJpa(toSave)));
     }
 
     public void save(List<IWisdom> toSave){
@@ -27,12 +34,12 @@ public class WisdomRepository {
     }
 
     public void save(String wisdomContent, String attribution, String addedByUsername, Timestamp timeAdded){
-        jpaWisdomRepo.save(WisdomFactory.createWisdomJpa(wisdomContent, attribution, addedByUsername, timeAdded));
+        this.save(DomainObjectFactory.createWisdom(wisdomContent, attribution, addedByUsername, timeAdded));
     }
 
     public List<IWisdom> getAll(){
         List<IWisdom> toReturn = new ArrayList<>();
-        jpaWisdomRepo.findAll().forEach((j) -> toReturn.add(WisdomFactory.createWisdom(j)));
+        jpaWisdomRepo.findAll().forEach((j) -> toReturn.add(DomainObjectFactory.createWisdom(j)));
         return toReturn;
     }
 
@@ -47,4 +54,9 @@ public class WisdomRepository {
 	public void clear() {
 		jpaWisdomRepo.deleteAll();
 	}
+
+    public Optional<WisdomJpa> findWisdom(IWisdom template){
+        WisdomJpa found = jpaWisdomRepo.findOneByWisdomContentAndAttributionAndAddedByUsernameAndTimeAdded(template.getWisdomContent(), template.getAttribution(), template.getAddedByUsername(), template.getTimeAdded());
+        return found == null ? Optional.empty() : Optional.of(found);
+    }
 }

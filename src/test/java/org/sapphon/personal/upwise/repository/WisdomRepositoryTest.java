@@ -5,7 +5,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
 import org.sapphon.personal.upwise.IWisdom;
-import org.sapphon.personal.upwise.factory.WisdomFactory;
+import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,10 +29,10 @@ public class WisdomRepositoryTest {
 	@Before
     public void setUp() throws Exception {
 		testWisdoms = new IWisdom[4];
-		testWisdoms[0] = WisdomFactory.createWisdom("Good programmer looks both ways one way street", "Larry", "hschaug1", TimeLord.getNowWithOffset(-1000));
-		testWisdoms[1] = WisdomFactory.createWisdom("Debugging crime movie detective also murderer", "Curly", "rnueter", TimeLord.getNowWithOffset(500000));
-		testWisdoms[2] = WisdomFactory.createWisdom("What takes one one takes two two", "Moe", "wlata35", TimeLord.getNowWithOffset(-1));
-		testWisdoms[3] = WisdomFactory.createWisdomWithCreatedTimeNow("Programming is creative problem solving", "MacCarr", "stamat");
+		testWisdoms[0] = DomainObjectFactory.createWisdom("Good programmer looks both ways one way street", "Larry", "hschaug1", TimeLord.getNowWithOffset(-1000));
+		testWisdoms[1] = DomainObjectFactory.createWisdom("Debugging crime movie detective also murderer", "Curly", "rnueter", TimeLord.getNowWithOffset(500000));
+		testWisdoms[2] = DomainObjectFactory.createWisdom("What takes one one takes two two", "Moe", "wlata35", TimeLord.getNowWithOffset(-1));
+		testWisdoms[3] = DomainObjectFactory.createWisdomWithCreatedTimeNow("Programming is creative problem solving", "MacCarr", "stamat");
 		wisdomRepo.clear();
 	}
 
@@ -48,7 +48,7 @@ public class WisdomRepositoryTest {
 	}
 
 	@Test
-	public void canGetAllOfSeveralRecords(){
+	public void canGetAllOfSeveralDifferentRecords(){
 
 		for(int i = 0; i < testWisdoms.length - 1; i++) {
 			wisdomRepo.save(testWisdoms[i].getWisdomContent(), testWisdoms[i].getAttribution(), testWisdoms[i].getAddedByUsername(), testWisdoms[i].getTimeAdded());
@@ -58,6 +58,20 @@ public class WisdomRepositoryTest {
 		List<IWisdom> actual = wisdomRepo.getAll();
 
 		assertArrayEquals(testWisdoms, actual.toArray());
+	}
+
+	@Test
+	public void doesNotCreateDuplicatesWhenSavingSeveralOfTheSameRecord(){
+
+		for(int i = 0; i < 3; i++) {
+			wisdomRepo.save(testWisdoms[0].getWisdomContent(), testWisdoms[0].getAttribution(), testWisdoms[0].getAddedByUsername(), testWisdoms[0].getTimeAdded());
+		}
+		wisdomRepo.save(testWisdoms[0]);
+
+		List<IWisdom> actual = wisdomRepo.getAll();
+
+		IWisdom[] expectedWisdoms = {testWisdoms[0]};
+		assertArrayEquals(expectedWisdoms, actual.toArray());
 	}
 
 	@Test
