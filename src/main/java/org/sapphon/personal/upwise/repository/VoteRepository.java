@@ -25,7 +25,7 @@ public class VoteRepository {
     protected VoteRepository(){}
 
     public IVote save(IVote toSave){
-        return this.save(toSave.getWisdom(), toSave.getAddedByUsername(), toSave.getTimeAdded());
+        return this.saveImpl(toSave);
     }
 
     public void save(List<IVote> toSave){
@@ -33,8 +33,14 @@ public class VoteRepository {
     }
 
     public IVote save(IWisdom wisdom, String addedByUsername, Timestamp timeAdded){
-        VoteJpa toSave = DomainObjectFactory.createVoteJpa(wisdomRepository.save(wisdom), addedByUsername, timeAdded);
-        return jpaVoteRepo.save(toSave);
+        IVote toSave = DomainObjectFactory.createVote(wisdomRepository.save(wisdom), addedByUsername, timeAdded);
+        return this.saveImpl(toSave);
+    }
+
+    VoteJpa saveImpl(IVote toSave){
+        Optional<VoteJpa> voteFound = this.findVote(toSave);
+        toSave.setWisdom(wisdomRepository.saveImpl(toSave.getWisdom()));
+        return voteFound.orElseGet(() -> jpaVoteRepo.save(DomainObjectFactory.createVoteJpa(toSave)));
     }
 
     public List<IVote> getAll(){
