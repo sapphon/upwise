@@ -68,21 +68,6 @@ public class VoteRepositoryTest {
 		assertArrayEquals(testVotes, actual.toArray());
 	}
 
-
-	@Test
-	public void doesNotCreateDuplicatesWhenSavingSeveralOfTheSameRecord() {
-
-		for (int i = 0; i < 3; i++) {
-			voteRepo.save(testVotes[0].getWisdom(), testVotes[0].getAddedByUsername(), testVotes[0].getTimeAdded());
-		}
-		voteRepo.save(testVotes[0]);
-
-		List<IVote> actual = voteRepo.getAll();
-
-		IVote[] expectedVotes = {testVotes[0]};
-		assertArrayEquals(expectedVotes, actual.toArray());
-	}
-
 	@Test
 	public void canGetOneRecordBySubmitter(){
 		IVote voteWeWant = testVotes[0];

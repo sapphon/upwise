@@ -15,10 +15,12 @@ import java.util.Optional;
 @Repository("wisdomRepo")
 public class WisdomRepository {
 
-	@Autowired
-    private WisdomRepositoryJpa jpaWisdomRepo;
+	private final WisdomRepositoryJpa jpaWisdomRepo;
 
-    protected WisdomRepository(){}
+    @Autowired
+    protected WisdomRepository(WisdomRepositoryJpa jpaWisdomRepo){
+        this.jpaWisdomRepo = jpaWisdomRepo;
+    }
 
     public IWisdom save(IWisdom toSave){
         return this.saveImpl(toSave);

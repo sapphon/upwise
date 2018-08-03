@@ -1,8 +1,13 @@
 package org.sapphon.personal.upwise.controller;
 
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.sapphon.personal.upwise.TestObjectFactory;
+import org.sapphon.personal.upwise.service.WisdomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,6 +17,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -22,10 +29,36 @@ public class LeaderboardControllerTest {
     @Autowired
     private MockMvc mvc;
 
+    @Mock
+    private WisdomService wisdomService;
+
+    @InjectMocks
+    private LeaderboardController underTest;
+
     @Test
     public void getLeaderboardData() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("Leaderboard test text")));
+                .andExpect(content().string(equalTo("Leaderboard is up")));
+    }
+
+    @Test
+    public void getAllEndpoint() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/wisdom/all").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo("[]")));
+    }
+
+    //TODO fix the dependency injection for this class so that this test works.
+    @Ignore
+    @Test
+    public void getAllCanReturnRealValues() throws Exception {
+        when(wisdomService.getAllWisdoms()).thenReturn(TestObjectFactory.makeRandomCollection());
+
+        mvc.perform(MockMvcRequestBuilders.get("/wisdom/all").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo("[]")));
+
+        verify(wisdomService).getAllWisdoms();
     }
 }
