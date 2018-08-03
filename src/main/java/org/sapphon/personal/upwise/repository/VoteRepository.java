@@ -48,7 +48,7 @@ public class VoteRepository {
     }
 
     public List<IVote> getByWisdom(IWisdom wisdom){
-        return new ArrayList<>(jpaVoteRepo.findByWisdom(wisdomRepository.saveImpl(wisdom)));
+        return new ArrayList<>(jpaVoteRepo.findByWisdom(wisdomRepository.getOrCreate(wisdom)));
     }
 
     public IVote getById(long id) {
@@ -60,7 +60,7 @@ public class VoteRepository {
 	}
 
     public Optional<VoteJpa> findVote(IVote template){
-        VoteJpa found = jpaVoteRepo.findOneByWisdomAndAddedByUsernameAndTimeAdded(wisdomRepository.saveImpl(template.getWisdom()), template.getAddedByUsername(), template.getTimeAdded());
+        VoteJpa found = jpaVoteRepo.findOneByWisdomAndAddedByUsernameAndTimeAdded(wisdomRepository.getOrCreate(template.getWisdom()), template.getAddedByUsername(), template.getTimeAdded());
         return found == null ? Optional.empty() : Optional.of(found);
     }
 

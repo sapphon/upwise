@@ -10,5 +10,5 @@ import java.util.List;
 public interface WisdomRepositoryJpa extends CrudRepository<WisdomJpa, Long>{
     List<WisdomJpa> findByAddedByUsernameOrderByTimeAddedDesc(String username);
     WisdomJpa findOneById(long id);
-    WisdomJpa findOneByWisdomContentAndAttributionAndAddedByUsernameAndTimeAdded(String wisdomContent, String attribution, String addedByUsername, Timestamp timeAdded);
+    WisdomJpa findOneByWisdomContentAndAttribution(String wisdomContent, String attribution);
 }

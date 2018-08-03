@@ -23,10 +23,10 @@ public class WisdomRepository {
     }
 
     public IWisdom save(IWisdom toSave){
-        return this.saveImpl(toSave);
+        return this.getOrCreate(toSave);
     }
 
-    WisdomJpa saveImpl(IWisdom toSave){
+    WisdomJpa getOrCreate(IWisdom toSave){
         Optional<WisdomJpa> wisdomFound = this.findWisdom(toSave);
         return wisdomFound.orElseGet(() -> jpaWisdomRepo.save(DomainObjectFactory.createWisdomJpa(toSave)));
     }
@@ -58,7 +58,7 @@ public class WisdomRepository {
 	}
 
     public Optional<WisdomJpa> findWisdom(IWisdom template){
-        WisdomJpa found = jpaWisdomRepo.findOneByWisdomContentAndAttributionAndAddedByUsernameAndTimeAdded(template.getWisdomContent(), template.getAttribution(), template.getAddedByUsername(), template.getTimeAdded());
+        WisdomJpa found = jpaWisdomRepo.findOneByWisdomContentAndAttribution(template.getWisdomContent(), template.getAttribution());
         return found == null ? Optional.empty() : Optional.of(found);
     }
 }
