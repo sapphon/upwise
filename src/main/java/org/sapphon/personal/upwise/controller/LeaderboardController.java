@@ -4,6 +4,7 @@ import org.sapphon.personal.upwise.IVote;
 import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
+import org.sapphon.personal.upwise.service.VoteService;
 import org.sapphon.personal.upwise.service.WisdomService;
 import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class LeaderboardController {
 
     @Autowired
     WisdomService wisdomService;
+
+    @Autowired
+    VoteService voteService;
 
 
     @RequestMapping(value = "/")
@@ -39,6 +43,15 @@ public class LeaderboardController {
 
     public List<IWisdom> getAllWisdoms(){
         return wisdomService.getAllWisdoms();
+    }
+
+    @RequestMapping(value = "/vote/all")
+    public List<IVote> getAllVotesEndpoint(){
+        return this.getAllVotes();
+    }
+
+    public List<IVote> getAllVotes(){
+        return voteService.getAllVotes();
     }
 
 

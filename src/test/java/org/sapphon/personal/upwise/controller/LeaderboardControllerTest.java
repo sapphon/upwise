@@ -43,8 +43,16 @@ public class LeaderboardControllerTest {
     }
 
     @Test
-    public void getAllEndpoint() throws Exception {
+    public void getAllWisdomsEndpoint() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/wisdom/all").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo("[]")));
+    }
+
+
+    @Test
+    public void getAllVotesEndpoint() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/vote/all").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("[]")));
     }
