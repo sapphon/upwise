@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class LeaderboardControllerTest {
+public class APIControllerTest {
     @Autowired
     private MockMvc mvc;
 
@@ -33,7 +33,7 @@ public class LeaderboardControllerTest {
     private WisdomService wisdomService;
 
     @InjectMocks
-    private LeaderboardController underTest;
+    private APIController underTest;
 
     @Test
     public void getLeaderboardData() throws Exception {
