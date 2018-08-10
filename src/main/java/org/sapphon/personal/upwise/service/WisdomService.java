@@ -1,8 +1,10 @@
 package org.sapphon.personal.upwise.service;
 
+import org.sapphon.personal.upwise.IVote;
 import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.repository.VoteRepository;
 import org.sapphon.personal.upwise.repository.WisdomRepository;
+import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +22,11 @@ public class WisdomService {
         return this.wisdomRepo.getAll();
     }
 
-    public void addOrUpdateWisdom(IWisdom wisdom) {
-        this.wisdomRepo.save(wisdom);
+    public IWisdom addOrUpdateWisdom(IWisdom wisdom) {
+        return this.wisdomRepo.save(wisdom);
+    }
+
+    public IVote addOrUpdateVote(IVote vote){
+        return this.voteRepo.save(vote);
     }
 }

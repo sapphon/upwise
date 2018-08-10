@@ -18,7 +18,9 @@ public class VoteJpa extends AbstractVote {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
 
-    protected VoteJpa(){}
+    protected VoteJpa(){
+        super();
+    }
 
     public VoteJpa(IWisdom wisdom, String addedByUsername, Timestamp timeAdded) {
         super(wisdom, addedByUsername, timeAdded);

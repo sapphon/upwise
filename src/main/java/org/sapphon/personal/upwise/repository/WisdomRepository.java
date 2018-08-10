@@ -2,6 +2,7 @@ package org.sapphon.personal.upwise.repository;
 
 import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
+import org.sapphon.personal.upwise.factory.RandomObjectFactory;
 import org.sapphon.personal.upwise.repository.jpa.WisdomJpa;
 import org.sapphon.personal.upwise.repository.jpa.WisdomRepositoryJpa;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.sapphon.personal.upwise.TestObjectFactory;
+import org.sapphon.personal.upwise.factory.RandomObjectFactory;
 import org.sapphon.personal.upwise.service.WisdomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -53,7 +53,7 @@ public class LeaderboardControllerTest {
     @Ignore
     @Test
     public void getAllCanReturnRealValues() throws Exception {
-        when(wisdomService.getAllWisdoms()).thenReturn(TestObjectFactory.makeRandomCollection());
+        when(wisdomService.getAllWisdoms()).thenReturn(RandomObjectFactory.makeRandomCollection());
 
         mvc.perform(MockMvcRequestBuilders.get("/wisdom/all").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

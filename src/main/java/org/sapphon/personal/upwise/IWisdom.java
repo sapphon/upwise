@@ -1,7 +1,10 @@
 package org.sapphon.personal.upwise;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import java.sql.Timestamp;
 
+@JsonDeserialize(as = Wisdom.class)
 public interface IWisdom {
 
     //region SettersGetters

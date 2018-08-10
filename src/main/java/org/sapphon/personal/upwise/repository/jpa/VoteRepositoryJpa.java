@@ -11,5 +11,5 @@ public interface VoteRepositoryJpa extends CrudRepository<VoteJpa, Long>{
     List<VoteJpa> findByAddedByUsernameOrderByTimeAddedDesc(String username);
     VoteJpa findOneById(long id);
     List<VoteJpa> findByWisdom(WisdomJpa wisdom);
-    VoteJpa findOneByWisdomAndAddedByUsernameAndTimeAdded(WisdomJpa wisdom, String username, Timestamp timeAdded);
+    VoteJpa findOneByWisdomAndAddedByUsername(WisdomJpa orCreate, String addedByUsername);
 }

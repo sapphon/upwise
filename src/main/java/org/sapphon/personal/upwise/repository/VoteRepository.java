@@ -5,6 +5,7 @@ import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.repository.jpa.VoteJpa;
 import org.sapphon.personal.upwise.repository.jpa.VoteRepositoryJpa;
+import org.sapphon.personal.upwise.repository.jpa.WisdomJpa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -25,7 +26,12 @@ public class VoteRepository {
     protected VoteRepository(){}
 
     public IVote save(IVote toSave){
-        return this.save(toSave.getWisdom(), toSave.getAddedByUsername(), toSave.getTimeAdded());
+        return this.getOrCreate(toSave);
+    }
+
+    VoteJpa getOrCreate(IVote toPersist){
+        Optional<VoteJpa> voteFound = this.findVote(toPersist);
+        return voteFound.orElseGet(() -> jpaVoteRepo.save(DomainObjectFactory.createVoteJpa(wisdomRepository.save(toPersist.getWisdom()), toPersist.getAddedByUsername(), toPersist.getTimeAdded())));
     }
 
     public void save(List<IVote> toSave){
@@ -34,7 +40,7 @@ public class VoteRepository {
 
     public IVote save(IWisdom wisdom, String addedByUsername, Timestamp timeAdded){
         VoteJpa toSave = DomainObjectFactory.createVoteJpa(wisdomRepository.save(wisdom), addedByUsername, timeAdded);
-        return jpaVoteRepo.save(toSave);
+        return this.save(toSave);
     }
 
     public List<IVote> getAll(){
@@ -60,7 +66,7 @@ public class VoteRepository {
 	}
 
     public Optional<VoteJpa> findVote(IVote template){
-        VoteJpa found = jpaVoteRepo.findOneByWisdomAndAddedByUsernameAndTimeAdded(wisdomRepository.getOrCreate(template.getWisdom()), template.getAddedByUsername(), template.getTimeAdded());
+        VoteJpa found = jpaVoteRepo.findOneByWisdomAndAddedByUsername(wisdomRepository.getOrCreate(template.getWisdom()), template.getAddedByUsername());
         return found == null ? Optional.empty() : Optional.of(found);
     }
 

@@ -4,13 +4,21 @@ import org.sapphon.personal.upwise.IVote;
 import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.Vote;
 import org.sapphon.personal.upwise.Wisdom;
+import org.sapphon.personal.upwise.repository.VoteRepository;
+import org.sapphon.personal.upwise.repository.WisdomRepository;
 import org.sapphon.personal.upwise.repository.jpa.VoteJpa;
 import org.sapphon.personal.upwise.repository.jpa.WisdomJpa;
 import org.sapphon.personal.upwise.time.TimeLord;
+import org.springframework.context.annotation.Bean;
 
 import java.sql.Timestamp;
 
 public class DomainObjectFactory {
+
+    private WisdomRepository wisdomRepo;
+
+    private VoteRepository voteRepo;
+
     public static IWisdom createWisdom(String content, String utterer, String submitter, Timestamp time){
         return new Wisdom(content, utterer, submitter, time);
     }
@@ -32,7 +40,7 @@ public class DomainObjectFactory {
     }
 
     public static VoteJpa createVoteJpa(IVote vote){
-        return createVoteJpa(vote.getWisdom(), vote.getAddedByUsername(), vote.getTimeAdded());
+        return createVoteJpa(createWisdomJpa(vote.getWisdom()), vote.getAddedByUsername(), vote.getTimeAdded());
     }
 
     public static IVote createVote(IVote vote) {
