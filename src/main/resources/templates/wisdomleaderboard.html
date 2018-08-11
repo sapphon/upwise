@@ -1,3 +1,10 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Wisdom Leaderboard</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
 <div class="wisdomlist" th:unless="${#lists.isEmpty(allWisdoms)}">
     <h1 th:text="#{title.leaderboard}">Wisdom Leaderboard</h1>
     <table>
@@ -19,3 +26,5 @@
         </tbody>
     </table>
 </div>
+</body>
+</html>
