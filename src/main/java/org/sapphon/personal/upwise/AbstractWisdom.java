@@ -43,7 +43,6 @@ public abstract class AbstractWisdom implements IWisdom {
 		}
 		if(this == obj) return true;
 		AbstractWisdom other = (AbstractWisdom) obj;
-		if(other == null) return false;
 		return this.wisdomContent.equals(other.wisdomContent) &&
 				this.attribution.equals(other.attribution) &&
 				this.addedByUsername.equals(other.addedByUsername) &&
