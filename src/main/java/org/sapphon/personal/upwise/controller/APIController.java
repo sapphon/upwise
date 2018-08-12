@@ -36,7 +36,7 @@ public class APIController {
     }
 
     public String getCannedResponse(){
-        return "Leaderboard is up";
+        return "Upwise API is up";
     }
 
 

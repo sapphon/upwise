@@ -39,7 +39,7 @@ public class APIControllerTest {
     public void getLeaderboardData() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("Leaderboard is up")));
+                .andExpect(content().string(equalTo("Upwise API is up")));
     }
 
     @Test
