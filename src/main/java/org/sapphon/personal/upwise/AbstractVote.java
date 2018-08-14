@@ -19,6 +19,7 @@ public abstract class AbstractVote implements IVote {
     @ManyToOne(targetEntity = WisdomJpa.class, fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "wisdom_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     protected IWisdom wisdom;
     protected Timestamp timeAdded;
 
@@ -76,16 +77,19 @@ public abstract class AbstractVote implements IVote {
         }
 
     @Override
-    public void setWisdom(IWisdom wisdom){
+    public IVote setWisdom(IWisdom wisdom){
         this.wisdom = wisdom;
+        return this;
     }
         @Override
-        public void setAddedByUsername(String addedByUsername) {
+        public IVote setAddedByUsername(String addedByUsername) {
             this.addedByUsername = addedByUsername;
+            return this;
         }
         @Override
-        public void setTimeAdded(Timestamp timeAdded) {
+        public IVote setTimeAdded(Timestamp timeAdded) {
             this.timeAdded = timeAdded;
+            return this;
         }
     //endregion
 }

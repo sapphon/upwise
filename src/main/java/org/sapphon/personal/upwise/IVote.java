@@ -15,11 +15,11 @@ public interface IVote {
 
     Timestamp getTimeAdded();
 
-    void setTimeAdded(Timestamp timeAdded);
+    IVote setTimeAdded(Timestamp timeAdded);
 
-    void setAddedByUsername(String addedByUsername);
+    IVote setAddedByUsername(String addedByUsername);
 
-    void setWisdom(IWisdom wisdom);
+    IVote setWisdom(IWisdom wisdom);
 
     //endregion
 
