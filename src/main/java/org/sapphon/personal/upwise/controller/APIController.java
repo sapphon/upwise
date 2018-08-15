@@ -2,16 +2,12 @@ package org.sapphon.personal.upwise.controller;
 
 import org.sapphon.personal.upwise.IVote;
 import org.sapphon.personal.upwise.IWisdom;
-import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
-import org.sapphon.personal.upwise.presentation.WisdomDto;
 import org.sapphon.personal.upwise.service.VoteService;
 import org.sapphon.personal.upwise.service.WisdomService;
-import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -95,9 +91,12 @@ public class APIController {
 
 
     @RequestMapping(value = "/wisdom/add", method = RequestMethod.POST)
-    public ResponseEntity<IWisdom> addWisdomEndpoint(@RequestBody WisdomDto wisdom) {
+    public ResponseEntity<IWisdom> addWisdomEndpoint(@RequestBody IWisdom wisdom) {
         int wisdomsBeforeAdd = this.wisdomService.getAllWisdoms().size();
-        IWisdom result = this.wisdomService.addOrUpdateWisdom(wisdom.getModelObject());
+        if(!validateWisdom(wisdom)){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        IWisdom result = this.wisdomService.addOrUpdateWisdom(wisdom);
         if(wisdomsBeforeAdd < this.wisdomService.getAllWisdoms().size()) {
                 return ResponseEntity.status(HttpStatus.CREATED).body(result);
             }
@@ -105,6 +104,10 @@ public class APIController {
                 return ResponseEntity.status(HttpStatus.CONFLICT).build();
             }
 
+    }
+
+    private boolean validateWisdom(IWisdom wisdom) {
+        return wisdom.getWisdomContent() != null && wisdom.getAttribution() != null;
     }
 
     public IWisdom addWisdom(IWisdom wisdom){

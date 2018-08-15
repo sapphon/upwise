@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
 import org.sapphon.personal.upwise.service.WisdomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,5 +69,17 @@ public class APIControllerTest {
                 .andExpect(content().string(equalTo("[]")));
 
         verify(wisdomService).getAllWisdoms();
+    }
+
+    //TODO seriously this mockmvc stuff doesn't mean what I think it means
+    @Ignore
+    @Test
+    public void addWisdomEndpoint_SaysBadRequestIfNoWisdomContent() throws Exception {
+        IWisdom randomWisdom = RandomObjectFactory.makeRandom();
+        randomWisdom.setWisdomContent(null);
+        mvc.perform(MockMvcRequestBuilders.post("/wisdom/all", randomWisdom).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(equalTo("[]")));
+
     }
 }
