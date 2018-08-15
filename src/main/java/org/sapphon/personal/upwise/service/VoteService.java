@@ -19,4 +19,8 @@ public class VoteService {
     }
 
     public List<IVote> getByWisdom(IWisdom wisdom){return voteRepository.getByWisdom(wisdom); }
+
+    public IVote addOrUpdateVote(IVote vote){
+        return this.voteRepository.save(vote);
+    }
 }

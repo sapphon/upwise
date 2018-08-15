@@ -62,4 +62,9 @@ public class WisdomRepository {
         WisdomJpa found = jpaWisdomRepo.findOneByWisdomContentAndAttribution(template.getWisdomContent(), template.getAttribution());
         return found == null ? Optional.empty() : Optional.of(found);
     }
+
+
+    public Optional<IWisdom> findWisdom(String content, String attribution){
+        return this.findWisdom(content, attribution);
+    }
 }

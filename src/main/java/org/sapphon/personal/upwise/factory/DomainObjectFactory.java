@@ -1,7 +1,7 @@
 package org.sapphon.personal.upwise.factory;
 
 import org.sapphon.personal.upwise.*;
-import org.sapphon.personal.upwise.presentation.WisdomWithVotes;
+import org.sapphon.personal.upwise.presentation.WisdomWithVotesPresentation;
 import org.sapphon.personal.upwise.repository.VoteRepository;
 import org.sapphon.personal.upwise.repository.WisdomRepository;
 import org.sapphon.personal.upwise.repository.jpa.VoteJpa;
@@ -54,8 +54,8 @@ public class DomainObjectFactory {
         return new Vote(wisdom, addedByUsername,timeAdded);
     }
 
-    public static WisdomWithVotes createWisdomWithVotes(IWisdom wisdom, List<IVote> votes){
-        return new WisdomWithVotes(wisdom, votes);
+    public static WisdomWithVotesPresentation createWisdomWithVotes(IWisdom wisdom, List<IVote> votes){
+        return new WisdomWithVotesPresentation(wisdom, votes);
     }
 
 }

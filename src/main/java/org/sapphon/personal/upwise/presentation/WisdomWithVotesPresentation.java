@@ -8,15 +8,15 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WisdomWithVotes extends Wisdom {
+public class WisdomWithVotesPresentation extends Wisdom {
 
     private List<IVote> votes;
-    public WisdomWithVotes(String wisdomContent, String attribution, String addedByUsername, Timestamp timeAdded) {
+    public WisdomWithVotesPresentation(String wisdomContent, String attribution, String addedByUsername, Timestamp timeAdded) {
         super(wisdomContent, attribution, addedByUsername, timeAdded);
         this.votes = new ArrayList<IVote>();
     }
 
-    public WisdomWithVotes(IWisdom wisdom, List<IVote> votes){
+    public WisdomWithVotesPresentation(IWisdom wisdom, List<IVote> votes){
         this(wisdom.getWisdomContent(), wisdom.getAttribution(), wisdom.getAddedByUsername(), wisdom.getTimeAdded());
         this.votes = votes;
     }
@@ -27,7 +27,7 @@ public class WisdomWithVotes extends Wisdom {
         return votes;
     }
 
-    public WisdomWithVotes setVotes(List<IVote> votes) {
+    public WisdomWithVotesPresentation setVotes(List<IVote> votes) {
         this.votes = votes;
         return this;
     }

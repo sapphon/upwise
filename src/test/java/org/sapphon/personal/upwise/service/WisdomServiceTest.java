@@ -52,11 +52,4 @@ public class WisdomServiceTest {
 
         verify(wisdomRepo).save(expectedResult);
     }
-
-    @Test
-    public void votesPassedToAddOrUpdateVoteGetSentToTheRepositorySaveMethod() {
-        IVote expectedResult = RandomObjectFactory.makeRandomWisdomlessVote();
-        underTest.addOrUpdateVote(expectedResult);
-        verify(voteRepo).save(expectedResult);
-    }
 }

@@ -4,6 +4,7 @@ import org.sapphon.personal.upwise.IVote;
 import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
+import org.sapphon.personal.upwise.presentation.WisdomDto;
 import org.sapphon.personal.upwise.service.VoteService;
 import org.sapphon.personal.upwise.service.WisdomService;
 import org.sapphon.personal.upwise.time.TimeLord;
@@ -87,17 +88,18 @@ public class APIController {
             IWisdom existingWisdom = allWisdoms.get(random.nextInt(allWisdoms.size()));
             IVote randomVote = RandomObjectFactory.makeRandomWisdomlessVote();
             randomVote.setWisdom(existingWisdom);
-            return this.wisdomService.addOrUpdateVote(randomVote);
+            return this.voteService.addOrUpdateVote(randomVote);
         }
         return null;
     }
 
+
     @RequestMapping(value = "/wisdom/add", method = RequestMethod.POST)
-    public ResponseEntity<IWisdom> addWisdomEndpoint(@RequestBody IWisdom wisdom) {
+    public ResponseEntity<IWisdom> addWisdomEndpoint(@RequestBody WisdomDto wisdom) {
         int wisdomsBeforeAdd = this.wisdomService.getAllWisdoms().size();
-        IWisdom result = this.wisdomService.addOrUpdateWisdom(wisdom);
+        IWisdom result = this.wisdomService.addOrUpdateWisdom(wisdom.getModelObject());
         if(wisdomsBeforeAdd < this.wisdomService.getAllWisdoms().size()) {
-                return ResponseEntity.status(HttpStatus.CREATED).body(wisdom);
+                return ResponseEntity.status(HttpStatus.CREATED).body(result);
             }
             else{
                 return ResponseEntity.status(HttpStatus.CONFLICT).build();
