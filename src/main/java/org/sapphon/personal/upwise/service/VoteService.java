@@ -17,4 +17,6 @@ public class VoteService {
     public List<IVote> getAllVotes(){
         return this.voteRepository.getAll();
     }
+
+    public List<IVote> getByWisdom(IWisdom wisdom){return voteRepository.getByWisdom(wisdom); }
 }

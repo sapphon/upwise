@@ -1,17 +1,15 @@
 package org.sapphon.personal.upwise.factory;
 
-import org.sapphon.personal.upwise.IVote;
-import org.sapphon.personal.upwise.IWisdom;
-import org.sapphon.personal.upwise.Vote;
-import org.sapphon.personal.upwise.Wisdom;
+import org.sapphon.personal.upwise.*;
+import org.sapphon.personal.upwise.presentation.WisdomWithVotes;
 import org.sapphon.personal.upwise.repository.VoteRepository;
 import org.sapphon.personal.upwise.repository.WisdomRepository;
 import org.sapphon.personal.upwise.repository.jpa.VoteJpa;
 import org.sapphon.personal.upwise.repository.jpa.WisdomJpa;
 import org.sapphon.personal.upwise.time.TimeLord;
-import org.springframework.context.annotation.Bean;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class DomainObjectFactory {
 
@@ -56,5 +54,8 @@ public class DomainObjectFactory {
         return new Vote(wisdom, addedByUsername,timeAdded);
     }
 
+    public static WisdomWithVotes createWisdomWithVotes(IWisdom wisdom, List<IVote> votes){
+        return new WisdomWithVotes(wisdom, votes);
+    }
 
 }

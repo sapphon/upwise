@@ -17,12 +17,29 @@
             </tr>
         </thead>
         <tbody>
-            <tr th:each="wisdom : ${allWisdoms}">
-                <td th:text="${wisdom.wisdomContent}">A good programmer is someone who looks both ways before crossing a one-way street.</td>
+            <div th:each="wisdom : ${allWisdoms}">
+                <tr><td th:text="${wisdom.wisdomContent}">A good programmer is someone who looks both ways before crossing a one-way street.</td>
                 <td th:text="${wisdom.attribution}">Doug Linder</td>
                 <td th:text="${wisdom.addedByUsername}">intellijames</td>
                 <td th:text="${wisdom.timeAdded}">January 1, 1970 01:00:00 GMT</td>
-            </tr>
+                </tr>
+        <tr th:unless="${#lists.isEmpty(wisdom.votes)}">
+            <table>
+            <thead>
+                <tr>
+                    <th th:text="#{vote.addedByUsername}">Voted Up By</th>
+                    <th th:text="#{vote.timeAdded}"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="vote : ${wisdom.votes}">
+                    <td th:text="${vote.addedByUsername}"></td>
+                    <td th:text="${vote.timeAdded}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </tr>
+            </div>
         </tbody>
     </table>
 </div>

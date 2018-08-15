@@ -36,6 +36,6 @@ public class DashboardControllerIntegration {
     public void getLeaderboard() throws Exception {
         ResponseEntity<String> response = template.getForEntity(base.toString(),
                 String.class);
-        assertThat(response.getBody(), equalTo("Leaderboard is up"));
+        assertThat(response.getBody(), equalTo("Upwise API is up"));
     }
 }

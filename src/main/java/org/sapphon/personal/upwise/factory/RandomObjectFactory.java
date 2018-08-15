@@ -31,4 +31,8 @@ public class RandomObjectFactory {
         Random random = new Random();
         return DomainObjectFactory.createVote(null, RandomStringUtils.random(random.nextInt(50),true,true), TimeLord.getTimestampForMillis(random.nextLong()));
     }
+
+    public static IVote makeRandomVoteForWisdom(IWisdom wisdom) {
+        return makeRandomWisdomlessVote().setWisdom(wisdom);
+    }
 }
