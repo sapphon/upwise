@@ -31,6 +31,7 @@ public class WisdomLeaderboardController {
         return "wisdomleaderboard";
     }
 
+    //TODO move this to the wisdom service and test explicitly
     private List<WisdomWithVotesPresentation> getWisdomsWithVotes(List<IWisdom> allWisdoms) {
         return allWisdoms.stream().map(wisdom -> DomainObjectFactory.createWisdomWithVotes(wisdom, voteService.getByWisdom(wisdom))).collect(Collectors.toList());
     }

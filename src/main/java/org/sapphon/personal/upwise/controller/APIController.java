@@ -95,19 +95,14 @@ public class APIController {
 
     @RequestMapping(value = "/wisdom/add", method = RequestMethod.POST)
     public ResponseEntity<IWisdom> addWisdomEndpoint(@RequestBody IWisdom wisdom) {
-        int wisdomsBeforeAdd = this.wisdomService.getAllWisdoms().size();
-        wisdom.setTimeAdded(TimeLord.getNow());
         if(!validateWisdom(wisdom)){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        IWisdom result = this.addWisdom(wisdom);
-        if(wisdomsBeforeAdd < this.wisdomService.getAllWisdoms().size()) {
-                return ResponseEntity.status(HttpStatus.CREATED).body(result);
-            }
-            else{
-                return ResponseEntity.status(HttpStatus.CONFLICT).build();
-            }
-
+        else if(this.wisdomService.findWisdomByContentAndAttribution(wisdom.getWisdomContent(), wisdom.getAttribution()).isPresent()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+        wisdom.setTimeAdded(TimeLord.getNow());
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.addWisdom(wisdom));
     }
 
     private boolean validateWisdom(IWisdom wisdom) {
