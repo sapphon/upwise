@@ -5,6 +5,7 @@ import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
 import org.sapphon.personal.upwise.service.VoteService;
 import org.sapphon.personal.upwise.service.WisdomService;
+import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.util.Random;
 @CrossOrigin
 @RestController
 public class APIController {
+
     private WisdomService wisdomService;
 
     private VoteService voteService;
@@ -32,17 +34,18 @@ public class APIController {
         return this.getCannedResponse();
     }
 
-    public String getCannedResponse(){
+    private String getCannedResponse(){
         return "Upwise API is up";
     }
 
 
     @RequestMapping(value = "/wisdom/all")
     public List<IWisdom> getAllWisdomsEndpoint(){
+
         return this.getAllWisdoms();
     }
 
-    public List<IWisdom> getAllWisdoms(){
+    private List<IWisdom> getAllWisdoms(){
         return wisdomService.getAllWisdoms();
     }
 
@@ -51,7 +54,7 @@ public class APIController {
         return this.getAllVotes();
     }
 
-    public List<IVote> getAllVotes(){
+    private List<IVote> getAllVotes(){
         return voteService.getAllVotes();
     }
 
@@ -93,10 +96,11 @@ public class APIController {
     @RequestMapping(value = "/wisdom/add", method = RequestMethod.POST)
     public ResponseEntity<IWisdom> addWisdomEndpoint(@RequestBody IWisdom wisdom) {
         int wisdomsBeforeAdd = this.wisdomService.getAllWisdoms().size();
+        wisdom.setTimeAdded(TimeLord.getNow());
         if(!validateWisdom(wisdom)){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        IWisdom result = this.wisdomService.addOrUpdateWisdom(wisdom);
+        IWisdom result = this.addWisdom(wisdom);
         if(wisdomsBeforeAdd < this.wisdomService.getAllWisdoms().size()) {
                 return ResponseEntity.status(HttpStatus.CREATED).body(result);
             }

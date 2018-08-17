@@ -1,13 +1,14 @@
 package org.sapphon.personal.upwise.controller;
 
 
-import org.junit.Ignore;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
+import org.sapphon.personal.upwise.service.VoteService;
 import org.sapphon.personal.upwise.service.WisdomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,11 +16,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -27,14 +27,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class APIControllerTest {
+
     @Autowired
     private MockMvc mvc;
 
-    @Mock
+    @Autowired
     private WisdomService wisdomService;
 
-    @InjectMocks
-    private APIController underTest;
+    @Autowired
+    private VoteService voteService;
 
     @Test
     public void getLeaderboardData() throws Exception {
@@ -58,28 +59,32 @@ public class APIControllerTest {
                 .andExpect(content().string(equalTo("[]")));
     }
 
-    //TODO fix the dependency injection for this class so that this test works.
-    @Ignore
     @Test
-    public void getAllCanReturnRealValues() throws Exception {
-        when(wisdomService.getAllWisdoms()).thenReturn(RandomObjectFactory.makeRandomCollection());
+    public void getAllCanReturnRealValues_IntegrationTest() throws Exception {
+        IWisdom[] testWisdoms = new IWisdom[2];
+        testWisdoms[0] = wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandom());
+        testWisdoms[1] = wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandom());
 
-        mvc.perform(MockMvcRequestBuilders.get("/wisdom/all").accept(MediaType.APPLICATION_JSON))
+        ObjectWriter mapper = new ObjectMapper().configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false).writer().withDefaultPrettyPrinter();
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/wisdom/all").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("[]")));
-
-        verify(wisdomService).getAllWisdoms();
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(
+                        "[" +
+                                mapper.writeValueAsString(testWisdoms[0]) + "," +
+                                mapper.writeValueAsString(testWisdoms[1]) +
+                                "]"))
+                .andReturn();
+        //verify(wisdomService).getAllWisdoms();      //this would be great, but can't figure out how to get a mock into the controller
     }
 
-    //TODO seriously this mockmvc stuff doesn't mean what I think it means
-    @Ignore
     @Test
     public void addWisdomEndpoint_SaysBadRequestIfNoWisdomContent() throws Exception {
         IWisdom randomWisdom = RandomObjectFactory.makeRandom();
         randomWisdom.setWisdomContent(null);
-        mvc.perform(MockMvcRequestBuilders.post("/wisdom/all", randomWisdom).accept(MediaType.APPLICATION_JSON))
+        mvc.perform(MockMvcRequestBuilders.post("/wisdom/add", randomWisdom).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string(equalTo("[]")));
+                .andExpect(content().string(equalTo("")));
 
     }
 }

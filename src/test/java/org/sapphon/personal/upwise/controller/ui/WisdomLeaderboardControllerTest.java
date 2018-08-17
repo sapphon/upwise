@@ -1,4 +1,4 @@
-package org.sapphon.personal.upwise.controller;
+package org.sapphon.personal.upwise.controller.ui;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.sapphon.personal.upwise.IVote;
 import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.Wisdom;
+import org.sapphon.personal.upwise.controller.ui.WisdomLeaderboardController;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
 import org.sapphon.personal.upwise.service.VoteService;
 import org.sapphon.personal.upwise.service.WisdomService;
@@ -26,7 +27,6 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.times;

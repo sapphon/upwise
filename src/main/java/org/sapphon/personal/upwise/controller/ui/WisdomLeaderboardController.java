@@ -1,4 +1,4 @@
-package org.sapphon.personal.upwise.controller;
+package org.sapphon.personal.upwise.controller.ui;
 
 import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.presentation.WisdomWithVotesPresentation;
@@ -9,8 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class WisdomLeaderboardController {
@@ -32,11 +32,7 @@ public class WisdomLeaderboardController {
     }
 
     private List<WisdomWithVotesPresentation> getWisdomsWithVotes(List<IWisdom> allWisdoms) {
-        List<WisdomWithVotesPresentation> toReturn = new ArrayList<>();
-        for (IWisdom wisdom : allWisdoms) {
-            toReturn.add(DomainObjectFactory.createWisdomWithVotes(wisdom, voteService.getByWisdom(wisdom)));
-        }
-        return toReturn;
+        return allWisdoms.stream().map(wisdom -> DomainObjectFactory.createWisdomWithVotes(wisdom, voteService.getByWisdom(wisdom))).collect(Collectors.toList());
     }
 
 }
