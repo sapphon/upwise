@@ -8,7 +8,6 @@ import org.mockito.InjectMocks;
 import org.sapphon.personal.upwise.IVote;
 import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.Wisdom;
-import org.sapphon.personal.upwise.controller.ui.WisdomLeaderboardController;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
 import org.sapphon.personal.upwise.service.VoteService;
 import org.sapphon.personal.upwise.service.WisdomService;
@@ -61,7 +60,7 @@ public class WisdomLeaderboardControllerTest {
         viewResolver.setPrefix("templates/");
         viewResolver.setSuffix(".html");
 
-        this.underTest = new WisdomLeaderboardController(wisdomService, voteService);
+        this.underTest = new WisdomLeaderboardController(wisdomService);
 
         mvc = MockMvcBuilders.standaloneSetup(underTest)
                 .setViewResolvers(viewResolver)
@@ -81,15 +80,12 @@ public class WisdomLeaderboardControllerTest {
     }
 
     @Test
-    public void getWisdomLeaderboardCollaboratesWithWisdomAndVoteService() throws Exception {
+    public void getWisdomLeaderboardCollaboratesWithWisdomService() throws Exception {
         when(wisdomService.getAllWisdoms()).thenReturn(this.exampleWisdoms);
         mvc.perform(MockMvcRequestBuilders.get("/wisdomleaderboard").accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("")));
-        verify(wisdomService,times(1)).getAllWisdoms();
-        for (IWisdom wisdom : this.exampleWisdoms) {
-            verify(voteService,times(1)).getByWisdom(wisdom);
-        }
+        verify(wisdomService,times(1)).getAllWisdomsWithVotes();
     }
 
     @Ignore     //something's no good, content back is always blank in this test even though page works irl

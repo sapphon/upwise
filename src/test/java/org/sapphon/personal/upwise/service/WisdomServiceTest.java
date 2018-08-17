@@ -26,7 +26,7 @@ public class WisdomServiceTest {
     private WisdomRepository wisdomRepo;
 
     @Mock
-    private VoteRepository voteRepo;
+    private VoteService voteService;
 
     @InjectMocks
     private WisdomService underTest;
@@ -51,5 +51,18 @@ public class WisdomServiceTest {
         underTest.addOrUpdateWisdom(expectedResult);
 
         verify(wisdomRepo).save(expectedResult);
+    }
+
+    @Test
+    public void testGetAllWisdomsWithVotesCallsVoteServiceOnceForEachWisdom(){
+        List<IWisdom> expectedWisdoms = RandomObjectFactory.makeRandomCollection();
+        when(wisdomRepo.getAll()).thenReturn(expectedWisdoms);
+
+        underTest.getAllWisdomsWithVotes();
+
+        verify(wisdomRepo).getAll();
+        for(IWisdom wisdom : expectedWisdoms){
+            verify(voteService).getByWisdom(wisdom);
+        }
     }
 }
