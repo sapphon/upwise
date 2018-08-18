@@ -28,7 +28,7 @@ public class WisdomRepository {
     }
 
     WisdomJpa getOrCreate(IWisdom toSave){
-        Optional<WisdomJpa> wisdomFound = this.findWisdom(toSave);
+        Optional<WisdomJpa> wisdomFound = this.findWisdomJpa(toSave.getWisdomContent(), toSave.getAttribution());
         return wisdomFound.orElseGet(() -> jpaWisdomRepo.save(DomainObjectFactory.createWisdomJpa(toSave)));
     }
 
@@ -54,17 +54,17 @@ public class WisdomRepository {
         return jpaWisdomRepo.findOneById(id);
     }
 
-	public void clear() {
+	void clear() {
 		jpaWisdomRepo.deleteAll();
 	}
 
-    public Optional<WisdomJpa> findWisdom(IWisdom template){
-        WisdomJpa found = jpaWisdomRepo.findOneByWisdomContentAndAttribution(template.getWisdomContent(), template.getAttribution());
+    private Optional<WisdomJpa> findWisdomJpa(String content, String attribution){
+        WisdomJpa found = jpaWisdomRepo.findOneByWisdomContentAndAttribution(content, attribution);
         return found == null ? Optional.empty() : Optional.of(found);
     }
 
-
     public Optional<IWisdom> findWisdom(String content, String attribution){
-        return this.findWisdom(content, attribution);
+        Optional<WisdomJpa> wisdomJpa = findWisdomJpa(content, attribution);
+        return wisdomJpa.isPresent() ? Optional.of(wisdomJpa.get()) : Optional.empty();
     }
 }

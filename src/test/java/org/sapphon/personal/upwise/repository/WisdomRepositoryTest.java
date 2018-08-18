@@ -1,11 +1,15 @@
 package org.sapphon.personal.upwise.repository;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
 import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
+import org.sapphon.personal.upwise.repository.jpa.WisdomJpa;
 import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,6 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 
 @RunWith(SpringRunner.class)
@@ -98,5 +103,20 @@ public class WisdomRepositoryTest {
 		List<IWisdom> result = wisdomRepo.getBySubmitter(ourBoy);
 
 		assertArrayEquals(new IWisdom[]{testWisdoms[1], testWisdoms[3], testWisdoms[0]}, result.toArray());
+	}
+
+	@Test
+	public void canFindAWisdomByUniqueKey(){
+		wisdomRepo.save(newArrayList(testWisdoms));
+		for(IWisdom wisdom : testWisdoms){
+			assertEquals(wisdom, getOrFail(wisdom.getWisdomContent(),wisdom.getAttribution()));
+		}
+	}
+
+	private IWisdom getOrFail(String wisdomContent, String attribution) {
+		Optional<IWisdom> wisdomFound = wisdomRepo.findWisdom(wisdomContent, attribution);
+		boolean good = wisdomFound.isPresent();
+		if (!good) Assert.fail("Expected wisdom not found in wisdom repo: " + wisdomContent + " " + attribution);
+		return wisdomFound.get();
 	}
 }

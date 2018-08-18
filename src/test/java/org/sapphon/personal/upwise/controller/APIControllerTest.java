@@ -75,7 +75,6 @@ public class APIControllerTest {
                                 mapper.writeValueAsString(testWisdoms[1]) +
                                 "]"))
                 .andReturn();
-        //verify(wisdomService).getAllWisdoms();      //this would be great, but can't figure out how to get a mock into the controller
     }
 
     @Test
