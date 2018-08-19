@@ -4,10 +4,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.sapphon.personal.upwise.IVote;
 import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
-import org.sapphon.personal.upwise.repository.VoteRepository;
 import org.sapphon.personal.upwise.repository.WisdomRepository;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -51,6 +49,12 @@ public class WisdomServiceTest {
         underTest.addOrUpdateWisdom(expectedResult);
 
         verify(wisdomRepo).save(expectedResult);
+    }
+
+    @Test
+    public void getWisdomsBySubmitterCollaboratesWithWisdomRepo(){
+        underTest.getAllWisdomsBySubmitter("bobert");
+        verify(wisdomRepo).getBySubmitter("bobert");
     }
 
     @Test

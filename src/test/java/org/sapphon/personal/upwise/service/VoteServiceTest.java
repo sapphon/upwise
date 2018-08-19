@@ -41,6 +41,12 @@ public class VoteServiceTest {
     }
 
     @Test
+    public void getBySubmitterCollaboratesWithTheRepositorySearchMethod() {
+        underTest.getAllByVoter("testBoi");
+        verify(voteRepository).getBySubmitter("testBoi");
+    }
+
+    @Test
     public void votesPassedToAddOrUpdateVoteGetSentToTheRepositorySaveMethod() {
         IVote expectedResult = RandomObjectFactory.makeRandomWisdomlessVote();
         underTest.addOrUpdateVote(expectedResult);

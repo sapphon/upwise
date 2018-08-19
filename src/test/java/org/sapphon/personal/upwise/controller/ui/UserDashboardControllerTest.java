@@ -1,6 +1,5 @@
 package org.sapphon.personal.upwise.controller.ui;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,9 +7,8 @@ import org.mockito.InjectMocks;
 import org.sapphon.personal.upwise.IVote;
 import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.Wisdom;
-import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
-import org.sapphon.personal.upwise.presentation.WisdomWithVotesPresentation;
+import org.sapphon.personal.upwise.service.VoteService;
 import org.sapphon.personal.upwise.service.WisdomService;
 import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +18,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
@@ -28,13 +25,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -44,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class WisdomLeaderboardControllerTest {
+public class UserDashboardControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -52,8 +43,12 @@ public class WisdomLeaderboardControllerTest {
     @MockBean
     private WisdomService wisdomService;
 
+
+    @MockBean
+    private VoteService voteService;
+
     @InjectMocks
-    private WisdomLeaderboardController underTest;
+    private UserDashboardController underTest;
 
     private List<IWisdom> exampleWisdoms;
     private List<IVote> exampleVotes;
@@ -64,7 +59,7 @@ public class WisdomLeaderboardControllerTest {
         viewResolver.setPrefix("templates/");
         viewResolver.setSuffix(".html");
 
-        this.underTest = new WisdomLeaderboardController(wisdomService);
+        this.underTest = new UserDashboardController(wisdomService, voteService);
 
         mvc = MockMvcBuilders.standaloneSetup(underTest)
                 .setViewResolvers(viewResolver)
@@ -84,29 +79,13 @@ public class WisdomLeaderboardControllerTest {
     }
 
     @Test
-    public void getWisdomLeaderboardCollaboratesWithWisdomService() throws Exception {
+    public void testCollaboratesWithWisdomServiceAndVoteService() throws Exception{
+
         when(wisdomService.getAllWisdoms()).thenReturn(this.exampleWisdoms);
-        mvc.perform(MockMvcRequestBuilders.get("/wisdomleaderboard").accept(MediaType.TEXT_HTML))
+        mvc.perform(MockMvcRequestBuilders.get("/user/testboi").accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("")));
-        verify(wisdomService,times(1)).getAllWisdomsWithVotes();
+        verify(wisdomService,times(1)).getAllWisdomsBySubmitter("testboi");
+        verify(voteService, times(1)).getAllByVoter("testboi");
     }
-
-    @Test
-    public void getWisdomLeaderboard_WithWisdomAndVotes_ProducesCorrectOutputOnModel() throws Exception {
-        when(wisdomService.getAllWisdomsWithVotes()).thenReturn(newArrayList(DomainObjectFactory.createWisdomWithVotes(exampleWisdoms.get(0), newArrayList(exampleVotes.get(0), exampleVotes.get(1)))));
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/wisdomleaderboard").accept(MediaType.TEXT_HTML))
-                .andExpect(status().isOk())
-                .andExpect(content().string(""))
-                .andReturn();
-    try {
-        List<WisdomWithVotesPresentation> actualWisdoms = (List<WisdomWithVotesPresentation>) mvcResult.getModelAndView().getModel().values().iterator().next();
-        assertEquals(exampleWisdoms.get(0), actualWisdoms.get(0));
-        assertEquals(exampleVotes.get(0), actualWisdoms.get(0).getVotes().get(0));
-        assertEquals(exampleVotes.get(1), actualWisdoms.get(0).getVotes().get(1));
-    }
-    catch(Exception e){
-        Assert.fail("Model not as expected.");
-    }
-}
 }

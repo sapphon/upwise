@@ -30,13 +30,19 @@ public class WisdomService {
         return this.wisdomRepo.getAll();
     }
 
+    public List<IWisdom> getAllWisdomsBySubmitter(String username){return this.wisdomRepo.getBySubmitter(username);}
+
     public IWisdom addOrUpdateWisdom(IWisdom wisdom) {
         return this.wisdomRepo.save(wisdom);
     }
 
     public Optional<IWisdom> findWisdomByContentAndAttribution(String content, String attribution) { return this.wisdomRepo.findWisdom(content, attribution);}
 
-    public List<WisdomWithVotesPresentation> getAllWisdomsWithVotes() {
-        return getAllWisdoms().stream().map(wisdom -> DomainObjectFactory.createWisdomWithVotes(wisdom, voteService.getByWisdom(wisdom))).collect(Collectors.toList());
+    public List<WisdomWithVotesPresentation> getAllWisdomsWithVotes(){
+        return this.getWisdomsWithVotes(this.getAllWisdoms());
+    }
+
+    public List<WisdomWithVotesPresentation> getWisdomsWithVotes(List<IWisdom> wisdoms) {
+        return wisdoms.stream().map(wisdom -> DomainObjectFactory.createWisdomWithVotes(wisdom, voteService.getByWisdom(wisdom))).collect(Collectors.toList());
     }
 }

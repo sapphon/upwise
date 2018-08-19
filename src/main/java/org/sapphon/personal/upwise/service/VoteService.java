@@ -18,6 +18,10 @@ public class VoteService {
         return this.voteRepository.getAll();
     }
 
+    public List<IVote> getAllByVoter(String username){
+        return this.voteRepository.getBySubmitter(username);
+    }
+
     public List<IVote> getByWisdom(IWisdom wisdom){return voteRepository.getByWisdom(wisdom); }
 
     public IVote addOrUpdateVote(IVote vote){

@@ -20,5 +20,11 @@ public class WisdomLeaderboardController {
         model.addAttribute("allWisdoms", wisdomService.getAllWisdomsWithVotes());
         return "wisdomleaderboard";
     }
+//other pages
 
+    //Add a Wisdom
+    //Search for a Wisdom (low priority, can already CTRL-F the leaderboard)
+    //User Dashboard
+        //user's wisdoms voted up
+        //user's wisdoms submitted
 }
