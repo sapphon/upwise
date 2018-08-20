@@ -1,0 +1,18 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add a Wisdom</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h1>Add a Wisdom</h1>
+<form action="#" th:action="@{/addwisdom}" th:object="${wisdomToAdd}" method="post">
+    <p>Wisdom: <input type="text" th:field="*{wisdomContent}"/></p>
+    <p>Attribution: <input type="text" th:field="*{attribution}"/></p>
+    <p>Your username: <input type="text" th:field="*{addedByUsername}"/></p>
+    <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+</form>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js" type="text/javascript"></script>
+</body>
+</html>

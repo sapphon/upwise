@@ -38,15 +38,18 @@ public abstract class AbstractWisdom implements IWisdom {
 
 	@Override
 	public boolean equals(Object obj) {
+        if(obj == null){
+            return false;
+        }
 		if (!(obj instanceof AbstractWisdom)) {
 			return false;
 		}
 		if(this == obj) return true;
 		AbstractWisdom other = (AbstractWisdom) obj;
-		return this.wisdomContent.equals(other.wisdomContent) &&
-				this.attribution.equals(other.attribution) &&
-				this.addedByUsername.equals(other.addedByUsername) &&
-				this.timeAdded.equals(other.timeAdded);
+		return this.wisdomContent == null ? other.wisdomContent == null : this.wisdomContent.equals(other.wisdomContent) &&
+                this.attribution == null ? other.attribution == null : this.attribution.equals(other.attribution) &&
+                this.addedByUsername == null ? other.addedByUsername == null : this.addedByUsername.equals(other.addedByUsername) &&
+                this.timeAdded == null ? other.timeAdded == null : this.timeAdded.equals(other.timeAdded);
 	}
 
 	//region SettersGetters
