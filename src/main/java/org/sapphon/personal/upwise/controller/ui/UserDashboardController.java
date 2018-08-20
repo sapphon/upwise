@@ -26,8 +26,9 @@ public class UserDashboardController {
 
     @GetMapping(value = "/user/{user}", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
     public String getUserDashboard(Model model, @PathVariable String user){
+        model.addAttribute("userName", user);
         model.addAttribute("allWisdomsSubmitted", wisdomService.getAllWisdomsBySubmitter(user));
-        model.addAttribute("allWisdomsVotedFor", voteService.getAllByVoter(user));
+        model.addAttribute("allWisdomsVotedFor", voteService.getAllByVoter(user).stream().map(IVote::getWisdom).collect(Collectors.toList()));
         return "userdashboard";
     }
 }

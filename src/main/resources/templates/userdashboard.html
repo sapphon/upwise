@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{title.userDashboardTitle}">User Dashboard</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h1 th:text="#{title.userDashboardTitle}">User Dashboard</h1>
+<div class="wisdomsSubmittedList" th:unless="${#lists.isEmpty(allWisdomsSubmitted)}">
+    <h2 th:text="#{title.userDashboard.submitted}">Wisdoms Submitted</h2>
+    <table>
+        <thead>
+            <tr>
+                <th th:text="#{wisdom.wisdomContent}">Wisdom</th>
+                <th th:text="#{wisdom.attribution}">Wise Person</th>
+                <th th:text="#{wisdom.addedDate}">Submitted On</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr th:each="wisdom : ${allWisdomsSubmitted}">
+                    <td th:text="${wisdom.wisdomContent}">A good programmer is someone who looks both ways before crossing a one-way street.</td>
+                    <td th:text="${wisdom.attribution}">Doug Linder</td>
+                    <td th:text="${wisdom.timeAdded}">January 1, 1970 01:00:00 GMT</td>
+                </tr>
+        </tbody>
+    </table>
+</div>
+<div class="wisdomsVotedForList" th:unless="${#lists.isEmpty(allWisdomsVotedFor)}">
+    <h2 th:text="#{title.userDashboard.votedFor}">Wisdoms Voted For</h2>
+    <table>
+        <thead>
+        <tr>
+            <th th:text="#{wisdom.wisdomContent}">Wisdom</th>
+            <th th:text="#{wisdom.attribution}">Wise Person</th>
+            <th th:text="#{wisdom.addedBy}">Submitted By</th>
+            <th th:text="#{wisdom.addedDate}">Submitted On</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="wisdom : ${allWisdomsVotedFor}">
+            <td th:text="${wisdom.wisdomContent}">A good programmer is someone who looks both ways before crossing a one-way street.</td>
+            <td th:text="${wisdom.attribution}">Doug Linder</td>
+            <td th:text="${wisdom.addedByUsername}">intellijames</td>
+            <td th:text="${wisdom.timeAdded}">January 1, 1970 01:00:00 GMT</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js" type="text/javascript"></script>
+</body>
+</html>

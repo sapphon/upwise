@@ -1,13 +1,17 @@
 package org.sapphon.personal.upwise.controller.ui;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.sapphon.personal.upwise.IVote;
 import org.sapphon.personal.upwise.IWisdom;
+import org.sapphon.personal.upwise.TestHelper;
 import org.sapphon.personal.upwise.Wisdom;
+import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
+import org.sapphon.personal.upwise.presentation.WisdomWithVotesPresentation;
 import org.sapphon.personal.upwise.service.VoteService;
 import org.sapphon.personal.upwise.service.WisdomService;
 import org.sapphon.personal.upwise.time.TimeLord;
@@ -18,17 +22,22 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.sapphon.personal.upwise.TestHelper.assertListEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -79,13 +88,32 @@ public class UserDashboardControllerTest {
     }
 
     @Test
-    public void testCollaboratesWithWisdomServiceAndVoteService() throws Exception{
-
-        when(wisdomService.getAllWisdoms()).thenReturn(this.exampleWisdoms);
-        mvc.perform(MockMvcRequestBuilders.get("/user/testboi").accept(MediaType.TEXT_HTML))
+    public void testCollaboratesWithWisdomServiceAndVoteService() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/user/testBoi").accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("")));
-        verify(wisdomService,times(1)).getAllWisdomsBySubmitter("testboi");
-        verify(voteService, times(1)).getAllByVoter("testboi");
+        verify(wisdomService, times(1)).getAllWisdomsBySubmitter("testBoi");
+        verify(voteService, times(1)).getAllByVoter("testBoi");
+    }
+
+
+    @Test
+    public void testSetsCorrectValuesOnModel() throws Exception {
+        when(wisdomService.getAllWisdomsBySubmitter("testBoi")).thenReturn(this.exampleWisdoms);
+        when(voteService.getAllByVoter("testBoi")).thenReturn(this.exampleVotes);
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/user/testBoi").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""))
+                .andReturn();
+        try {
+            String actualUsername = (String) mvcResult.getModelAndView().getModel().get("userName");
+            List<IWisdom> actualSubmittedWisdoms = (List<IWisdom>) mvcResult.getModelAndView().getModel().get("allWisdomsSubmitted");
+            List<IWisdom> actualVotedWisdoms = (List<IWisdom>) mvcResult.getModelAndView().getModel().get("allWisdomsVotedFor");
+            assertEquals("testBoi", actualUsername);
+            assertListEquals(this.exampleWisdoms, actualSubmittedWisdoms);
+            assertListEquals(this.exampleVotes.stream().map(IVote::getWisdom).collect(Collectors.toList()), actualVotedWisdoms);
+        } catch (Exception e) {
+            Assert.fail("Model not as expected.");
+        }
     }
 }
