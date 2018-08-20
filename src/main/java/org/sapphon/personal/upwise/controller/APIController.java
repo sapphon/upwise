@@ -106,7 +106,10 @@ public class APIController {
     }
 
     private boolean validateWisdom(IWisdom wisdom) {
-        return wisdom.getWisdomContent() != null && wisdom.getAttribution() != null;
+        return wisdom.getWisdomContent() != null &&
+                !wisdom.getWisdomContent().isEmpty() &&
+                wisdom.getAttribution() != null &&
+                !wisdom.getAttribution().isEmpty();
     }
 
     public IWisdom addWisdom(IWisdom wisdom){

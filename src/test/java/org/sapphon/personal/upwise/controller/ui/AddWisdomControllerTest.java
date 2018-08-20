@@ -2,6 +2,7 @@ package org.sapphon.personal.upwise.controller.ui;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -97,6 +98,21 @@ public class AddWisdomControllerTest {
         try {
             IWisdom actualWisdom = (IWisdom) mvcResult.getModelAndView().getModel().get("wisdomToAdd");
             assertEquals(new Wisdom(), actualWisdom);
+        } catch (Exception e) {
+            Assert.fail("Model not as expected.");
+        }
+    }
+
+    @Ignore     //TODO this test doesn't work yet, mockmvc.perform blows up
+    @Test
+    public void testPostRequestWhereApiSaysBadRequestGets400Status() throws Exception{
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/addwisdom").accept(MediaType.TEXT_HTML).requestAttr("wisdomToAdd", new Wisdom()))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""))
+                .andReturn();
+        try {
+            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("statusCode");
+            assertEquals(new Integer(400), actualStatusCode);
         } catch (Exception e) {
             Assert.fail("Model not as expected.");
         }
