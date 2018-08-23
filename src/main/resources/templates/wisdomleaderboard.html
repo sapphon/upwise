@@ -10,26 +10,28 @@
 <div class="container">
     <div class="wisdomlist" th:unless="${#lists.isEmpty(allWisdoms)}">
         <h1 th:text="#{title.leaderboard}">Wisdom Leaderboard</h1>
-        <div class="row">
-            <div class="col s5" th:text="#{wisdom.wisdomContent}">Wisdom</div>
-            <div class="col s2" th:text="#{wisdom.attribution}">Wise Person</div>
-            <div class="col s2" th:text="#{wisdom.addedBy}">Submitted By</div>
-            <div class="col s2 hide" th:text="#{wisdom.addedDate}">Submitted On</div>
-            <div class="col s3">Votes</div>
-        </div>
         <div class="row" th:each="wisdom : ${allWisdoms}">
-            <div class="col s5" th:text="${wisdom.wisdomContent}">A good programmer is someone who looks both ways
-                before crossing a
-                one-way street.
+            <div class="col s12">
+                <div class="card green darken-4">
+                    <div class="card-content white-text">
+                        <span class="card-title" th:text="${wisdom.wisdomContent}">A good programmer is someone who looks both ways
+                            before crossing a
+                            one-way street.
+                        </span>
+                        <div th:text="${wisdom.attribution}">Doug Linder</div>
+                    </div>
+                    <div class="card-action">
+                        <div th:text="${wisdom.addedByUsername}">intellijames</div>
+                        <div th:text="${wisdom.timeAdded}">January 1, 1970 01:00:00 GMT</div>
+                    </div>
+                </div>
             </div>
-            <div class="col s2" th:text="${wisdom.attribution}">Doug Linder</div>
-            <div class="col s2" th:text="${wisdom.addedByUsername}">intellijames</div>
-            <div class="col s2 hide" th:text="${wisdom.timeAdded}">January 1, 1970 01:00:00 GMT</div>
-            <div class="col s3">
+            <!--<div class="col s3">
                 <div class="votesContainer" th:unless="${#lists.isEmpty(wisdom.votes)}">
                     <ul class="collapsible">
                         <li>
-                            <div class="collapsible-header"><span th:text="${#lists.size(wisdom.votes)}">0</span><i class="material-icons">arrow_downward</i></div>
+                            <div class="collapsible-header"><span th:text="${#lists.size(wisdom.votes)}">0</span><i
+                                    class="material-icons">arrow_downward</i></div>
                             <div class="collapsible-body">
                                 <table>
                                     <thead>
@@ -49,7 +51,7 @@
                         </li>
                     </ul>
                 </div>
-            </div>
+            </div>-->
         </div>
     </div>
 </div>
