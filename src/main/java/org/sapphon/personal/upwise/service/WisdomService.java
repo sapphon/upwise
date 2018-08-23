@@ -10,6 +10,7 @@ import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,7 +40,12 @@ public class WisdomService {
     public Optional<IWisdom> findWisdomByContentAndAttribution(String content, String attribution) { return this.wisdomRepo.findWisdom(content, attribution);}
 
     public List<WisdomWithVotesPresentation> getAllWisdomsWithVotes(){
-        return this.getWisdomsWithVotes(this.getAllWisdoms());
+        return this.getWisdomsWithVotes(this.getAllWisdoms()).stream().sorted(new Comparator<WisdomWithVotesPresentation>() {
+            @Override
+            public int compare(WisdomWithVotesPresentation o1, WisdomWithVotesPresentation o2) {
+                return Integer.compare(o2.getVotes().size(), o1.getVotes().size());
+            }
+        }).collect(Collectors.toList());
     }
 
     public List<WisdomWithVotesPresentation> getWisdomsWithVotes(List<IWisdom> wisdoms) {
