@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class VoteService {
@@ -23,6 +24,8 @@ public class VoteService {
     }
 
     public List<IVote> getByWisdom(IWisdom wisdom){return voteRepository.getByWisdom(wisdom); }
+
+    public Optional<IVote> getByWisdomAndVoterUsername(IWisdom wisdom, String userName){return voteRepository.findByWisdomAndVoterUsername(wisdom, userName); }
 
     public IVote addOrUpdateVote(IVote vote){
         return this.voteRepository.save(vote);

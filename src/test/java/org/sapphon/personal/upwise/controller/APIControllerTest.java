@@ -1,22 +1,27 @@
 package org.sapphon.personal.upwise.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
+import org.sapphon.personal.upwise.repository.VoteRepository;
+import org.sapphon.personal.upwise.repository.WisdomRepository;
 import org.sapphon.personal.upwise.service.VoteService;
 import org.sapphon.personal.upwise.service.WisdomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -36,6 +41,16 @@ public class APIControllerTest {
 
     @Autowired
     private VoteService voteService;
+
+    private ObjectWriter inputMapper;
+
+    private ObjectWriter outputMapper;
+
+    @Before
+    public void setUp(){
+        inputMapper = new ObjectMapper().configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true).writer().withDefaultPrettyPrinter();
+        outputMapper = new ObjectMapper().configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false).writer().withDefaultPrettyPrinter();
+    }
 
     @Test
     public void getLeaderboardData() throws Exception {
@@ -60,19 +75,19 @@ public class APIControllerTest {
     }
 
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     public void getAllCanReturnRealValues_IntegrationTest() throws Exception {
         IWisdom[] testWisdoms = new IWisdom[2];
         testWisdoms[0] = wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandom());
         testWisdoms[1] = wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandom());
 
-        ObjectWriter mapper = new ObjectMapper().configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false).writer().withDefaultPrettyPrinter();
-        MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/wisdom/all").accept(MediaType.APPLICATION_JSON))
+        mvc.perform(MockMvcRequestBuilders.get("/wisdom/all").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(
                         "[" +
-                                mapper.writeValueAsString(testWisdoms[0]) + "," +
-                                mapper.writeValueAsString(testWisdoms[1]) +
+                                outputMapper.writeValueAsString(testWisdoms[0]) + "," +
+                                outputMapper.writeValueAsString(testWisdoms[1]) +
                                 "]"))
                 .andReturn();
     }
@@ -81,9 +96,44 @@ public class APIControllerTest {
     public void addWisdomEndpoint_SaysBadRequestIfNoWisdomContent() throws Exception {
         IWisdom randomWisdom = RandomObjectFactory.makeRandom();
         randomWisdom.setWisdomContent(null);
-        mvc.perform(MockMvcRequestBuilders.post("/wisdom/add", randomWisdom).accept(MediaType.APPLICATION_JSON))
+        mvc.perform(buildJsonPostRequest(randomWisdom, "/wisdom/add"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(equalTo("")));
 
+    }
+
+
+    @Test
+    public void addWisdomEndpoint_SaysConflictIfWisdomCollidesWithPreexistingWisdom() throws Exception {
+        IWisdom randomWisdom = RandomObjectFactory.makeRandom();
+        wisdomService.addOrUpdateWisdom(randomWisdom);
+        mvc.perform(buildJsonPostRequest(randomWisdom, "/wisdom/add"))
+                .andExpect(status().isConflict())
+                .andExpect(content().string(equalTo("")));
+
+    }
+
+    @Test
+    public void addVoteEndpoint_SaysBadRequestIfNoWisdomContent() throws Exception {
+        IWisdom randomWisdom = RandomObjectFactory.makeRandom();
+        randomWisdom.setWisdomContent(null);
+        mvc.perform(buildJsonPostRequest(randomWisdom, "/vote/add").param("voterUsername", "trollface"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(equalTo("")));
+
+    }
+
+    @Test
+    public void addVoteEndpoint_SaysBadRequestIfNoWisdomAttribution() throws Exception {
+        IWisdom randomWisdom = RandomObjectFactory.makeRandom();
+        randomWisdom.setAttribution(null);
+        mvc.perform(buildJsonPostRequest(randomWisdom, "/vote/add").param("voterUsername", "trollface"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(equalTo("")));
+
+    }
+
+    private MockHttpServletRequestBuilder buildJsonPostRequest(Object postBodyContent, String uri) throws JsonProcessingException {
+        return MockMvcRequestBuilders.post(uri).contentType(MediaType.APPLICATION_JSON).content(inputMapper.writeValueAsString(postBodyContent));
     }
 }

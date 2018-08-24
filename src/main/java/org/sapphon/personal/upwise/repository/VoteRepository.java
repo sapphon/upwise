@@ -5,7 +5,6 @@ import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.repository.jpa.VoteJpa;
 import org.sapphon.personal.upwise.repository.jpa.VoteRepositoryJpa;
-import org.sapphon.personal.upwise.repository.jpa.WisdomJpa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -17,20 +16,22 @@ import java.util.Optional;
 @Repository("voteRepo")
 public class VoteRepository {
 
-	@Autowired
-    private VoteRepositoryJpa jpaVoteRepo;
+	private final VoteRepositoryJpa jpaVoteRepo;
 
-	@Autowired
-    private WisdomRepository wisdomRepository;
+	private final WisdomRepository wisdomRepository;
 
-    protected VoteRepository(){}
+    @Autowired
+    protected VoteRepository(VoteRepositoryJpa jpaVoteRepo, WisdomRepository wisdomRepository){
+        this.jpaVoteRepo = jpaVoteRepo;
+        this.wisdomRepository = wisdomRepository;
+    }
 
     public IVote save(IVote toSave){
         return this.getOrCreate(toSave);
     }
 
-    VoteJpa getOrCreate(IVote toPersist){
-        Optional<VoteJpa> voteFound = this.findVote(toPersist);
+    IVote getOrCreate(IVote toPersist){
+        Optional<IVote> voteFound = this.findVote(toPersist);
         return voteFound.orElseGet(() -> jpaVoteRepo.save(DomainObjectFactory.createVoteJpa(wisdomRepository.save(toPersist.getWisdom()), toPersist.getAddedByUsername(), toPersist.getTimeAdded())));
     }
 
@@ -65,9 +66,16 @@ public class VoteRepository {
         jpaVoteRepo.deleteAll();
 	}
 
-    public Optional<VoteJpa> findVote(IVote template){
-        VoteJpa found = jpaVoteRepo.findOneByWisdomAndAddedByUsername(wisdomRepository.getOrCreate(template.getWisdom()), template.getAddedByUsername());
+	public Optional<IVote> findByWisdomAndVoterUsername(IWisdom wisdom, String userName){
+        Optional<IWisdom> wisdomFound = this.wisdomRepository.findWisdom(wisdom.getWisdomContent(), wisdom.getAttribution());
+        if(!wisdomFound.isPresent()){
+            return Optional.empty();
+        }
+        VoteJpa found = jpaVoteRepo.findOneByWisdomAndAddedByUsername(wisdomRepository.getOrCreate(wisdom), userName);
         return found == null ? Optional.empty() : Optional.of(found);
     }
 
+    public Optional<IVote> findVote(IVote template){
+        return this.findByWisdomAndVoterUsername(template.getWisdom(), template.getAddedByUsername());
+    }
 }

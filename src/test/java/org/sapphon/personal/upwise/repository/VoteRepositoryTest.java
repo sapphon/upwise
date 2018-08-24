@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -96,18 +97,28 @@ public class VoteRepositoryTest {
 	}
 
     @Test
-    public void canGetByWisdom() {
-        voteRepo.save(Arrays.asList(testVotes));
+	public void canGetByWisdom() {
+		voteRepo.save(Arrays.asList(testVotes));
 
-        IVote[] expected = {testVotes[0], testVotes[2]};
-        Object[] actual = voteRepo.getByWisdom(testWisdoms[0]).toArray();
-        assertArrayEquals(expected, actual);
+		IVote[] expected = {testVotes[0], testVotes[2]};
+		Object[] actual = voteRepo.getByWisdom(testWisdoms[0]).toArray();
+		assertArrayEquals(expected, actual);
 
-        IVote[] expectedToo = {testVotes[1]};
-        Object[] actualToo = voteRepo.getByWisdom(testWisdoms[1]).toArray();
+		IVote[] expectedToo = {testVotes[1]};
+		Object[] actualToo = voteRepo.getByWisdom(testWisdoms[1]).toArray();
 
-        assertArrayEquals(expectedToo, actualToo);
-    }
+		assertArrayEquals(expectedToo, actualToo);
+	}
+
+	@Test
+	public void canFindOneVoteByWisdomAndSubmitter() {
+		voteRepo.save(Arrays.asList(testVotes));
+
+		Optional<IVote> actual = voteRepo.findByWisdomAndVoterUsername(testWisdoms[0], "rnueter");
+
+		assertTrue(actual.isPresent());
+		assertEquals(testVotes[2], actual.get());
+	}
 
 
 }

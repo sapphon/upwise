@@ -2,6 +2,7 @@ package org.sapphon.personal.upwise.controller;
 
 import org.sapphon.personal.upwise.IVote;
 import org.sapphon.personal.upwise.IWisdom;
+import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
 import org.sapphon.personal.upwise.service.VoteService;
 import org.sapphon.personal.upwise.service.WisdomService;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @CrossOrigin
@@ -90,6 +92,28 @@ public class APIController {
             return this.voteService.addOrUpdateVote(randomVote);
         }
         return null;
+    }
+
+    @RequestMapping(value = "/vote/add")
+    public ResponseEntity<IVote> voteForWisdomEndpoint(@RequestParam String voterUsername, @RequestBody IWisdom wisdom){
+        if(!validateWisdom(wisdom) || !validateUsername(voterUsername) || !this.wisdomService.findWisdom(wisdom).isPresent()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        else if(voteService.getByWisdomAndVoterUsername(wisdom, voterUsername).isPresent()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.voteForWisdom(voterUsername, wisdom));
+    }
+
+    private boolean validateUsername(String voterUsername) {
+        return voterUsername != null && !voterUsername.equals("");
+    }
+
+    public IVote voteForWisdom(String userName, IWisdom toVoteFor){
+        Optional<IWisdom> wisdomMaybe = this.wisdomService.findWisdomByContentAndAttribution(toVoteFor.getWisdomContent(), toVoteFor.getAttribution());
+        return wisdomMaybe.map(iWisdom -> this.voteService.addOrUpdateVote(DomainObjectFactory.createVote(iWisdom, userName, TimeLord.getNow()))).orElse(null);
+
     }
 
 
