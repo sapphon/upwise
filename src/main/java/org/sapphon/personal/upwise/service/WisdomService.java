@@ -39,6 +39,10 @@ public class WisdomService {
 
     public Optional<IWisdom> findWisdomByContentAndAttribution(String content, String attribution) { return this.wisdomRepo.findWisdom(content, attribution);}
 
+    public Optional<IWisdom> findWisdom(IWisdom wisdom){
+        return this.findWisdomByContentAndAttribution(wisdom.getWisdomContent(), wisdom.getAttribution());
+    }
+
     public List<WisdomWithVotesPresentation> getAllWisdomsWithVotes(){
         return this.getWisdomsWithVotes(this.getAllWisdoms()).stream().sorted(new Comparator<WisdomWithVotesPresentation>() {
             @Override
