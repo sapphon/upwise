@@ -8,9 +8,9 @@
 <h1>Add a Wisdom</h1>
 <div class="container">
     <form action="#" th:action="@{/addwisdom}" th:object="${wisdomToAdd}" method="post">
-        <p>Wisdom: <input type="text" th:field="*{wisdomContent}" placeholder="e.g. 'Measure twice, cut once.'"/></p>
-        <p>Attribution: <input type="text" th:field="*{attribution}" placeholder="e.g. 'My old man'"/></p>
-        <p>Your username: <input type="text" th:field="*{addedByUsername}" placeholder="e.g. 'rkennel'; leave blank for anon"/></p>
+        <p>Wisdom: <input type="text" th:field="*{wisdomContent}" th:placeholder="#{placeholder.wisdomContent}"/></p>
+        <p>Attribution: <input type="text" th:field="*{attribution}" th:placeholder="#{placeholder.wisdomAttribution}"/></p>
+        <p>Your username: <input type="text" th:field="*{addedByUsername}" th:placeholder="#{placeholder.optionalUsername}"/></p>
         <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
     </form>
 </div>
