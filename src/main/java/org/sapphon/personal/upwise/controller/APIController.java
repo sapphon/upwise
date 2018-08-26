@@ -110,7 +110,7 @@ public class APIController {
         return voterUsername != null && !voterUsername.equals("");
     }
 
-    public IVote voteForWisdom(String userName, IWisdom toVoteFor){
+    private IVote voteForWisdom(String userName, IWisdom toVoteFor){
         Optional<IWisdom> wisdomMaybe = this.wisdomService.findWisdomByContentAndAttribution(toVoteFor.getWisdomContent(), toVoteFor.getAttribution());
         return wisdomMaybe.map(iWisdom -> this.voteService.addOrUpdateVote(DomainObjectFactory.createVote(iWisdom, userName, TimeLord.getNow()))).orElse(null);
 
