@@ -18,7 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -32,6 +34,7 @@ import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -103,9 +106,9 @@ public class AddWisdomControllerTest {
         }
     }
 
-    @Ignore     //TODO this test doesn't work yet, mockmvc.perform blows up
     @Test
     public void testPostRequestWhereApiSaysBadRequestGets400Status() throws Exception{
+        when(apiController.addWisdomEndpoint(any())).thenReturn(new ResponseEntity(IWisdom.class, HttpStatus.BAD_REQUEST));
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/addwisdom").accept(MediaType.TEXT_HTML).requestAttr("wisdomToAdd", new Wisdom()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
