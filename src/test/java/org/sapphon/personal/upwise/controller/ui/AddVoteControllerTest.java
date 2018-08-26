@@ -2,18 +2,14 @@ package org.sapphon.personal.upwise.controller.ui;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.sapphon.personal.upwise.IVote;
-import org.sapphon.personal.upwise.IWisdom;
+import org.sapphon.personal.upwise.Vote;
 import org.sapphon.personal.upwise.Wisdom;
 import org.sapphon.personal.upwise.controller.APIController;
-import org.sapphon.personal.upwise.factory.RandomObjectFactory;
-import org.sapphon.personal.upwise.service.VoteService;
-import org.sapphon.personal.upwise.service.WisdomService;
-import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,88 +24,46 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.sapphon.personal.upwise.TestHelper.assertListEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class AddWisdomControllerTest {
-
-    @Autowired
-    private MockMvc mvc;
+public class AddVoteControllerTest {
 
     @MockBean
     private APIController apiController;
 
-    @InjectMocks
-    private AddWisdomController underTest;
+    @Autowired
+    private MockMvc mvc;
 
-    private List<IWisdom> exampleWisdoms;
-    private List<IVote> exampleVotes;
+    private AddVoteController underTest;
+    private String urlUnderTest;
 
     @Before
     public void setup() {
+        urlUnderTest = "addvote";
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setPrefix("templates/");
         viewResolver.setSuffix(".html");
 
-        this.underTest = new AddWisdomController(apiController);
+        this.underTest = new AddVoteController(apiController);
 
         mvc = MockMvcBuilders.standaloneSetup(underTest)
                 .setViewResolvers(viewResolver)
                 .build();
 
-        this.exampleWisdoms = new ArrayList<IWisdom>();
-        exampleWisdoms.add(new Wisdom("A good programmer is someone who looks both ways before crossing a one-way street.", "Doug Linder", "jcrouc15", TimeLord.getNow()));
-        exampleWisdoms.add(new Wisdom("[Javascript] doesn't exactly allow you to fall into a pit of success.", "Nick Reuter", "cshaugh1", TimeLord.getNow()));
-        exampleWisdoms.add(new Wisdom("It's done, it just doesn't work.", "Chris Boyer", "tsatam", TimeLord.getNow()));
-        exampleWisdoms.add(new Wisdom("May we be judged by the quality of our commits, not by the content of our Google searches.", "Connor Shaughnessy", "awalte35", TimeLord.getNow()));
-
-        this.exampleVotes = new ArrayList<IVote>();
-        exampleVotes.add(RandomObjectFactory.makeRandomVoteForWisdom(exampleWisdoms.get(0)));
-        exampleVotes.add(RandomObjectFactory.makeRandomVoteForWisdom(exampleWisdoms.get(0)));
-        exampleVotes.add(RandomObjectFactory.makeRandomVoteForWisdom(exampleWisdoms.get(1)));
-
-    }
-
-    @Test
-    public void testBasicEndpointHealth() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/addwisdom").accept(MediaType.TEXT_HTML))
-                .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("")));
-    }
-
-
-    @Test
-    public void testGetRequestReceivesABlankWisdomOnModel() throws Exception {
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/addwisdom").accept(MediaType.TEXT_HTML))
-                .andExpect(status().isOk())
-                .andExpect(content().string(""))
-                .andReturn();
-        try {
-            IWisdom actualWisdom = (IWisdom) mvcResult.getModelAndView().getModel().get("wisdomToAdd");
-            assertEquals(new Wisdom(), actualWisdom);
-        } catch (Exception e) {
-            Assert.fail("Model not as expected.");
-        }
     }
 
     @Test
     public void testPostRequestWhereApiSaysBadRequestGets400Status() throws Exception{
-        when(apiController.addWisdomEndpoint(any())).thenReturn(new ResponseEntity(IWisdom.class, HttpStatus.BAD_REQUEST));
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/addwisdom").accept(MediaType.TEXT_HTML))
+        when(apiController.voteForWisdomEndpoint(any(), any())).thenReturn(new ResponseEntity(IVote.class, HttpStatus.BAD_REQUEST));
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/"+urlUnderTest).accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
                 .andReturn();
@@ -123,8 +77,8 @@ public class AddWisdomControllerTest {
 
     @Test
     public void testPostRequestWhereApiSaysConflictGets409Status() throws Exception{
-        when(apiController.addWisdomEndpoint(any())).thenReturn(new ResponseEntity(IWisdom.class, HttpStatus.CONFLICT));
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/addwisdom").accept(MediaType.TEXT_HTML))
+        when(apiController.voteForWisdomEndpoint(any(), any())).thenReturn(new ResponseEntity(IVote.class, HttpStatus.CONFLICT));
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/"+urlUnderTest).accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
                 .andReturn();
@@ -139,8 +93,8 @@ public class AddWisdomControllerTest {
 
     @Test
     public void testPostRequestWhereApiSaysCreatedGets201Status() throws Exception{
-        when(apiController.addWisdomEndpoint(any())).thenReturn(new ResponseEntity(IWisdom.class, HttpStatus.CREATED));
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/addwisdom").accept(MediaType.TEXT_HTML))
+        when(apiController.voteForWisdomEndpoint(any(), any())).thenReturn(new ResponseEntity(IVote.class, HttpStatus.CREATED));
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/"+urlUnderTest).accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
                 .andReturn();
