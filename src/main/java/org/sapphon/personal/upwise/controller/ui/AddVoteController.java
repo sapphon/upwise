@@ -25,7 +25,7 @@ public class AddVoteController {
     @PostMapping("/addvote")
     public String voteSubmit(Model model, @ModelAttribute Vote voteToAdd) {
         ResponseEntity<IVote> voteResponseEntity = this.apiController.voteForWisdomEndpoint(voteToAdd.getAddedByUsername(), voteToAdd.getWisdom());
-        model.addAttribute("statusCode", voteResponseEntity.getStatusCodeValue());
+         model.addAttribute("statusCode", voteResponseEntity.getStatusCodeValue());
         return "addvoteresult";
     }
 

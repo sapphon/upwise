@@ -96,14 +96,15 @@ public class APIController {
 
     @RequestMapping(value = "/vote/add")
     public ResponseEntity<IVote> voteForWisdomEndpoint(@RequestParam String voterUsername, @RequestBody IWisdom wisdom){
-        if(!validateWisdom(wisdom) || !validateUsername(voterUsername) || !this.wisdomService.findWisdom(wisdom).isPresent()){
+        Optional<IWisdom> wisdomMaybe = this.wisdomService.findWisdom(wisdom);
+        if(!validateWisdom(wisdom) || !validateUsername(voterUsername) || !wisdomMaybe.isPresent()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        else if(voteService.getByWisdomAndVoterUsername(wisdom, voterUsername).isPresent()){
+        else if(voteService.getByWisdomAndVoterUsername(wisdomMaybe.get(), voterUsername).isPresent()){
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.voteForWisdom(voterUsername, wisdom));
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.voteForWisdom(voterUsername, wisdomMaybe.get()));
     }
 
     private boolean validateUsername(String voterUsername) {
@@ -130,7 +131,7 @@ public class APIController {
     }
 
     private boolean validateWisdom(IWisdom wisdom) {
-        return wisdom.getWisdomContent() != null &&
+        return wisdom != null && wisdom.getWisdomContent() != null &&
                 !wisdom.getWisdomContent().isEmpty() &&
                 wisdom.getAttribution() != null &&
                 !wisdom.getAttribution().isEmpty();
