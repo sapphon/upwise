@@ -20,11 +20,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.*;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -68,6 +71,15 @@ public class APIControllerTest {
 
 
     @Test
+    public void getRandomWisdomEndpoint() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/wisdom/random").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo("")));
+    }
+
+
+
+    @Test
     public void getAllVotesEndpoint() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/vote/all").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -75,7 +87,7 @@ public class APIControllerTest {
     }
 
     @Test
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    @DirtiesContext
     public void getAllCanReturnRealValues_IntegrationTest() throws Exception {
         IWisdom[] testWisdoms = new IWisdom[2];
         testWisdoms[0] = wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandom());
@@ -93,6 +105,29 @@ public class APIControllerTest {
     }
 
     @Test
+    @DirtiesContext
+    public void getRandomRealValues_IntegrationTest() throws Exception {
+        IWisdom[] testWisdoms = new IWisdom[2];
+        testWisdoms[0] = wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandom());
+        testWisdoms[1] = wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandom());
+
+        String json0 = outputMapper.writeValueAsString(testWisdoms[0]);
+        String json1 = outputMapper.writeValueAsString(testWisdoms[1]);
+
+        mvc.perform(MockMvcRequestBuilders.get("/wisdom/random").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                    .andDo(new ResultHandler() {
+                @Override
+                public void handle(MvcResult result) throws Exception {
+                    String contentAsString = result.getResponse().getContentAsString();
+                    assertTrue(contentAsString.contains(testWisdoms[0].getWisdomContent()) ||  contentAsString.contains(testWisdoms[1].getWisdomContent()));
+                }
+            })
+                    .andReturn();
+    }
+
+    @Test
     public void addWisdomEndpoint_SaysBadRequestIfNoWisdomContent() throws Exception {
         IWisdom randomWisdom = RandomObjectFactory.makeRandom();
         randomWisdom.setWisdomContent(null);
@@ -104,6 +139,7 @@ public class APIControllerTest {
 
 
     @Test
+    @DirtiesContext
     public void addWisdomEndpoint_SaysConflictIfWisdomCollidesWithPreexistingWisdom() throws Exception {
         IWisdom randomWisdom = RandomObjectFactory.makeRandom();
         wisdomService.addOrUpdateWisdom(randomWisdom);

@@ -47,6 +47,12 @@ public class APIController {
         return this.getAllWisdoms();
     }
 
+    @RequestMapping(value="/wisdom/random")
+    public IWisdom getRandomWisdomEndpoint(){
+        int numberOfWisdoms = getAllWisdoms().size();
+        return numberOfWisdoms > 0 ?  this.getAllWisdoms().get(new Random().nextInt(numberOfWisdoms)) : null;
+    }
+
     private List<IWisdom> getAllWisdoms(){
         return wisdomService.getAllWisdoms();
     }
