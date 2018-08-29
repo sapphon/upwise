@@ -26,7 +26,11 @@
                         <div th:unless="${#lists.isEmpty(wisdom.votes)}" th:text="${#lists.size(wisdom.votes)}">-1</div>
                         <div th:if="${#lists.isEmpty(wisdom.votes)}">0!</div>
                     </div>
-                    <!--<a class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>-->
+                    <div class="collapsible header">
+                        <a class="btn-floating btn-large waves-effect waves-light red collapsible-header"><i class="material-icons">add</i></a>
+                    </div>
+                    <div class="vote_form_div collapsible-body">
+                    </div>
                 </div>
             </div>
             <!--<div class="col s3">
