@@ -19,7 +19,6 @@ public abstract class AbstractVote implements IVote {
     @ManyToOne(targetEntity = WisdomJpa.class, fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "wisdom_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
     protected IWisdom wisdom;
     protected Timestamp timeAdded;
 
