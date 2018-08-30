@@ -1,13 +1,9 @@
 package org.sapphon.personal.upwise.service;
 
-import org.sapphon.personal.upwise.IVote;
 import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.presentation.WisdomWithVotesPresentation;
-import org.sapphon.personal.upwise.repository.VoteRepository;
 import org.sapphon.personal.upwise.repository.WisdomRepository;
-import org.sapphon.personal.upwise.time.TimeLord;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -22,28 +18,33 @@ public class WisdomService {
 
     private VoteService voteService;
 
-    public WisdomService(WisdomRepository wisdomRepository, VoteService voteService){
+    public WisdomService(WisdomRepository wisdomRepository, VoteService voteService) {
         this.wisdomRepo = wisdomRepository;
         this.voteService = voteService;
     }
 
-    public List<IWisdom> getAllWisdoms(){
+    public List<IWisdom> getAllWisdoms() {
         return this.wisdomRepo.getAll();
     }
 
-    public List<IWisdom> getAllWisdomsBySubmitter(String username){return this.wisdomRepo.getBySubmitter(username);}
+    public List<IWisdom> getAllWisdomsBySubmitter(String username) {
+        return this.wisdomRepo.getBySubmitter(username);
+    }
 
-    public IWisdom addOrUpdateWisdom(IWisdom wisdom) {
+    public IWisdom addOrUpdateWisdom(IWisdom wisdom)
+    {
         return this.wisdomRepo.save(wisdom);
     }
 
-    public Optional<IWisdom> findWisdomByContentAndAttribution(String content, String attribution) { return this.wisdomRepo.findWisdom(content, attribution);}
+    public Optional<IWisdom> findWisdomByContentAndAttribution(String content, String attribution) {
+        return this.wisdomRepo.findWisdom(content, attribution);
+    }
 
-    public Optional<IWisdom> findWisdom(IWisdom wisdom){
+    public Optional<IWisdom> findWisdom(IWisdom wisdom) {
         return this.findWisdomByContentAndAttribution(wisdom.getWisdomContent(), wisdom.getAttribution());
     }
 
-    public List<WisdomWithVotesPresentation> getAllWisdomsWithVotes(){
+    public List<WisdomWithVotesPresentation> getAllWisdomsWithVotes() {
         return this.getWisdomsWithVotes(this.getAllWisdoms()).stream().sorted(new Comparator<WisdomWithVotesPresentation>() {
             @Override
             public int compare(WisdomWithVotesPresentation o1, WisdomWithVotesPresentation o2) {
