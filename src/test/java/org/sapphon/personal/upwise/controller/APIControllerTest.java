@@ -149,7 +149,8 @@ public class APIControllerTest {
     public void addVoteEndpoint_SaysBadRequestIfNoWisdomContent() throws Exception {
         IWisdom randomWisdom = RandomObjectFactory.makeRandom();
         randomWisdom.setWisdomContent(null);
-        mvc.perform(buildJsonPostRequest(randomWisdom, "/vote/add").param("voterUsername", "trollface"))
+        IVote randomVote = RandomObjectFactory.makeRandomVoteForWisdom(randomWisdom);
+        mvc.perform(buildJsonPostRequest(randomVote, "/vote/add"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(equalTo("")));
 
@@ -159,7 +160,8 @@ public class APIControllerTest {
     @Test
     public void addVoteEndpoint_SaysBadRequestIfWisdomDoesNotExist() throws Exception {
         IWisdom randomWisdom = RandomObjectFactory.makeRandom();
-        mvc.perform(buildJsonPostRequest(randomWisdom, "/vote/add").param("voterUsername", "trollface"))
+        IVote randomVote = RandomObjectFactory.makeRandomVoteForWisdom(randomWisdom);
+        mvc.perform(buildJsonPostRequest(randomVote, "/vote/add"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(equalTo("")));
 
@@ -168,8 +170,9 @@ public class APIControllerTest {
     @Test
     public void addVoteEndpoint_SaysBadRequestIfNoWisdomAttribution() throws Exception {
         IWisdom randomWisdom = RandomObjectFactory.makeRandom();
+        IVote randomVote = RandomObjectFactory.makeRandomVoteForWisdom(randomWisdom);
         randomWisdom.setAttribution(null);
-        mvc.perform(buildJsonPostRequest(randomWisdom, "/vote/add").param("voterUsername", "trollface"))
+        mvc.perform(buildJsonPostRequest(randomVote, "/vote/add"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(equalTo("")));
 
@@ -178,8 +181,10 @@ public class APIControllerTest {
     @Test
     public void addVoteEndpoint_SaysBadRequestIfNoVoterName() throws Exception {
         IWisdom randomWisdom = RandomObjectFactory.makeRandom();
+        IVote randomVote = RandomObjectFactory.makeRandomVoteForWisdom(randomWisdom);
+        randomVote.setAddedByUsername(null);
         wisdomService.addOrUpdateWisdom(randomWisdom);
-        mvc.perform(buildJsonPostRequest(randomWisdom, "/vote/add").param("voterUsername", ""))
+        mvc.perform(buildJsonPostRequest(randomVote, "/vote/add"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(equalTo("")));
 
@@ -189,10 +194,10 @@ public class APIControllerTest {
     @Test
     public void addVoteEndpoint_SaysConflictIfVoteCollidesWithPreexistingVote() throws Exception {
         IWisdom randomWisdom = RandomObjectFactory.makeRandom();
-        wisdomService.addOrUpdateWisdom(randomWisdom);
         IVote randomVote = RandomObjectFactory.makeRandomVoteForWisdom(randomWisdom);
+        wisdomService.addOrUpdateWisdom(randomWisdom);
         voteService.addOrUpdateVote(randomVote);
-        mvc.perform(buildJsonPostRequest(randomWisdom, "/vote/add").param("voterUsername", randomVote.getAddedByUsername()))
+        mvc.perform(buildJsonPostRequest(randomVote, "/vote/add"))
                 .andExpect(status().isConflict())
                 .andExpect(content().string(equalTo("")));
 
@@ -204,7 +209,7 @@ public class APIControllerTest {
         IWisdom randomWisdom = RandomObjectFactory.makeRandom();
         wisdomService.addOrUpdateWisdom(randomWisdom);
         IVote randomVote = RandomObjectFactory.makeRandomVoteForWisdom(randomWisdom);
-        mvc.perform(buildJsonPostRequest(randomWisdom, "/vote/add").param("voterUsername", randomVote.getAddedByUsername()))
+        mvc.perform(buildJsonPostRequest(randomVote, "/vote/add"))
                 .andExpect(status().isCreated());
 
     }

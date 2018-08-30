@@ -101,16 +101,16 @@ public class APIController {
     }
 
     @RequestMapping(value = "/vote/add")
-    public ResponseEntity<IVote> voteForWisdomEndpoint(@RequestParam String voterUsername, @RequestBody IWisdom wisdom){
-        Optional<IWisdom> wisdomMaybe = this.wisdomService.findWisdom(wisdom);
-        if(!validateWisdom(wisdom) || !validateUsername(voterUsername) || !wisdomMaybe.isPresent()){
+    public ResponseEntity<IVote> voteForWisdomEndpoint(@RequestBody IVote vote){
+        Optional<IWisdom> wisdomMaybe = this.wisdomService.findWisdom(vote.getWisdom());
+        if(!validateWisdom(vote.getWisdom()) || !validateUsername(vote.getAddedByUsername()) || !wisdomMaybe.isPresent()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        else if(voteService.getByWisdomAndVoterUsername(wisdomMaybe.get(), voterUsername).isPresent()){
+        else if(voteService.getByWisdomAndVoterUsername(wisdomMaybe.get(), vote.getAddedByUsername()).isPresent()){
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.voteForWisdom(voterUsername, wisdomMaybe.get()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.voteForWisdom(vote.getAddedByUsername(), wisdomMaybe.get()));
     }
 
     private boolean validateUsername(String voterUsername) {
