@@ -25,13 +25,6 @@ public class AddVoteController {
         this.apiController = apiController;
     }
 
-    @GetMapping("/addvote")
-    public String wisdomForm(Model model) {
-        List<IWisdom> allWisdomsEndpoint = apiController.getAllWisdomsEndpoint();
-        model.addAttribute("wisdomToVoteFor", allWisdomsEndpoint.get(new Random().nextInt(allWisdomsEndpoint.size())));
-        return "addvote";
-    }
-
     @PostMapping("/addvote")
     public String voteSubmit(Model model, @RequestParam String voterUsername, @RequestParam String wisdomContent, @RequestParam String wisdomAttribution) {
         Vote voteToAdd = new Vote(new Wisdom(wisdomContent, wisdomAttribution, null, null), voterUsername, null);
