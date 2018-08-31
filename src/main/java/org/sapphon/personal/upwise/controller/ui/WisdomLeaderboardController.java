@@ -20,4 +20,10 @@ public class WisdomLeaderboardController {
         model.addAttribute("allWisdoms", wisdomService.getAllWisdomsWithVotes());
         return "wisdomleaderboard";
     }
+
+    @GetMapping(value = "/wisdomparade", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
+    public String getWisdomParadeWithVotes(Model model){
+        model.addAttribute("allWisdoms", wisdomService.getAllWisdomsWithVotes());
+        return "wisdomparade";
+    }
 }

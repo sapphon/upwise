@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Wisdom Parade</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+<div class="carousel carousel-slider center" th:unless="${#lists.isEmpty(allWisdoms)}">
+    <div th:each="wisdom : ${allWisdoms}" class="carousel-item blue white-text">
+        <h2 th:text="${wisdom.wisdomContent}">Wisdom Content</h2>
+        <p class="white-text" th:text="${wisdom.attribution}">Wise Person</p>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"
+        type="text/javascript"></script>
+<script src="/scripts/carousel_autoadvance-init.js" type="text/javascript"></script>
+</body>
+</html>

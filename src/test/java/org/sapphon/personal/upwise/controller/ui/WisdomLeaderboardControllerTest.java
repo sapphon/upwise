@@ -30,14 +30,8 @@ import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -85,11 +79,10 @@ public class WisdomLeaderboardControllerTest {
 
     @Test
     public void getWisdomLeaderboardCollaboratesWithWisdomService() throws Exception {
-        when(wisdomService.getAllWisdoms()).thenReturn(this.exampleWisdoms);
         mvc.perform(MockMvcRequestBuilders.get("/wisdomleaderboard").accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("")));
-        verify(wisdomService,times(1)).getAllWisdomsWithVotes();
+        verify(wisdomService, times(1)).getAllWisdomsWithVotes();
     }
 
     @Test
@@ -99,14 +92,38 @@ public class WisdomLeaderboardControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
                 .andReturn();
-    try {
-        List<WisdomWithVotesPresentation> actualWisdoms = (List<WisdomWithVotesPresentation>) mvcResult.getModelAndView().getModel().values().iterator().next();
-        assertEquals(exampleWisdoms.get(0), actualWisdoms.get(0));
-        assertEquals(exampleVotes.get(0), actualWisdoms.get(0).getVotes().get(0));
-        assertEquals(exampleVotes.get(1), actualWisdoms.get(0).getVotes().get(1));
+        try {
+            List<WisdomWithVotesPresentation> actualWisdoms = (List<WisdomWithVotesPresentation>) mvcResult.getModelAndView().getModel().values().iterator().next();
+            assertEquals(exampleWisdoms.get(0), actualWisdoms.get(0));
+            assertEquals(exampleVotes.get(0), actualWisdoms.get(0).getVotes().get(0));
+            assertEquals(exampleVotes.get(1), actualWisdoms.get(0).getVotes().get(1));
+        } catch (Exception e) {
+            Assert.fail("Model not as expected.");
+        }
     }
-    catch(Exception e){
-        Assert.fail("Model not as expected.");
+
+    @Test
+    public void getWisdomParadeCollaboratesWithWisdomService() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/wisdomparade").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo("")));
+        verify(wisdomService, times(1)).getAllWisdomsWithVotes();
     }
-}
+
+    @Test
+    public void getWisdomParade_WithWisdomAndVotes_ProducesCorrectOutputOnModel() throws Exception {
+        when(wisdomService.getAllWisdomsWithVotes()).thenReturn(newArrayList(DomainObjectFactory.createWisdomWithVotes(exampleWisdoms.get(0), newArrayList(exampleVotes.get(0), exampleVotes.get(1)))));
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/wisdomparade").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""))
+                .andReturn();
+        try {
+            List<WisdomWithVotesPresentation> actualWisdoms = (List<WisdomWithVotesPresentation>) mvcResult.getModelAndView().getModel().values().iterator().next();
+            assertEquals(exampleWisdoms.get(0), actualWisdoms.get(0));
+            assertEquals(exampleVotes.get(0), actualWisdoms.get(0).getVotes().get(0));
+            assertEquals(exampleVotes.get(1), actualWisdoms.get(0).getVotes().get(1));
+        } catch (Exception e) {
+            Assert.fail("Model not as expected.");
+        }
+    }
 }
