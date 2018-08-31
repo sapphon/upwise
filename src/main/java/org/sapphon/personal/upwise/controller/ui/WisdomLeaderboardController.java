@@ -26,4 +26,9 @@ public class WisdomLeaderboardController {
         model.addAttribute("allWisdoms", wisdomService.getAllWisdomsWithVotes());
         return "wisdomparade";
     }
+
+    @GetMapping(value = "/wisdomsearch", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
+    public String getWisdomSearchForm(Model model){
+        return "wisdomsearch";
+    }
 }

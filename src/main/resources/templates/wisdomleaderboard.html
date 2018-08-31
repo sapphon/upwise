@@ -7,6 +7,21 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
+
+<div class="navbar-fixed">
+    <nav>
+        <div class="nav-wrapper">
+            <a href="/wisdomparade" class="brand-logo">UPWISE</a>
+            <ul class="right hide-on-med-and-down">
+                <li><a href="/addwisdom">Submit</a></li>
+                <li><a href="/wisdomleaderboard">Leaderboard</a></li>
+                <li><a href="/wisdomparade">All</a></li>
+                <li><a href="/wisdomsearch">Search</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
 <div class="container">
     <h1 th:text="#{title.leaderboard}">Wisdom Leaderboard</h1>
     <div class="wisdomlist" th:unless="${#lists.isEmpty(allWisdoms)}">
