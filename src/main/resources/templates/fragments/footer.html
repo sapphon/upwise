@@ -5,8 +5,14 @@
     <title>Footer Fragment</title>
 </head>
 <body>
+<a th:fragment="scriptimports">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"
+            type="text/javascript"></script>
+    <script src="/scripts/collapsible-init.js" type="text/javascript"></script>
+    <script src="/scripts/carousel_autoadvance-init.js" type="text/javascript"></script>
+</a>
 </body>
 <footer th:fragment="footer">
-    &copy;2018 absolutely no one.  Source is open at <a href="http://www.github.com/sapphon/upwise">github.com/sapphon/upwise</a>
+    &copy;2018 absolutely no one. Source is open at <a href="http://www.github.com/sapphon/upwise">github.com/sapphon/upwise</a>
 </footer>
 </html>

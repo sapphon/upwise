@@ -5,14 +5,14 @@
 
 <div th:replace="fragments/navbar :: navbar"></div>
 
-<h1>Add a Wisdom - Result</h1>
+<main>
 <div th:switch="${statusCode}">
     <h2 th:case="201">Your wisdom was added successfully!</h2>
     <h2 th:case="400">That's not a valid wisdom!</h2>
     <h2 th:case="409">That wisdom exists already and was not added.</h2>
 </div>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js" type="text/javascript"></script>
+</main>
+<a th:replace="fragments/footer :: scriptimports"></a>
 </body>
 <footer th:replace="fragments/footer :: footer"></footer>
 </html>

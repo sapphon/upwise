@@ -4,7 +4,7 @@
 <body>
 
 <div th:replace="fragments/navbar :: navbar"></div>
-
+<main>
 <div class="container">
     <h1 th:text="#{title.leaderboard}">Wisdom Leaderboard</h1>
     <div class="wisdomlist" th:unless="${#lists.isEmpty(allWisdoms)}">
@@ -53,9 +53,8 @@
     </div>
     <div class="wisdomlist" th:if="${#lists.isEmpty(allWisdoms)}">No wisdoms to rank by vote!</div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"
-        type="text/javascript"></script>
-<script src="/scripts/collapsible-init.js" type="text/javascript"></script>
+</main>
+<a th:replace="fragments/footer :: scriptimports"></a>
 </body>
 <footer th:replace="fragments/footer :: footer"></footer>
 </html>
