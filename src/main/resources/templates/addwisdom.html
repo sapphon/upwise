@@ -5,19 +5,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
-<div class="navbar-fixed">
-    <nav>
-        <div class="nav-wrapper">
-            <a href="/wisdomparade" class="brand-logo">UPWISE</a>
-            <ul class="right hide-on-med-and-down">
-                <li><a href="/addwisdom">Submit</a></li>
-                <li><a href="/wisdomleaderboard">Leaderboard</a></li>
-                <li><a href="/wisdomparade">All</a></li>
-                <li><a href="/wisdomsearch">Search</a></li>
-            </ul>
-        </div>
-    </nav>
-</div>
+
+<div th:replace="fragments/navbar :: navbar"></div>
+
 <h1>Add a Wisdom</h1>
 <div class="container">
     <form action="#" th:action="@{/addwisdom}" th:object="${wisdomToAdd}" method="post">
@@ -31,4 +21,5 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"
         type="text/javascript"></script>
 </body>
+<footer th:replace="fragments/footer :: footer"></footer>
 </html>

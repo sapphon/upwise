@@ -8,19 +8,7 @@
 </head>
 <body>
 
-<div class="navbar-fixed">
-    <nav>
-        <div class="nav-wrapper">
-            <a href="/wisdomparade" class="brand-logo">UPWISE</a>
-            <ul class="right hide-on-med-and-down">
-                <li><a href="/addwisdom">Submit</a></li>
-                <li><a href="/wisdomleaderboard">Leaderboard</a></li>
-                <li><a href="/wisdomparade">All</a></li>
-                <li><a href="/wisdomsearch">Search</a></li>
-            </ul>
-        </div>
-    </nav>
-</div>
+<div th:replace="fragments/navbar :: navbar"></div>
 
 <div class="carousel carousel-slider center" th:unless="${#lists.isEmpty(allWisdoms)}">
     <div th:each="wisdom : ${allWisdoms}" class="carousel-item blue white-text">
@@ -32,4 +20,5 @@
         type="text/javascript"></script>
 <script src="/scripts/carousel_autoadvance-init.js" type="text/javascript"></script>
 </body>
+<footer th:replace="fragments/footer :: footer"></footer>
 </html>
