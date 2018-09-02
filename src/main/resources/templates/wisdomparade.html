@@ -5,12 +5,14 @@
 
 <div th:replace="fragments/navbar :: navbar"></div>
 <main>
-<div class="carousel carousel-slider center" th:unless="${#lists.isEmpty(allWisdoms)}">
-    <div th:each="wisdom : ${allWisdoms}" class="carousel-item blue white-text">
-        <h2 th:text="${wisdom.wisdomContent}">Wisdom Content</h2>
-        <p class="white-text" th:text="${wisdom.attribution}">Wise Person</p>
+    <div class="container">
+        <div class="carousel carousel-slider center" th:unless="${#lists.isEmpty(allWisdoms)}">
+            <div th:each="wisdom : ${allWisdoms}" class="carousel-item blue white-text">
+                <h2 th:text="${wisdom.wisdomContent}">Wisdom Content</h2>
+                <p class="white-text" th:text="${wisdom.attribution}">Wise Person</p>
+            </div>
+        </div>
     </div>
-</div>
 </main>
 <a th:replace="fragments/footer :: scriptimports"></a>
 </body>
