@@ -18,10 +18,10 @@
             </div>
         </div>
         <div class="wisdomSecondaryInfo">
-            <h4 th:text="${wisdom.attribution}" class="almendra">Doug Linder</h4>
+            <h4 th:text="${wisdom.attribution}" class="almendra center">Doug Linder</h4>
             <!--<span><a th:href="@{'/user/' + waves-effect waves-light btn-small${wisdom.addedByUsername}}" th:text="${wisdom.addedByUsername}">intellijames</a> <p th:text="${wisdom.timeAdded}">January 1, 1970 01:00:00 GMT</p></span>-->
             <div class="divider"></div>
-            <h5>Proponents:</h5>
+            <h5>Proponents (<span th:text="${#lists.size(wisdom.votes)}">#</span>):</h5>
             <div class="voterbadges" th:unless="${#lists.isEmpty(wisdom.votes)}">
                 <a th:each="vote : ${wisdom.votes}" th:href="@{'/user/' + ${vote.addedByUsername}}" class="waves-effect waves-light btn-small" ><span th:text="${vote.addedByUsername}">Bud Bundy</span><i class="material-icons left">child_care</i></a>
             </div>
