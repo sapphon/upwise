@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head(pageTitle='View Wisdom')"></head>
+
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+<main>
+    <div class="vert-container">
+        <div class="container">
+            <div class="row">
+                <div class="col s12">
+                    <h1 th:text="${wisdom.wisdomContent}" class="cinzel">A good programmer is someone who looks both
+                        ways
+                        before crossing a
+                        one-way street.
+                    </h1>
+                </div>
+            </div>
+        </div>
+        <div class="wisdomSecondaryInfo">
+            <h4 th:text="${wisdom.attribution}" class="almendra">Doug Linder</h4>
+            <!--<span><a th:href="@{'/user/' + waves-effect waves-light btn-small${wisdom.addedByUsername}}" th:text="${wisdom.addedByUsername}">intellijames</a> <p th:text="${wisdom.timeAdded}">January 1, 1970 01:00:00 GMT</p></span>-->
+            <div class="divider"></div>
+            <h5>Proponents:</h5>
+            <div class="voterbadges" th:unless="${#lists.isEmpty(wisdom.votes)}">
+                <a th:each="vote : ${wisdom.votes}" th:href="@{'/user/' + ${vote.addedByUsername}}" class="waves-effect waves-light btn-small" ><span th:text="${vote.addedByUsername}">Bud Bundy</span><i class="material-icons left">child_care</i></a>
+            </div>
+        </div>
+        <p th:if="${#lists.isEmpty(wisdom.votes)}">0 votes</p>
+    </div>
+</main>
+<a th:replace="fragments/footer :: scriptimports"></a>
+</body>
+<footer th:replace="fragments/footer :: footer"></footer>
+</html>

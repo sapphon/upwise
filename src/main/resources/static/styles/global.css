@@ -7,3 +7,44 @@
   main {
     flex: 1 0 auto;
   }
+
+    .wisdomSecondaryInfo, .brand-logo{
+        margin-left: 20px;
+    }
+
+    .vert-container{
+        margin-top:10%;
+    }
+
+    .voterbadges{
+        margin-right:20px;
+       }
+
+       .voterbadges a{
+            margin-right:10px;
+       }
+
+  .cinzel{
+    font-family: 'Cinzel', serif;
+}
+ .josefin{
+    font-family: 'Josefin Slab', serif;
+ }
+.glegoo{
+    font-family: 'Glegoo', serif;
+}
+.imfell{
+    font-family: 'IM Fell English SC', serif;
+}
+ .italiana{
+    font-family: 'Italiana', serif;
+ }
+ .almendra{
+    font-family: 'Almendra SC', serif;
+}
+
+@media screen and (max-width:600px){
+    h1{
+        font-size:3.5rem;
+    }
+}

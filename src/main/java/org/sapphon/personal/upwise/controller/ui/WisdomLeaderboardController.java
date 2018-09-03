@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.Random;
+
 @Controller
 public class WisdomLeaderboardController {
 
@@ -30,5 +32,12 @@ public class WisdomLeaderboardController {
     @GetMapping(value = "/wisdomsearch", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
     public String getWisdomSearchForm(Model model){
         return "wisdomsearch";
+    }
+
+    @GetMapping(value = "/randomwisdom", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
+    public String getRandomWisdom(Model model)
+    {
+        model.addAttribute("wisdom", wisdomService.getAllWisdomsWithVotes().get(new Random().nextInt(wisdomService.getAllWisdomsWithVotes().size())));
+        return "viewwisdom";
     }
 }
