@@ -4,7 +4,6 @@ package org.sapphon.personal.upwise.controller.ui;
 import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.Wisdom;
 import org.sapphon.personal.upwise.controller.APIController;
-import org.sapphon.personal.upwise.service.WisdomService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,7 +30,7 @@ public class AddWisdomController {
     public String wisdomSubmit(Model model, @ModelAttribute Wisdom wisdomToAdd) {
         ResponseEntity<IWisdom> wisdomResponseEntity = this.apiController.addWisdomEndpoint(wisdomToAdd);
         model.addAttribute("statusCode", wisdomResponseEntity.getStatusCodeValue());
-        return "addwisdomresult";
+        return wisdomForm(model);
     }
 
 }

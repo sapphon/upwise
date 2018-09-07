@@ -7,6 +7,13 @@
 
 <main>
 <div class="container">
+
+    <div th:if="${statusCode}" th:switch="${statusCode}">
+        <h2 th:case="201">Your wisdom was added successfully!</h2>
+        <h2 th:case="400">That's not a valid wisdom!</h2>
+        <h2 th:case="409">That wisdom exists already and was not added.</h2>
+    </div>
+
     <form action="#" th:action="@{/addwisdom}" th:object="${wisdomToAdd}" method="post">
         <p>Wisdom: <input type="text" th:field="*{wisdomContent}" th:placeholder="#{placeholder.wisdomContent}"/></p>
         <p>Attribution: <input type="text" th:field="*{attribution}" th:placeholder="#{placeholder.wisdomAttribution}"/></p>
