@@ -1,50 +1,107 @@
-  body {
+html{
+    --color-bg1: #57467b;
+    --color-bg2: #537a5a;
+    --color-bg3: #909590;
+    --color-1: #8b85c1;
+    --color-2: #9ae19d;
+}
+body {
     display: flex;
     min-height: 100vh;
     flex-direction: column;
-  }
+    background-color: var(--color-bg1);
+}
 
-  main {
+main {
     flex: 1 0 auto;
-  }
+}
 
-    .wisdomSecondaryInfo, .brand-logo{
-        margin-left: 20px;
-    }
+footer {
+    background-color: var(--color-bg3);
+}
 
-    .vert-container{
-        margin-top:10%;
-    }
+a {
+    color: var(--color-2) !important;
+}
 
-    .voterbadges{
-        margin-right:20px;
-       }
+input{
+    color: var(--color-bg3);
+}
 
-       .voterbadges a{
-            margin-right:10px;
-       }
+.input-field input[type=text]:focus {
+    border-bottom: 1px solid var(--color-1);
+    box-shadow: 0 1px 0 0 var(--color-1);
+}
 
-  .cinzel{
+::placeholder{
+    color: var(--color-2);
+    opacity: 1;
+}
+
+h1, h2, p{
+    color: var(--color-1);
+}
+
+h4{
+    color: var(--color-bg2);
+}
+
+.wisdomlist, .wisdomsSubmittedList, .wisdomsVotedForList{
+    background-color: var(--color-bg3);
+}
+
+.nav-wrapper {
+    background-color: var(--color-bg2);
+    color: var(--color-2);
+}
+
+.card {
+    background-color: var(--color-bg2);
+    color: var(--color-1);
+}
+
+.wisdomSecondaryInfo, .brand-logo {
+    margin-left: 20px;
+}
+
+.vert-container {
+    margin-top: 10%;
+}
+
+.voterbadges {
+    margin-right: 20px;
+}
+
+.voterbadges a {
+    margin-right: 10px;
+}
+
+.cinzel {
     font-family: 'Cinzel', serif;
 }
- .josefin{
+
+.josefin {
     font-family: 'Josefin Slab', serif;
- }
-.glegoo{
+}
+
+.glegoo {
     font-family: 'Glegoo', serif;
 }
-.imfell{
+
+.imfell {
     font-family: 'IM Fell English SC', serif;
 }
- .italiana{
+
+.italiana {
     font-family: 'Italiana', serif;
- }
- .almendra{
+}
+
+.almendra {
     font-family: 'Almendra SC', serif;
 }
 
-@media screen and (max-width:600px){
-    h1{
-        font-size:3.5rem;
+@media screen and (max-width: 600px) {
+    h1 {
+        font-size: 3.5rem;
     }
 }
