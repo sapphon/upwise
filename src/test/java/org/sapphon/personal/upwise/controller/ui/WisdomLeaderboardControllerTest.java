@@ -31,6 +31,7 @@ import java.util.List;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -122,6 +123,21 @@ public class WisdomLeaderboardControllerTest {
             assertEquals(exampleWisdoms.get(0), actualWisdoms.get(0));
             assertEquals(exampleVotes.get(0), actualWisdoms.get(0).getVotes().get(0));
             assertEquals(exampleVotes.get(1), actualWisdoms.get(0).getVotes().get(1));
+        } catch (Exception e) {
+            Assert.fail("Model not as expected.");
+        }
+    }
+
+    @Test
+    public void setsANullWisdomOnTheModelForTheRandomWisdomPage_IfNoWisdomsExist() throws Exception{
+        when(wisdomService.hasAnyWisdoms()).thenReturn(false);
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/randomwisdom").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""))
+                .andReturn();
+        try {
+            WisdomWithVotesPresentation actualWisdom = (WisdomWithVotesPresentation) mvcResult.getModelAndView().getModel().get("wisdom");
+            assertNull(actualWisdom);
         } catch (Exception e) {
             Assert.fail("Model not as expected.");
         }

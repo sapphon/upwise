@@ -37,7 +37,9 @@ public class WisdomLeaderboardController {
     @GetMapping(value = "/randomwisdom", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
     public String getRandomWisdom(Model model)
     {
-        model.addAttribute("wisdom", wisdomService.getAllWisdomsWithVotes().get(new Random().nextInt(wisdomService.getAllWisdomsWithVotes().size())));
+        if(wisdomService.hasAnyWisdoms()) {
+            model.addAttribute("wisdom", wisdomService.getAllWisdomsWithVotes().get(new Random().nextInt(wisdomService.getAllWisdomsWithVotes().size())));
+        }
         return "viewwisdom";
     }
 }

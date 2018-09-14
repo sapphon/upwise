@@ -15,6 +15,9 @@ import java.util.Optional;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.sapphon.personal.upwise.TestHelper.assertListEquals;
@@ -81,5 +84,19 @@ public class WisdomServiceTest {
         assertEquals(theChosenOne, underTest.findWisdom(theChosenOne).get());
 
         verify(wisdomRepo).findWisdom(theChosenOne.getWisdomContent(), theChosenOne.getAttribution());
+    }
+
+    @Test
+    public void testSaysHasWisdomsIfRepositoryIsNotEmpty() {
+        when(wisdomRepo.getCount()).thenReturn(5L);
+        assertTrue(underTest.hasAnyWisdoms());
+        verify(wisdomRepo).getCount();
+    }
+
+    @Test
+    public void testSaysHasNoWisdomsIfRepositoryIsEmpty(){
+        when(wisdomRepo.getCount()).thenReturn(0L);
+        assertFalse(underTest.hasAnyWisdoms());
+        verify(wisdomRepo).getCount();
     }
 }

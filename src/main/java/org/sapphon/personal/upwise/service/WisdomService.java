@@ -56,4 +56,8 @@ public class WisdomService {
     public List<WisdomWithVotesPresentation> getWisdomsWithVotes(List<IWisdom> wisdoms) {
         return wisdoms.stream().map(wisdom -> DomainObjectFactory.createWisdomWithVotes(wisdom, voteService.getByWisdom(wisdom))).collect(Collectors.toList());
     }
+
+    public boolean hasAnyWisdoms() {
+        return this.wisdomRepo.getCount() > 0;
+    }
 }

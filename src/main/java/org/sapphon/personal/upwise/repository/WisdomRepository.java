@@ -67,4 +67,8 @@ public class WisdomRepository {
         Optional<WisdomJpa> wisdomJpa = findWisdomJpa(content, attribution);
         return wisdomJpa.isPresent() ? Optional.of(wisdomJpa.get()) : Optional.empty();
     }
+
+    public long getCount(){
+        return jpaWisdomRepo.count();
+    }
 }

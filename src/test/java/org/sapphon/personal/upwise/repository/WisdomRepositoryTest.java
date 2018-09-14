@@ -113,6 +113,16 @@ public class WisdomRepositoryTest {
 		}
 	}
 
+	@Test
+	public void canAccuratelyCountStoredWisdoms(){
+		wisdomRepo.save(testWisdoms[0]);
+		assertEquals(1, wisdomRepo.getCount());
+		wisdomRepo.save(testWisdoms[0]);
+		assertEquals(1, wisdomRepo.getCount());
+		wisdomRepo.save(testWisdoms[1]);
+		assertEquals(2, wisdomRepo.getCount());
+	}
+
 	private IWisdom getOrFail(String wisdomContent, String attribution) {
 		Optional<IWisdom> wisdomFound = wisdomRepo.findWisdom(wisdomContent, attribution);
 		boolean good = wisdomFound.isPresent();

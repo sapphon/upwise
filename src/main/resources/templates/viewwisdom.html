@@ -5,7 +5,7 @@
 <body>
 <div th:replace="fragments/navbar :: navbar"></div>
 <main>
-    <div class="vert-container">
+    <div class="vert-container" th:unless="${wisdom} == null">
         <div class="container">
             <div class="row">
                 <div class="col s12">
@@ -28,6 +28,8 @@
         </div>
         <p th:if="${#lists.isEmpty(wisdom.votes)}">0 votes</p>
     </div>
+
+    <div th:if="${wisdom} == null"><p>Cannot show a wisdom - no wisdoms have been added!</p></div>
 </main>
 <a th:replace="fragments/footer :: scriptimports"></a>
 </body>
