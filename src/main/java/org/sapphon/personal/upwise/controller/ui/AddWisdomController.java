@@ -4,6 +4,7 @@ package org.sapphon.personal.upwise.controller.ui;
 import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.Wisdom;
 import org.sapphon.personal.upwise.controller.APIController;
+import org.sapphon.personal.upwise.presentation.ColorPicker;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +24,8 @@ public class AddWisdomController {
     @GetMapping("/addwisdom")
     public String wisdomForm(Model model) {
         model.addAttribute("wisdomToAdd", new Wisdom());
+        new ColorPicker("#57467b", "#537a5a", "#909590", "#8b85c1", "#9ae19d").setColorPaletteOnModel(model);
+        System.out.println("eyy");
         return "addwisdom";
     }
 
