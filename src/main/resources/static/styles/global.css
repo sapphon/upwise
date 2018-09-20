@@ -1,9 +1,16 @@
 html{
-    --color-bg1: #57467b;
+/*  --color-bg1: #57467b;
     --color-bg2: #537a5a;
     --color-bg3: #909590;
     --color-1: #8b85c1;
-    --color-2: #9ae19d;
+    --color-2: #9ae19d; */
+    /*Joker colors*/
+
+    --color-bg1: #502419;
+    --color-bg2: #7ea172;
+    --color-bg3: #c7cb85;
+    --color-1: #e7a977;
+    --color-2: #ebbe9b;
 }
 body {
     display: flex;
@@ -20,7 +27,7 @@ footer {
     background-color: var(--color-bg3);
 }
 
-a {
+a, th {
     color: var(--color-2) !important;
 }
 
@@ -38,11 +45,11 @@ input{
     opacity: 1;
 }
 
-h1, h2, p{
+h1, h2, p, td{
     color: var(--color-1);
 }
 
-h4{
+h3, h4{
     color: var(--color-bg2);
 }
 
