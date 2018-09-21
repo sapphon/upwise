@@ -1,9 +1,8 @@
 html{
-/*  --color-bg1: #57467b;
-    --color-bg2: #537a5a;
-    --color-bg3: #909590;
-    --color-1: #8b85c1;
-    --color-2: #9ae19d; */
+    --color-bg1: #eff9a6;
+    --color-bg2: #5F8B67;
+    --color-1: #300138;
+    --color-2: #300138;
     /*Joker colors*/
 
    /* --color-bg1: #502419;
@@ -21,7 +20,7 @@ html{
     /*weird monochrome colors*/
 
 
-    /*--color-bg1: #87b38d;
+/*    --color-bg1: #87b38d;
     --color-bg2: #22031f;
     --color-bg3: #cc76a1;
     --color-1: #dd9296;
@@ -29,11 +28,11 @@ html{
     /*Pepto Bismol colors*/
 
 
-    --color-bg1: #d4e4bc;
+   /* --color-bg1: #d4e4bc;
     --color-bg2: #96acb7;
     --color-bg3: #36558f;
     --color-1: #40376e;
-    --color-2: #48233c;
+    --color-2: #48233c;*/
     /*cool colors*/
 
 
@@ -50,16 +49,16 @@ main {
 }
 
 footer {
-    background-color: var(--color-bg3);
+    background-color: var(--color-bg2);
 }
 
 a, th {
     color: var(--color-2) !important;
 }
 
-input{
+/*input{
     color: var(--color-bg3);
-}
+}*/
 
 .input-field input[type=text]:focus {
     border-bottom: 1px solid var(--color-1);
@@ -79,9 +78,9 @@ h3, h4, h5, h6{
     color: var(--color-bg2);
 }
 
-.wisdomlist, .wisdomsSubmittedList, .wisdomsVotedForList{
+/*.wisdomlist, .wisdomsSubmittedList, .wisdomsVotedForList{
     background-color: var(--color-bg3);
-}
+}*/
 
 .nav-wrapper {
     background-color: var(--color-bg2);
