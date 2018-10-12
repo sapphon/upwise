@@ -4,7 +4,7 @@ script:
 - "./gradlew build"
 deploy:
   provider: cloudfoundry
-  api: ''
+  api: api.run.pivotal.io
   username: connor.shaughnessy@gmail.com
   password:
     secure: guR0EUMivCV1aPXta3956ZxUoh3N9Ip+QDBTEhtr3SGbXfbW8LLatwudNQ6BndvA1BJd/WVSeQkJJ6qF7ZluBUWwv8pcIuGb13cs4/m2XueMg9nDVu4+VPvjChXWT5QJw6lDKVeV1FnPaof/VpKzxsaqYrIxIcp2AQbSZ99r4uhEfqtBnEhkykRxwj/mhlobQ5anUUDwytl6+Q8BX9Xcc0Iyc5e8AkJhyFtCAmuaXuBpzNgx+JPEqN5FgOsIQTSLsJ22O1OuwFl2RZzjiUs9wY6/wgUZyNsVRK0m9+9ylGx+lFKMxNgZYNQvumFUWdRLGd300YuD0VhrMO8hoUicBeBqBQbhHjyEVauuN3kOVNOLd5eJQku8zhVvWNCpAsdjGGsUBeKEQXOAHWuxW/hKyRliptyhk2TXkgACVvD1Guz3d9WNN4x8Bvi3SNYpsIfetTXAOXOvsJxgAfS4JMkUg8j11PrLFznUvAWU8AUmi79IK01uMnpVwHoarhAw462nZ8qzez/8u93TcrFffiB2q74tiRvzRpFQ7PTzv8XC4ukoa84fNz73UZEhn4aW9oUI7H2DTMJS5vYZEvYDfNZV7lS/8y2uGbZRgb5cwYfLPo8wB0RXU13l+UFSAHHgUFbvE/x0xrFk6zOHJgKe5h0a0zD6uC5J4ouxBMYKwLyfDf0=
