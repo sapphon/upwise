@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 public class WisdomJpa extends AbstractWisdom {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
     protected WisdomJpa(){}

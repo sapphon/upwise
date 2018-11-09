@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 public class VoteJpa extends AbstractVote {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
     protected VoteJpa(){
