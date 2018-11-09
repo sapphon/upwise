@@ -54,7 +54,7 @@ public class VoteRepositoryTest {
         voteRepo.save(voteWeDoNotWant);
 		voteRepo.save(voteWeWantToFind);
 
-		assertEquals(voteWeWantToFind, voteRepo.getById(4L));
+		assertEquals(voteWeWantToFind, voteRepo.getById(2L));
 	}
 
 	@Test
