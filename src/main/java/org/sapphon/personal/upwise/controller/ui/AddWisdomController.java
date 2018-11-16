@@ -24,7 +24,6 @@ public class AddWisdomController {
     @GetMapping("/addwisdom")
     public String wisdomForm(Model model) {
         model.addAttribute("wisdomToAdd", new Wisdom());
-        new ColorPicker("#57467b", "#537a5a", "#909590", "#8b85c1", "#9ae19d").setColorPaletteOnModel(model);
         return "addwisdom";
     }
 
