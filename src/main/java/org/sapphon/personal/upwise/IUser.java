@@ -1,0 +1,25 @@
+package org.sapphon.personal.upwise;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import java.sql.Timestamp;
+
+@JsonDeserialize(as=User.class)
+public interface IUser {
+    //region SettersGetters
+
+
+    Timestamp getTimeAdded();
+
+    String getDisplayName();
+
+    String getLoginUsername();
+
+    void setLoginUsername(String addedByUsername);
+
+    void setDisplayName(String displayName);
+
+    void setTimeAdded(Timestamp timeAdded);
+
+    //endregion
+}

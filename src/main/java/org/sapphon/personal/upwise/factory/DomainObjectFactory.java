@@ -4,6 +4,7 @@ import org.sapphon.personal.upwise.*;
 import org.sapphon.personal.upwise.presentation.WisdomWithVotesPresentation;
 import org.sapphon.personal.upwise.repository.VoteRepository;
 import org.sapphon.personal.upwise.repository.WisdomRepository;
+import org.sapphon.personal.upwise.repository.jpa.UserJpa;
 import org.sapphon.personal.upwise.repository.jpa.VoteJpa;
 import org.sapphon.personal.upwise.repository.jpa.WisdomJpa;
 import org.sapphon.personal.upwise.time.TimeLord;
@@ -12,10 +13,6 @@ import java.sql.Timestamp;
 import java.util.List;
 
 public class DomainObjectFactory {
-
-    private WisdomRepository wisdomRepo;
-
-    private VoteRepository voteRepo;
 
     public static IWisdom createWisdom(String content, String utterer, String submitter, Timestamp time){
         return new Wisdom(content, utterer, submitter, time);
@@ -39,6 +36,22 @@ public class DomainObjectFactory {
 
     public static VoteJpa createVoteJpa(IVote vote){
         return createVoteJpa(createWisdomJpa(vote.getWisdom()), vote.getAddedByUsername(), vote.getTimeAdded());
+    }
+
+    public static IUser createUser(IUser user){
+        return createUser(user.getLoginUsername(), user.getDisplayName(), user.getTimeAdded());
+    }
+
+    public static IUser createUserWithCreatedTimeNow(String loginUsername, String displayUsername){
+        return createUser(loginUsername, displayUsername, TimeLord.getNow());
+    }
+
+    public static IUser createUser(String loginUsername, String displayUsername, Timestamp timeAdded) {
+        return new User(loginUsername, displayUsername, timeAdded);
+    }
+
+    public static UserJpa createUserJpa(IUser user){
+        return new UserJpa(user.getLoginUsername(), user.getDisplayName(), user.getTimeAdded());
     }
 
     public static IVote createVote(IVote vote) {
