@@ -86,10 +86,8 @@ public class UserRepositoryTest {
         userRepository.save(userWeDoNotWant);
         userRepository.save(userWeWant);
 
-        List<IUser> usersByLoginName = userRepository.getByLoginUsername(userWeWant.getLoginUsername());
-        assertNotNull(usersByLoginName);
-        assertEquals(1, usersByLoginName.size());
-        assertEquals(userWeWant, usersByLoginName.get(0));
+        IUser usersByLoginName = userRepository.getByLoginUsername(userWeWant.getLoginUsername());
+        assertEquals(userWeWant, usersByLoginName);
     }
 
     @Test

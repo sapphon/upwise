@@ -11,6 +11,6 @@ import java.util.Optional;
 public interface UserRepositoryJpa extends CrudRepository<UserJpa, Long> {
     List<UserJpa> findAll();
     List<UserJpa> findAllByDisplayUsernameOrderByTimeAddedDesc(String displayUsername);
-    List<UserJpa> findAllByLoginUsernameOrderByTimeAddedDesc(String loginUsername);
+    UserJpa findTopByLoginUsernameOrderByTimeAddedDesc(String loginUsername);
     Optional<UserJpa> findTopByLoginUsernameAndDisplayUsernameOrderByTimeAddedDesc(String loginUsername, String displayUsername);
 }

@@ -50,10 +50,8 @@ public class UserRepository {
         return toReturn;
     }
 
-    public List<IUser> getByLoginUsername(String loginUsername) {
-        List<IUser> toReturn = new ArrayList<>();
-        jpaUserRepo.findAllByLoginUsernameOrderByTimeAddedDesc(loginUsername).forEach((j) -> toReturn.add(DomainObjectFactory.createUser(j)));
-        return toReturn;
+    public IUser getByLoginUsername(String loginUsername) {
+        return DomainObjectFactory.createUser(jpaUserRepo.findTopByLoginUsernameOrderByTimeAddedDesc(loginUsername));
     }
 
     public List<IUser> getByDisplayName(String displayUsername) {
