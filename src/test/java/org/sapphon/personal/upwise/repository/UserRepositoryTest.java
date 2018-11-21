@@ -51,4 +51,81 @@ public class UserRepositoryTest {
 
         assertEquals(userWeWantToFind, userRepository.getById(2L));
     }
+
+
+    @Test
+    public void canGetAllOfSeveralDifferentRecords(){
+
+        for(int i = 0; i < testUsers.length; i++) {
+            userRepository.save(testUsers[i]);
+        }
+
+        List<IUser> actual = userRepository.getAll();
+
+        assertArrayEquals(testUsers, actual.toArray());
+    }
+
+    @Test
+    public void doesNotCreateDuplicatesWhenSavingSeveralOfTheSameRecord(){
+
+        for(int i = 0; i < 3; i++) {
+            userRepository.save(testUsers[0]);
+        }
+
+        List<IUser> actual = userRepository.getAll();
+
+        IUser[] expectedWisdoms = {testUsers[0]};
+        assertArrayEquals(expectedWisdoms, actual.toArray());
+    }
+
+    @Test
+    public void canGetOneRecordByLoginName(){
+        IUser userWeWant = testUsers[3];
+        IUser userWeDoNotWant = testUsers[2];
+
+        userRepository.save(userWeDoNotWant);
+        userRepository.save(userWeWant);
+
+        List<IUser> usersByLoginName = userRepository.getByLoginUsername(userWeWant.getLoginUsername());
+        assertNotNull(usersByLoginName);
+        assertEquals(1, usersByLoginName.size());
+        assertEquals(userWeWant, usersByLoginName.get(0));
+    }
+
+    @Test
+    public void canGetByDisplayName_NewestFirst() {
+        String ourBoy = "jrobiso7";
+        testUsers[0].setDisplayName(ourBoy);
+        testUsers[1].setDisplayName(ourBoy);
+        userRepository.save(Arrays.asList(testUsers));
+
+        List<IUser> result = userRepository.getByDisplayName(ourBoy);
+
+        assertArrayEquals(new IUser[]{testUsers[1], testUsers[0]}, result.toArray());
+    }
+
+    @Test
+    public void canFindAUserByUniqueKey(){
+        userRepository.save(newArrayList(testUsers));
+        for(IUser user : testUsers){
+            assertEquals(user, getOrFail(user.getLoginUsername(),user.getDisplayName()));
+        }
+    }
+
+    @Test
+    public void canAccuratelyCountStoredUsers(){
+        userRepository.save(testUsers[0]);
+        assertEquals(1, userRepository.getCount());
+        userRepository.save(testUsers[0]);
+        assertEquals(1, userRepository.getCount());
+        userRepository.save(testUsers[1]);
+        assertEquals(2, userRepository.getCount());
+    }
+
+    private IUser getOrFail(String loginName, String displayName) {
+        Optional<IUser> wisdomFound = userRepository.findUser(loginName, displayName);
+        boolean good = wisdomFound.isPresent();
+        if (!good) Assert.fail("Expected wisdom not found in wisdom repo: " + loginName + " " + displayName);
+        return wisdomFound.get();
+    }
 }
