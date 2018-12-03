@@ -1,39 +1,8 @@
 html{
-    --color-bg1: #eff9a6;
-    --color-bg2: #5F8B67;
-    --color-1: #300138;
-    --color-2: #cc76a1;
-    /*Joker colors*/
-
-   /* --color-bg1: #502419;
-    --color-bg2: #7ea172;
-    --color-bg3: #c7cb85;
-    --color-1: #e7a977;
-    --color-2: #ebbe9b;*/
-    /*Summer-to-fall colors*/
-
-    /*--color-bg1: #1c1c1c;
-    --color-bg2: #daddd8;
-    --color-bg3: #ecebe4;
-    --color-1: #eef0f2;
-    --color-2: #fafaff;*/
-    /*weird monochrome colors*/
-
-
-/*    --color-bg1: #87b38d;
-    --color-bg2: #22031f;
-    --color-bg3: #cc76a1;
-    --color-1: #dd9296;
-    --color-2: #f2b7c6;*/
-    /*Pepto Bismol colors*/
-
-
-   /* --color-bg1: #d4e4bc;
+    --color-bg1: #d4e4bc;
     --color-bg2: #96acb7;
-    --color-bg3: #36558f;
     --color-1: #40376e;
-    --color-2: #48233c;*/
-    /*cool colors*/
+    --color-2: #48233c;
 
 
 }
@@ -75,12 +44,8 @@ h1, h2, p, td{
 }
 
 h3, h4, h5, h6{
-    color: var(--color-bg2);
+    color: var(--color-2);
 }
-
-/*.wisdomlist, .wisdomsSubmittedList, .wisdomsVotedForList{
-    background-color: var(--color-bg3);
-}*/
 
 .nav-wrapper {
     background-color: var(--color-bg2);
