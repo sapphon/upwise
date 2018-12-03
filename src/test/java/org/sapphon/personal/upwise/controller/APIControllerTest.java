@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -149,6 +150,19 @@ public class APIControllerTest {
     public void addVoteEndpoint_SaysBadRequestIfNoWisdomContent() throws Exception {
         IWisdom randomWisdom = RandomObjectFactory.makeRandom();
         randomWisdom.setWisdomContent(null);
+        wisdomService.addOrUpdateWisdom(randomWisdom);
+        IVote randomVote = RandomObjectFactory.makeRandomVoteForWisdom(randomWisdom);
+        mvc.perform(buildJsonPostRequest(randomVote, "/vote/add"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(equalTo("")));
+
+    }
+
+    @Test
+    public void addVoteEndpoint_SaysBadRequestIfEmptyWisdomContent() throws Exception {
+        IWisdom randomWisdom = RandomObjectFactory.makeRandom();
+        randomWisdom.setWisdomContent("");
+        wisdomService.addOrUpdateWisdom(randomWisdom);
         IVote randomVote = RandomObjectFactory.makeRandomVoteForWisdom(randomWisdom);
         mvc.perform(buildJsonPostRequest(randomVote, "/vote/add"))
                 .andExpect(status().isBadRequest())
@@ -170,8 +184,9 @@ public class APIControllerTest {
     @Test
     public void addVoteEndpoint_SaysBadRequestIfNoWisdomAttribution() throws Exception {
         IWisdom randomWisdom = RandomObjectFactory.makeRandom();
-        IVote randomVote = RandomObjectFactory.makeRandomVoteForWisdom(randomWisdom);
         randomWisdom.setAttribution(null);
+        wisdomService.addOrUpdateWisdom(randomWisdom);
+        IVote randomVote = RandomObjectFactory.makeRandomVoteForWisdom(randomWisdom);
         mvc.perform(buildJsonPostRequest(randomVote, "/vote/add"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(equalTo("")));
@@ -181,9 +196,9 @@ public class APIControllerTest {
     @Test
     public void addVoteEndpoint_SaysBadRequestIfNoVoterName() throws Exception {
         IWisdom randomWisdom = RandomObjectFactory.makeRandom();
+        wisdomService.addOrUpdateWisdom(randomWisdom);
         IVote randomVote = RandomObjectFactory.makeRandomVoteForWisdom(randomWisdom);
         randomVote.setAddedByUsername(null);
-        wisdomService.addOrUpdateWisdom(randomWisdom);
         mvc.perform(buildJsonPostRequest(randomVote, "/vote/add"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(equalTo("")));
@@ -210,7 +225,9 @@ public class APIControllerTest {
         wisdomService.addOrUpdateWisdom(randomWisdom);
         IVote randomVote = RandomObjectFactory.makeRandomVoteForWisdom(randomWisdom);
         mvc.perform(buildJsonPostRequest(randomVote, "/vote/add"))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(outputMapper.writeValueAsString(randomVote)));
 
     }
 

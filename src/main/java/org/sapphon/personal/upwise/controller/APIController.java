@@ -110,16 +110,15 @@ public class APIController {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.voteForWisdom(vote.getAddedByUsername(), wisdomMaybe.get()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.voteForWisdom(vote, wisdomMaybe.get()));
     }
 
     private boolean validateUsername(String voterUsername) {
         return voterUsername != null && !voterUsername.equals("");
     }
 
-    private IVote voteForWisdom(String userName, IWisdom toVoteFor){
-        Optional<IWisdom> wisdomMaybe = this.wisdomService.findWisdomByContentAndAttribution(toVoteFor.getWisdomContent(), toVoteFor.getAttribution());
-        return wisdomMaybe.map(iWisdom -> this.voteService.addOrUpdateVote(DomainObjectFactory.createVote(iWisdom, userName, TimeLord.getNow()))).orElse(null);
+    private IVote voteForWisdom(IVote prospectiveVote, IWisdom toVoteFor){
+        return this.voteService.addOrUpdateVote(DomainObjectFactory.createVote(toVoteFor, prospectiveVote.getAddedByUsername(), prospectiveVote.getTimeAdded() == null ? TimeLord.getNow() : prospectiveVote.getTimeAdded()));
 
     }
 
