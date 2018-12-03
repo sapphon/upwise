@@ -71,6 +71,7 @@ dependencies {
 	//dependencies used for rendering only
 	compile('org.thymeleaf:thymeleaf-spring5:3.0.9.RELEASE')
 	compile('org.thymeleaf:thymeleaf:3.0.9.RELEASE')
+	compile('org.thymeleaf.extras:thymeleaf-extras-springsecurity4')
 
 	runtime('org.springframework.boot:spring-boot-devtools')
 	runtime('com.microsoft.sqlserver:mssql-jdbc')
