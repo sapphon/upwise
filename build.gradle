@@ -58,7 +58,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	//compile('org.springframework.boot:spring-boot-starter-data-rest')
 	//compile('org.springframework.boot:spring-boot-starter-jdbc')
-	//compile('org.springframework.boot:spring-boot-starter-security')	//	Didn't wanna sign in to test
+	compile('org.springframework.boot:spring-boot-starter-security')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	//compile('com.ford.cloudnative:activedirectory-spring-oauth2-client:1.1.2-RELEASE')	//Need a real app for this
 	//compile('com.ford.cloudnative:activedirectory-spring-oauth2-service:1.1.1-RELEASE')	//Need a real app for this
