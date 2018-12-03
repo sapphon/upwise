@@ -123,7 +123,7 @@ public class UserRepositoryTest {
     private IUser getOrFail(String loginName, String displayName) {
         Optional<IUser> wisdomFound = userRepository.findUser(loginName, displayName);
         boolean good = wisdomFound.isPresent();
-        if (!good) Assert.fail("Expected wisdom not found in wisdom repo: " + loginName + " " + displayName);
+        if (!good) Assert.fail("Expected user not found in user repo: " + loginName + " " + displayName);
         return wisdomFound.get();
     }
 }
