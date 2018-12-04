@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class WisdomLeaderboardControllerTest {
+public class WisdomControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -48,7 +48,7 @@ public class WisdomLeaderboardControllerTest {
     private WisdomService wisdomService;
 
     @InjectMocks
-    private WisdomLeaderboardController underTest;
+    private WisdomController underTest;
 
     private List<IWisdom> exampleWisdoms;
     private List<IVote> exampleVotes;
@@ -59,7 +59,7 @@ public class WisdomLeaderboardControllerTest {
         viewResolver.setPrefix("templates/");
         viewResolver.setSuffix(".html");
 
-        this.underTest = new WisdomLeaderboardController(wisdomService);
+        this.underTest = new WisdomController(wisdomService);
 
         mvc = MockMvcBuilders.standaloneSetup(underTest)
                 .setViewResolvers(viewResolver)

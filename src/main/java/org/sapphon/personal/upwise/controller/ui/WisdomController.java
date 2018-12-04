@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.Random;
 
 @Controller
-public class WisdomLeaderboardController {
+public class WisdomController {
 
     private final WisdomService wisdomService;
 
-    public WisdomLeaderboardController(WisdomService wisdomService){
+    public WisdomController(WisdomService wisdomService){
         this.wisdomService = wisdomService;
     }
 

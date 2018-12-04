@@ -1,5 +1,6 @@
 package org.sapphon.personal.upwise.controller;
 
+import org.sapphon.personal.upwise.IUser;
 import org.sapphon.personal.upwise.IVote;
 import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
@@ -142,7 +143,24 @@ public class APIController {
                 !wisdom.getAttribution().isEmpty();
     }
 
-    public IWisdom addWisdom(IWisdom wisdom){
+    private boolean validateUser(IUser user) {
+        return false;
+    }
+
+    private IWisdom addWisdom(IWisdom wisdom){
         return this.wisdomService.addOrUpdateWisdom(wisdom);
+    }
+
+    @RequestMapping(value = "/registration/add", method = RequestMethod.POST)
+    public ResponseEntity<IUser> addUserEndpoint(IUser user) {
+//        if(!validateUser(user)){
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+//        }
+//        else if(this.userService.findWisdomByContentAndAttribution(wisdom.getWisdomContent(), wisdom.getAttribution()).isPresent()){
+//            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+//        }
+//        user.setTimeAdded(TimeLord.getNow());
+//        return ResponseEntity.status(HttpStatus.CREATED).body(this.addWisdom(wisdom));
+        return null;
     }
 }

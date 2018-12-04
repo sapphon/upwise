@@ -1,24 +1,30 @@
 package org.sapphon.personal.upwise.controller.ui;
 
+import org.sapphon.personal.upwise.IUser;
 import org.sapphon.personal.upwise.IVote;
+import org.sapphon.personal.upwise.controller.APIController;
 import org.sapphon.personal.upwise.service.VoteService;
 import org.sapphon.personal.upwise.service.WisdomService;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.stream.Collectors;
 
 @Controller
-public class UserDashboardController {
+public class UserController {
 
     private final WisdomService wisdomService;
 
     private final VoteService voteService;
+    private APIController apiController;
 
-    public UserDashboardController(WisdomService wisdomService, VoteService voteService){
+    public UserController(WisdomService wisdomService, VoteService voteService, APIController apiController){
         this.wisdomService = wisdomService;
         this.voteService = voteService;
     }
@@ -35,5 +41,17 @@ public class UserDashboardController {
     @GetMapping("/loggedout")
     public String getLogoutPage(Model model){
         return "loggedout";
+    }
+
+    @GetMapping("/register")
+    public String registrationForm(Model model){
+        return "register";
+    }
+
+    @PostMapping("/register")
+    public String registrationSubmit(Model model, @ModelAttribute IUser userToRegister){
+        ResponseEntity<IUser> userRegistrationResponseEntity = this.apiController.addUserEndpoint(userToRegister);
+        model.addAttribute("statusCode", userRegistrationResponseEntity.getStatusCodeValue());
+        return registrationForm(model);
     }
 }

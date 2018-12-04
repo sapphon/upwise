@@ -5,13 +5,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.sapphon.personal.upwise.IVote;
 import org.sapphon.personal.upwise.IWisdom;
-import org.sapphon.personal.upwise.TestHelper;
 import org.sapphon.personal.upwise.Wisdom;
-import org.sapphon.personal.upwise.factory.DomainObjectFactory;
+import org.sapphon.personal.upwise.controller.APIController;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
-import org.sapphon.personal.upwise.presentation.WisdomWithVotesPresentation;
 import org.sapphon.personal.upwise.service.VoteService;
 import org.sapphon.personal.upwise.service.WisdomService;
 import org.sapphon.personal.upwise.time.TimeLord;
@@ -44,7 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UserDashboardControllerTest {
+public class UserControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -57,7 +56,7 @@ public class UserDashboardControllerTest {
     private VoteService voteService;
 
     @InjectMocks
-    private UserDashboardController underTest;
+    private UserController underTest;
 
     private List<IWisdom> exampleWisdoms;
     private List<IVote> exampleVotes;
@@ -68,7 +67,7 @@ public class UserDashboardControllerTest {
         viewResolver.setPrefix("templates/");
         viewResolver.setSuffix(".html");
 
-        this.underTest = new UserDashboardController(wisdomService, voteService);
+        this.underTest = new UserController(wisdomService, voteService, Mockito.mock(APIController.class));
 
         mvc = MockMvcBuilders.standaloneSetup(underTest)
                 .setViewResolvers(viewResolver)
@@ -115,5 +114,12 @@ public class UserDashboardControllerTest {
         } catch (Exception e) {
             Assert.fail("Model not as expected.");
         }
+    }
+
+    @Test
+    public void testCanGetRegistrationPage() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/register").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo("")));
     }
 }
