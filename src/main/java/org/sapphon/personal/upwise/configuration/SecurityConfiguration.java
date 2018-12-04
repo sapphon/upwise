@@ -1,10 +1,13 @@
 package org.sapphon.personal.upwise.configuration;
 
+import org.sapphon.personal.upwise.IUser;
+import org.sapphon.personal.upwise.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configurers.provisioning.InMemoryUserDetailsManagerConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -16,20 +19,28 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Profile("!test")
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    private final UserService userService;
+
+    @Autowired
+    public SecurityConfiguration(UserService userService){
+        this.userService = userService;
+    }
+
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth)
             throws Exception {
-                auth
-                .inMemoryAuthentication()
-                .withUser("user").password(passwordEncoder().encode("password")).roles("USER")
-                .and()
-                .withUser("admin").password(passwordEncoder().encode("admin")).roles("ADMIN");
+        final InMemoryUserDetailsManagerConfigurer<AuthenticationManagerBuilder> inMemoryAuth = auth
+                .inMemoryAuthentication();
+        for(IUser user : userService.getAllUsers()){
+            inMemoryAuth.withUser(user.getLoginUsername()).password("abc").roles("USER");
+        }
+        inMemoryAuth.withUser("uwadmin").password(passwordEncoder().encode("Thunderfluff")).roles("ADMIN");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception{
         http.formLogin().permitAll()
-                .and().headers().frameOptions().sameOrigin()
+                .and().headers().frameOptions().sameOrigin()        //sauce for h2 console to work with spring security enabled
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/loggedout")).permitAll()
                 .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/loggedout")
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/scripts/**")).permitAll()
