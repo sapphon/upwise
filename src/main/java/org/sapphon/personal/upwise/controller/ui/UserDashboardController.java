@@ -31,4 +31,9 @@ public class UserDashboardController {
         model.addAttribute("allWisdomsVotedFor", voteService.getAllByVoter(user).stream().map(IVote::getWisdom).collect(Collectors.toList()));
         return "userdashboard";
     }
+
+    @GetMapping("/loggedout")
+    public String getLogoutPage(Model model){
+        return "loggedout";
+    }
 }

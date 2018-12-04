@@ -85,7 +85,7 @@ apply plugin: 'cf-app'
 cfConfig {
 
 	// See GettingStarted.md for information on updating these values
-	ccHost = "api.yourpcf.cf.ford.com" // Change
+	ccHost = "api.upwise.cfapps.io" // Change
 	space = "YOUR_SPACE" // Change
 	org = "YOUR_ORG" // Change
 
