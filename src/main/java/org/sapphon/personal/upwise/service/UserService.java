@@ -26,4 +26,8 @@ public class UserService {
     public IUser getUserWithLogin(String login) {
         return userRepo.getByLoginUsername(login);
     }
+
+    public IUser addOrUpdateUser(IUser toAdd) {
+        return userRepo.save(toAdd);
+    }
 }

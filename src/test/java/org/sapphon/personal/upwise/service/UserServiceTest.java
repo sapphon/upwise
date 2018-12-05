@@ -1,18 +1,12 @@
 package org.sapphon.personal.upwise.service;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.sapphon.personal.upwise.IUser;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.repository.UserRepository;
 import org.sapphon.personal.upwise.time.TimeLord;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +16,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-//@SpringBootTest
-//@RunWith(SpringRunner.class)
 public class UserServiceTest {
 
     private UserService underTest;
@@ -53,6 +45,13 @@ public class UserServiceTest {
         IUser actual = underTest.getUserWithLogin("lmccoy67");
         verify(mockUserRepository).getByLoginUsername("lmccoy67");
         assertSame(expected, actual);
+    }
+
+    @Test
+    public void addsToRepoWhenUserIsAdded(){
+        IUser expected = DomainObjectFactory.createUser("lmccoy67", "Leonard McCoy", TimeLord.getNow());
+        underTest.addOrUpdateUser(expected);
+        verify(mockUserRepository).save(expected);
     }
 
 }
