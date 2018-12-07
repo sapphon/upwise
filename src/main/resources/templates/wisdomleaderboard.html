@@ -24,25 +24,18 @@
                         <div th:unless="${#lists.isEmpty(wisdom.votes)}"
                              th:text="${#lists.size(wisdom.votes)} + ' votes'">-1 votes</div>
                         <div th:if="${#lists.isEmpty(wisdom.votes)}">0 votes</div>
-                        <ul class="collapsible">
-                            <li>
-                                <div class="collapsible-header">
-                                    <p>Click here to vote for this wisdom!</p>
-                                </div>
-                                <div class="collapsible-body">
+                                <div>
                                     <form method="POST" th:action="@{/addvote}">
-                                        <p><input type="hidden" name="wisdomContent" th:value="${wisdom.wisdomContent}">
-                                        </p>
-                                        <p><input type="hidden" name="wisdomAttribution"
-                                                  th:value="${wisdom.attribution}"></p>
-                                        <button type="submit"
-                                                class="btn-floating btn-large waves-effect waves-light red collapsible-header">
-                                            <i class="material-icons">add</i>
-                                        </button>
+                                    <p><input type="hidden" name="wisdomContent" th:value="${wisdom.wisdomContent}">
+                                    </p>
+                                    <p><input type="hidden" name="wisdomAttribution"
+                                              th:value="${wisdom.attribution}"></p>
+                                    <button type="submit"
+                                            class="btn-floating btn-large waves-effect waves-light">
+                                        <i class="material-icons">trending_up</i>
+                                        </button><label class="vote-button-label">Vote for this wisdom!</label>
                                     </form>
                                 </div>
-                            </li>
-                        </ul>
                     </div>
                 </div>
             </div>
