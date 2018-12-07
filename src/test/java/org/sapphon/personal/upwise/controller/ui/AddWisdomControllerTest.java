@@ -5,7 +5,9 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.sapphon.personal.upwise.IVote;
 import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.Wisdom;
@@ -28,6 +30,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -107,7 +110,7 @@ public class AddWisdomControllerTest {
     }
 
     @Test
-    public void testPostRequestWhereApiSaysBadRequestGets400Status() throws Exception{
+    public void testPostRequestWhereApiSaysBadRequestGets400Status() throws Exception {
         when(apiController.addWisdomEndpoint(any())).thenReturn(new ResponseEntity(IWisdom.class, HttpStatus.BAD_REQUEST));
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/addwisdom").accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
@@ -122,7 +125,7 @@ public class AddWisdomControllerTest {
     }
 
     @Test
-    public void testPostRequestWhereApiSaysConflictGets409Status() throws Exception{
+    public void testPostRequestWhereApiSaysConflictGets409Status() throws Exception {
         when(apiController.addWisdomEndpoint(any())).thenReturn(new ResponseEntity(IWisdom.class, HttpStatus.CONFLICT));
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/addwisdom").accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
@@ -138,7 +141,7 @@ public class AddWisdomControllerTest {
 
 
     @Test
-    public void testPostRequestWhereApiSaysCreatedGets201Status() throws Exception{
+    public void testPostRequestWhereApiSaysCreatedGets201Status() throws Exception {
         when(apiController.addWisdomEndpoint(any())).thenReturn(new ResponseEntity(IWisdom.class, HttpStatus.CREATED));
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/addwisdom").accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
@@ -149,6 +152,41 @@ public class AddWisdomControllerTest {
             assertEquals(new Integer(201), actualStatusCode);
         } catch (Exception e) {
             Assert.fail("Model not as expected.");
+        }
+    }
+
+    @Test
+    public void testPostRequestUsesLoggedInPrincipalsNameAsUsernameForWisdom() throws Exception {
+        ArgumentCaptor<IWisdom> captor = ArgumentCaptor.forClass(IWisdom.class);
+        Principal principal = Mockito.mock(Principal.class);
+        when(principal.getName()).thenReturn("miriam");
+        when(apiController.addWisdomEndpoint(any())).thenReturn(new ResponseEntity(IWisdom.class, HttpStatus.CREATED));
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/addwisdom").accept(MediaType.TEXT_HTML).principal(principal))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""))
+                .andReturn();
+        try {
+            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("statusCode");
+            assertEquals(new Integer(201), actualStatusCode);
+            verify(apiController).addWisdomEndpoint(captor.capture());
+            assertEquals("miriam", captor.getValue().getAddedByUsername());
+        } catch (Exception e) {
+            Assert.fail("Model not as expected.");
+        }
+    }
+
+    @Test
+    public void testDoesNotBlowUpIfSomehowThereIsNoLoggedInPrincipalAtTimeOfWisdomSubmission() throws Exception {
+        try {
+            when(apiController.addWisdomEndpoint(any())).thenReturn(new ResponseEntity(IWisdom.class, HttpStatus.CREATED));
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/addwisdom").accept(MediaType.TEXT_HTML))
+                    .andExpect(status().isOk())
+                    .andExpect(content().string(""))
+                    .andReturn();
+            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("statusCode");
+            assertEquals(new Integer(201), actualStatusCode);
+        } catch (Exception e) {
+            Assert.fail("Should tolerate the lack of an authenticated principal.");
         }
     }
 }

@@ -4,13 +4,14 @@ package org.sapphon.personal.upwise.controller.ui;
 import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.Wisdom;
 import org.sapphon.personal.upwise.controller.APIController;
-import org.sapphon.personal.upwise.presentation.ColorPicker;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.security.Principal;
 
 @Controller
 public class AddWisdomController {
@@ -28,7 +29,11 @@ public class AddWisdomController {
     }
 
     @PostMapping("/addwisdom")
-    public String wisdomSubmit(Model model, @ModelAttribute Wisdom wisdomToAdd) {
+    public String wisdomSubmit(Model model, Principal loggedInUser, @ModelAttribute Wisdom wisdomToAdd) {
+        if(loggedInUser != null && loggedInUser.getName() != null && !loggedInUser.getName().isEmpty()){
+            wisdomToAdd.setAddedByUsername(loggedInUser.getName());
+        }
+
         ResponseEntity<IWisdom> wisdomResponseEntity = this.apiController.addWisdomEndpoint(wisdomToAdd);
         model.addAttribute("statusCode", wisdomResponseEntity.getStatusCodeValue());
         return wisdomForm(model);
