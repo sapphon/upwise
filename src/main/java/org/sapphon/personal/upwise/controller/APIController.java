@@ -5,6 +5,7 @@ import org.sapphon.personal.upwise.IVote;
 import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
+import org.sapphon.personal.upwise.service.UserService;
 import org.sapphon.personal.upwise.service.VoteService;
 import org.sapphon.personal.upwise.service.WisdomService;
 import org.sapphon.personal.upwise.time.TimeLord;
@@ -21,14 +22,16 @@ import java.util.Random;
 @RestController
 public class APIController {
 
-    private WisdomService wisdomService;
+    private final WisdomService wisdomService;
 
-    private VoteService voteService;
+    private final VoteService voteService;
+    private final UserService userService;
 
     @Autowired
-    public APIController(WisdomService wisdomService, VoteService voteService) {
+    public APIController(WisdomService wisdomService, VoteService voteService, UserService userService) {
         this.wisdomService = wisdomService;
         this.voteService = voteService;
+        this.userService = userService;
     }
 
 
@@ -143,24 +146,30 @@ public class APIController {
                 !wisdom.getAttribution().isEmpty();
     }
 
-    private boolean validateUser(IUser user) {
-        return false;
+    private boolean validateUser(IUser user){
+        return user.getLoginUsername() != null && !user.getLoginUsername().isEmpty();
     }
 
     private IWisdom addWisdom(IWisdom wisdom){
         return this.wisdomService.addOrUpdateWisdom(wisdom);
     }
 
+
     @RequestMapping(value = "/registration/add", method = RequestMethod.POST)
-    public ResponseEntity<IUser> addUserEndpoint(IUser user) {
-//        if(!validateUser(user)){
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
-//        else if(this.userService.findWisdomByContentAndAttribution(wisdom.getWisdomContent(), wisdom.getAttribution()).isPresent()){
-//            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-//        }
-//        user.setTimeAdded(TimeLord.getNow());
-//        return ResponseEntity.status(HttpStatus.CREATED).body(this.addWisdom(wisdom));
-        return null;
+    public ResponseEntity<IUser> addUserEndpoint(@RequestBody IUser user) {
+        if(!validateUser(user)){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        else if(this.userService.getUserWithLogin(user.getLoginUsername()) != null){
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+        else {
+            user.setTimeAdded(TimeLord.getNow());
+            return ResponseEntity.status(HttpStatus.CREATED).body(this.addUser(user));
+        }
+    }
+
+    private IUser addUser(IUser user) {
+        return this.userService.addOrUpdateUser(user);
     }
 }

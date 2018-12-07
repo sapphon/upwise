@@ -1,8 +1,6 @@
 package org.sapphon.personal.upwise.repository.jpa;
 
 import org.sapphon.personal.upwise.AbstractUser;
-import org.sapphon.personal.upwise.AbstractVote;
-import org.sapphon.personal.upwise.IWisdom;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,7 +19,7 @@ public class UserJpa extends AbstractUser {
         super();
     }
 
-    public UserJpa(String loginUsername, String displayUsername, Timestamp timeAdded) {
-        super(loginUsername, displayUsername, timeAdded);
+    public UserJpa(String loginUsername, String displayUsername, Timestamp timeAdded, String password) {
+        super(loginUsername, displayUsername, timeAdded, password);
     }
 }

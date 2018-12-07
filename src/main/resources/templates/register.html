@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head(pageTitle='Register an Upwise Account')"></head>
+<body>
+
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<main>
+<div class="container">
+    <form action="#" th:action="@{/register}" th:object="${userToRegister}" method="post">
+        <p>Login Name: <input type="text" th:field="*{loginUsername}" th:placeholder="#{placeholder.username}"/></p>
+        <p>Display Name: <input type="text" th:field="*{displayName}" th:placeholder="#{placeholder.displayName}"/></p>
+        <p>Password: <input type="text" th:field="*{password}" th:placeholder="#{placeholder.password}"/></p>
+        <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
+    </form>
+</div>
+</main>
+<a th:replace="fragments/footer :: scriptimports"></a>
+<div th:if="${statusCode}" th:switch="${statusCode}">
+    <script th:case="201">M.toast({html: "Your username was registered!"})</script>
+    <script th:case="400">M.toast({html: "That account information isn't valid!"})</script>
+    <script th:case="409">M.toast({html: "That login already exists!"})</script>
+</div>
+</body>
+<footer th:replace="fragments/footer :: footer"></footer>
+</html>

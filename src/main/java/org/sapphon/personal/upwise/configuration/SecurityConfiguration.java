@@ -32,16 +32,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         final InMemoryUserDetailsManagerConfigurer<AuthenticationManagerBuilder> inMemoryAuth = auth
                 .inMemoryAuthentication();
         for(IUser user : userService.getAllUsers()){
-            inMemoryAuth.withUser(user.getLoginUsername()).password("abc").roles("USER");
+            inMemoryAuth.withUser(user.getLoginUsername()).password(passwordEncoder().encode(user.getPassword())).roles("USER");
         }
         inMemoryAuth.withUser("uwadmin").password(passwordEncoder().encode("Thunderfluff")).roles("ADMIN");
+        inMemoryAuth.withUser("uwuser").password(passwordEncoder().encode("upwise")).roles("USER");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception{
         http.formLogin().permitAll()
-                .and().headers().frameOptions().sameOrigin()        //sauce for h2 console to work with spring security enabled
+                .and().headers().frameOptions().sameOrigin()   //sauce for h2 console to work with spring security enabled
+                .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/h2")).hasRole("ADMIN")
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/loggedout")).permitAll()
+                .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/register")).permitAll()
                 .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/loggedout")
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/scripts/**")).permitAll()
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/styles/**")).permitAll()

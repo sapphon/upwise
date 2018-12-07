@@ -9,13 +9,15 @@ public abstract class AbstractUser implements IUser {
     protected String loginUsername;
     protected String displayUsername;
     protected Timestamp timeAdded;
+    protected String password;
 
     public AbstractUser(){}
 
-    public AbstractUser(String loginUsername, String displayUsername, Timestamp timeAdded) {
+    public AbstractUser(String loginUsername, String displayUsername, Timestamp timeAdded, String password) {
         this.loginUsername = loginUsername;
         this.displayUsername = displayUsername;
         this.timeAdded = timeAdded;
+        this.password = password;
     }
 
     @Override
@@ -72,6 +74,14 @@ public abstract class AbstractUser implements IUser {
     @Override
     public void setTimeAdded(Timestamp timeAdded) {
         this.timeAdded = timeAdded;
+    }
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+    @Override
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     //endregion

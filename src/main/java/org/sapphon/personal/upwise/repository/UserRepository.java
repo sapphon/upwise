@@ -51,7 +51,8 @@ public class UserRepository {
     }
 
     public IUser getByLoginUsername(String loginUsername) {
-        return DomainObjectFactory.createUser(jpaUserRepo.findTopByLoginUsernameOrderByTimeAddedDesc(loginUsername));
+        final UserJpa foundUser = jpaUserRepo.findTopByLoginUsernameOrderByTimeAddedDesc(loginUsername);
+        return foundUser != null ? DomainObjectFactory.createUser(foundUser) : null;
     }
 
     public List<IUser> getByDisplayName(String displayUsername) {

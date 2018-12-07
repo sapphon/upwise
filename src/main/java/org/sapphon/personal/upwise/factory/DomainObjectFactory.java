@@ -2,8 +2,6 @@ package org.sapphon.personal.upwise.factory;
 
 import org.sapphon.personal.upwise.*;
 import org.sapphon.personal.upwise.presentation.WisdomWithVotesPresentation;
-import org.sapphon.personal.upwise.repository.VoteRepository;
-import org.sapphon.personal.upwise.repository.WisdomRepository;
 import org.sapphon.personal.upwise.repository.jpa.UserJpa;
 import org.sapphon.personal.upwise.repository.jpa.VoteJpa;
 import org.sapphon.personal.upwise.repository.jpa.WisdomJpa;
@@ -39,19 +37,19 @@ public class DomainObjectFactory {
     }
 
     public static IUser createUser(IUser user){
-        return createUser(user.getLoginUsername(), user.getDisplayName(), user.getTimeAdded());
+        return createUser(user.getLoginUsername(), user.getDisplayName(), user.getTimeAdded(), user.getPassword());
     }
 
-    public static IUser createUserWithCreatedTimeNow(String loginUsername, String displayUsername){
-        return createUser(loginUsername, displayUsername, TimeLord.getNow());
+    public static IUser createUserWithCreatedTimeNow(String loginUsername, String displayUsername, String password){
+        return createUser(loginUsername, displayUsername, TimeLord.getNow(), password);
     }
 
-    public static IUser createUser(String loginUsername, String displayUsername, Timestamp timeAdded) {
-        return new User(loginUsername, displayUsername, timeAdded);
+    public static IUser createUser(String loginUsername, String displayUsername, Timestamp timeAdded, String password) {
+        return new User(loginUsername, displayUsername, timeAdded, password);
     }
 
     public static UserJpa createUserJpa(IUser user){
-        return new UserJpa(user.getLoginUsername(), user.getDisplayName(), user.getTimeAdded());
+        return new UserJpa(user.getLoginUsername(), user.getDisplayName(), user.getTimeAdded(), user.getPassword());
     }
 
     public static IVote createVote(IVote vote) {

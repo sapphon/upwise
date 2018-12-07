@@ -15,6 +15,10 @@ public interface IUser {
 
     String getLoginUsername();
 
+    String getPassword();
+
+    void setPassword(String password);
+
     void setLoginUsername(String addedByUsername);
 
     void setDisplayName(String displayName);

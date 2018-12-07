@@ -8,7 +8,6 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
 import org.sapphon.personal.upwise.IUser;
-import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +33,10 @@ public class UserRepositoryTest {
     @Before
     public void setUp() throws Exception {
         testUsers = new IUser[4];
-        testUsers[0] = DomainObjectFactory.createUser("tstone10", "Terrence Austin Stoneridge III", TimeLord.getNow());
-        testUsers[1] = DomainObjectFactory.createUser("askywalk", "Darth Vader", TimeLord.getNowWithOffset(500000));
-        testUsers[2] = DomainObjectFactory.createUser("grivia", "The Witcher", TimeLord.getNowWithOffset(-1));
-        testUsers[3] = DomainObjectFactory.createUserWithCreatedTimeNow("jrobiso7", "Jackie Robinson");
+        testUsers[0] = DomainObjectFactory.createUser("tstone10", "Terrence Austin Stoneridge III", TimeLord.getNow(), "murica");
+        testUsers[1] = DomainObjectFactory.createUser("askywalk", "Darth Vader", TimeLord.getNowWithOffset(500000), "dark_$id3");
+        testUsers[2] = DomainObjectFactory.createUser("grivia", "The Witcher", TimeLord.getNowWithOffset(-1), "v3ng3rb3rg");
+        testUsers[3] = DomainObjectFactory.createUserWithCreatedTimeNow("jrobiso7", "Jackie Robinson", "butitdo");
         userRepository.clear();
     }
 

@@ -3,6 +3,7 @@ package org.sapphon.personal.upwise.controller.ui;
 import org.sapphon.personal.upwise.IUser;
 import org.sapphon.personal.upwise.IVote;
 import org.sapphon.personal.upwise.controller.APIController;
+import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.service.VoteService;
 import org.sapphon.personal.upwise.service.WisdomService;
 import org.springframework.http.MediaType;
@@ -22,11 +23,12 @@ public class UserController {
     private final WisdomService wisdomService;
 
     private final VoteService voteService;
-    private APIController apiController;
+    private final APIController apiController;
 
     public UserController(WisdomService wisdomService, VoteService voteService, APIController apiController){
         this.wisdomService = wisdomService;
         this.voteService = voteService;
+        this.apiController = apiController;
     }
 
 
@@ -45,6 +47,7 @@ public class UserController {
 
     @GetMapping("/register")
     public String registrationForm(Model model){
+        model.addAttribute("userToRegister", DomainObjectFactory.createUser(null, null, null, null));
         return "register";
     }
 

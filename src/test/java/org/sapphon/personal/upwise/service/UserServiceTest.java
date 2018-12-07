@@ -40,7 +40,7 @@ public class UserServiceTest {
 
     @Test
     public void queriesRepoForUsersByLoginName() {
-        IUser expected = DomainObjectFactory.createUser("lmccoy67", "Leonard McCoy", TimeLord.getNow());
+        IUser expected = DomainObjectFactory.createUser("lmccoy67", "Leonard McCoy", TimeLord.getNow(), "pword");
         when(mockUserRepository.getByLoginUsername("lmccoy67")).thenReturn(expected);
         IUser actual = underTest.getUserWithLogin("lmccoy67");
         verify(mockUserRepository).getByLoginUsername("lmccoy67");
@@ -49,7 +49,7 @@ public class UserServiceTest {
 
     @Test
     public void addsToRepoWhenUserIsAdded(){
-        IUser expected = DomainObjectFactory.createUser("lmccoy67", "Leonard McCoy", TimeLord.getNow());
+        IUser expected = DomainObjectFactory.createUser("lmccoy67", "Leonard McCoy", TimeLord.getNow(), "drowp");
         underTest.addOrUpdateUser(expected);
         verify(mockUserRepository).save(expected);
     }
