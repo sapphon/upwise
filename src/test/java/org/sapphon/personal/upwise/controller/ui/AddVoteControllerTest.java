@@ -4,7 +4,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 import org.sapphon.personal.upwise.IVote;
+import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.controller.APIController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,8 +24,11 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import java.security.Principal;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -98,12 +104,54 @@ public class AddVoteControllerTest {
         }
     }
 
+    @Test
+    public void testPostRequestUsesLoggedInPrincipalsNameAsUsernameForVote() throws Exception {
+        ArgumentCaptor<IVote> captor = ArgumentCaptor.forClass(IVote.class);
+        Principal principal = Mockito.mock(Principal.class);
+        when(principal.getName()).thenReturn("malvo");
+        when(apiController.voteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(IVote.class, HttpStatus.CREATED));
+        MvcResult mvcResult = makeMockMvcPostWithParamValuesAndPrincipal("morbo", "always fall up", principal)
+                .andExpect(status().isOk())
+                .andExpect(content().string(""))
+                .andReturn();
+        try {
+            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("statusCode");
+            assertEquals(new Integer(201), actualStatusCode);
+            verify(apiController).voteForWisdomEndpoint(captor.capture());
+            assertEquals("malvo", captor.getValue().getAddedByUsername());
+        } catch (Exception e) {
+            Assert.fail("Model not as expected.");
+        }
+    }
+
+    @Test
+    public void testDoesNotBlowUpIfSomehowThereIsNoLoggedInPrincipalAtTimeOfVoteSubmission() throws Exception {
+        try {
+            when(apiController.voteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(IVote.class, HttpStatus.CREATED));
+            MvcResult mvcResult = makeMockMvcPostWithBlankParams()
+                    .andExpect(status().isOk())
+                    .andExpect(content().string(""))
+                    .andReturn();
+            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("statusCode");
+            assertEquals(new Integer(201), actualStatusCode);
+        } catch (Exception e) {
+            Assert.fail("Should tolerate the lack of an authenticated principal.");
+        }
+    }
+
 
     private ResultActions makeMockMvcPostWithParamValues(String username, String content, String wiseMan) throws Exception {
         return mvc.perform(MockMvcRequestBuilders.post("/" + urlUnderTest).accept(MediaType.TEXT_HTML)
                 .param("voterUsername", username)
                 .param("wisdomContent", content)
                 .param("wisdomAttribution", wiseMan));
+    }
+
+    private ResultActions makeMockMvcPostWithParamValuesAndPrincipal(String content, String wiseMan, Principal principal) throws Exception {
+        return mvc.perform(MockMvcRequestBuilders.post("/" + urlUnderTest).accept(MediaType.TEXT_HTML)
+                .param("wisdomContent", content)
+                .param("wisdomAttribution", wiseMan)
+                .principal(principal));
     }
 
     private ResultActions makeMockMvcPostWithBlankParams() throws Exception {
