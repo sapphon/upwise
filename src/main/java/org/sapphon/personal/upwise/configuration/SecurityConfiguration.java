@@ -35,14 +35,24 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception{
-        http.formLogin().permitAll()
-                .and().headers().frameOptions().sameOrigin()   //sauce for h2 console to work with spring security enabled
+        http.
+                //login
+                formLogin().permitAll()
+                //sauce for h2 console to work with spring security enabled
+                .and().headers().frameOptions().sameOrigin()
+                //h2 console requires admin
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/h2")).hasRole("ADMIN")
+                //public endpoints
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/loggedout")).permitAll()
+                .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/randomwisdom")).permitAll()
+                .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/user/**")).permitAll()
+                .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/wisdomleaderboard")).permitAll()
+                .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/wisdomsearch")).permitAll()
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/register")).permitAll()
                 .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/loggedout")
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/scripts/**")).permitAll()
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/styles/**")).permitAll()
+                //anything not public requires authentication
                 .and().authorizeRequests().anyRequest().fullyAuthenticated()
                 .and().csrf().disable();
     }
