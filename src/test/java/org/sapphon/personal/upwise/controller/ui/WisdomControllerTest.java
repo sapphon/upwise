@@ -104,31 +104,6 @@ public class WisdomControllerTest {
     }
 
     @Test
-    public void getWisdomParadeCollaboratesWithWisdomService() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/wisdomparade").accept(MediaType.TEXT_HTML))
-                .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("")));
-        verify(wisdomService, times(1)).getAllWisdomsWithVotes();
-    }
-
-    @Test
-    public void getWisdomParade_WithWisdomAndVotes_ProducesCorrectOutputOnModel() throws Exception {
-        when(wisdomService.getAllWisdomsWithVotes()).thenReturn(newArrayList(DomainObjectFactory.createWisdomWithVotes(exampleWisdoms.get(0), newArrayList(exampleVotes.get(0), exampleVotes.get(1)))));
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/wisdomparade").accept(MediaType.TEXT_HTML))
-                .andExpect(status().isOk())
-                .andExpect(content().string(""))
-                .andReturn();
-        try {
-            List<WisdomWithVotesPresentation> actualWisdoms = (List<WisdomWithVotesPresentation>) mvcResult.getModelAndView().getModel().values().iterator().next();
-            assertEquals(exampleWisdoms.get(0), actualWisdoms.get(0));
-            assertEquals(exampleVotes.get(0), actualWisdoms.get(0).getVotes().get(0));
-            assertEquals(exampleVotes.get(1), actualWisdoms.get(0).getVotes().get(1));
-        } catch (Exception e) {
-            Assert.fail("Model not as expected.");
-        }
-    }
-
-    @Test
     public void setsANullWisdomOnTheModelForTheRandomWisdomPage_IfNoWisdomsExist() throws Exception{
         when(wisdomService.hasAnyWisdoms()).thenReturn(false);
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/randomwisdom").accept(MediaType.TEXT_HTML))
