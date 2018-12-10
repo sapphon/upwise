@@ -12,12 +12,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.sapphon.personal.upwise.TestHelper.assertListEquals;
@@ -37,7 +35,7 @@ public class WisdomServiceTest {
 
     @Test
     public void usesTheWisdomRepositoryToFindAllWisdomsAndReturnsThemWhenAllWisdomsIsCalled() {
-        List<IWisdom> expectedResults = RandomObjectFactory.makeRandomCollection();
+        List<IWisdom> expectedResults = RandomObjectFactory.makeRandomListOfWisdoms();
 
         when(wisdomRepo.getAll()).thenReturn(expectedResults);
 
@@ -50,7 +48,7 @@ public class WisdomServiceTest {
 
     @Test
     public void wisdomsPassedToAddOrUpdateWisdomGetSentToTheRepositorySaveMethod() {
-        IWisdom expectedResult = RandomObjectFactory.makeRandom();
+        IWisdom expectedResult = RandomObjectFactory.makeRandomWisdom();
 
         underTest.addOrUpdateWisdom(expectedResult);
 
@@ -65,7 +63,7 @@ public class WisdomServiceTest {
 
     @Test
     public void testGetAllWisdomsWithVotesCallsVoteServiceOnceForEachWisdom(){
-        List<IWisdom> expectedWisdoms = RandomObjectFactory.makeRandomCollection();
+        List<IWisdom> expectedWisdoms = RandomObjectFactory.makeRandomListOfWisdoms();
         when(wisdomRepo.getAll()).thenReturn(expectedWisdoms);
 
         underTest.getAllWisdomsWithVotes();
@@ -78,7 +76,7 @@ public class WisdomServiceTest {
 
     @Test
     public void testFindWisdomTakesAnIWisdomArgumentAndSearchesByUniqueKey(){
-        IWisdom theChosenOne = RandomObjectFactory.makeRandom();
+        IWisdom theChosenOne = RandomObjectFactory.makeRandomWisdom();
         when(wisdomRepo.findWisdom(theChosenOne.getWisdomContent(), theChosenOne.getAttribution())).thenReturn(Optional.of(theChosenOne));
 
         assertEquals(theChosenOne, underTest.findWisdom(theChosenOne).get());

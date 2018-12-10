@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -90,8 +88,8 @@ public class APIControllerTest {
     @Test
     public void getAllCanReturnRealValues_IntegrationTest() throws Exception {
         IWisdom[] testWisdoms = new IWisdom[2];
-        testWisdoms[0] = wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandom());
-        testWisdoms[1] = wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandom());
+        testWisdoms[0] = wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandomWisdom());
+        testWisdoms[1] = wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandomWisdom());
 
         mvc.perform(MockMvcRequestBuilders.get("/wisdom/all").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -107,8 +105,8 @@ public class APIControllerTest {
     @Test
     public void getRandomRealValues_IntegrationTest() throws Exception {
         IWisdom[] testWisdoms = new IWisdom[2];
-        testWisdoms[0] = wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandom());
-        testWisdoms[1] = wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandom());
+        testWisdoms[0] = wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandomWisdom());
+        testWisdoms[1] = wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandomWisdom());
 
         String json0 = outputMapper.writeValueAsString(testWisdoms[0]);
         String json1 = outputMapper.writeValueAsString(testWisdoms[1]);
@@ -128,7 +126,7 @@ public class APIControllerTest {
 
     @Test
     public void addWisdomEndpoint_SaysBadRequestIfNoWisdomContent() throws Exception {
-        IWisdom randomWisdom = RandomObjectFactory.makeRandom();
+        IWisdom randomWisdom = RandomObjectFactory.makeRandomWisdom();
         randomWisdom.setWisdomContent(null);
         mvc.perform(buildJsonPostRequest(randomWisdom, "/wisdom/add"))
                 .andExpect(status().isBadRequest())
@@ -139,7 +137,7 @@ public class APIControllerTest {
 
     @Test
     public void addWisdomEndpoint_SaysConflictIfWisdomCollidesWithPreexistingWisdom() throws Exception {
-        IWisdom randomWisdom = RandomObjectFactory.makeRandom();
+        IWisdom randomWisdom = RandomObjectFactory.makeRandomWisdom();
         wisdomService.addOrUpdateWisdom(randomWisdom);
         mvc.perform(buildJsonPostRequest(randomWisdom, "/wisdom/add"))
                 .andExpect(status().isConflict())
@@ -149,7 +147,7 @@ public class APIControllerTest {
 
     @Test
     public void addVoteEndpoint_SaysBadRequestIfNoWisdomContent() throws Exception {
-        IWisdom randomWisdom = RandomObjectFactory.makeRandom();
+        IWisdom randomWisdom = RandomObjectFactory.makeRandomWisdom();
         randomWisdom.setWisdomContent(null);
         wisdomService.addOrUpdateWisdom(randomWisdom);
         IVote randomVote = RandomObjectFactory.makeRandomVoteForWisdom(randomWisdom);
@@ -161,7 +159,7 @@ public class APIControllerTest {
 
     @Test
     public void addVoteEndpoint_SaysBadRequestIfEmptyWisdomContent() throws Exception {
-        IWisdom randomWisdom = RandomObjectFactory.makeRandom();
+        IWisdom randomWisdom = RandomObjectFactory.makeRandomWisdom();
         randomWisdom.setWisdomContent("");
         wisdomService.addOrUpdateWisdom(randomWisdom);
         IVote randomVote = RandomObjectFactory.makeRandomVoteForWisdom(randomWisdom);
@@ -174,7 +172,7 @@ public class APIControllerTest {
 
     @Test
     public void addVoteEndpoint_SaysBadRequestIfWisdomDoesNotExist() throws Exception {
-        IWisdom randomWisdom = RandomObjectFactory.makeRandom();
+        IWisdom randomWisdom = RandomObjectFactory.makeRandomWisdom();
         IVote randomVote = RandomObjectFactory.makeRandomVoteForWisdom(randomWisdom);
         mvc.perform(buildJsonPostRequest(randomVote, "/vote/add"))
                 .andExpect(status().isBadRequest())
@@ -184,7 +182,7 @@ public class APIControllerTest {
 
     @Test
     public void addVoteEndpoint_SaysBadRequestIfNoWisdomAttribution() throws Exception {
-        IWisdom randomWisdom = RandomObjectFactory.makeRandom();
+        IWisdom randomWisdom = RandomObjectFactory.makeRandomWisdom();
         randomWisdom.setAttribution(null);
         wisdomService.addOrUpdateWisdom(randomWisdom);
         IVote randomVote = RandomObjectFactory.makeRandomVoteForWisdom(randomWisdom);
@@ -196,7 +194,7 @@ public class APIControllerTest {
 
     @Test
     public void addVoteEndpoint_SaysBadRequestIfNoVoterName() throws Exception {
-        IWisdom randomWisdom = RandomObjectFactory.makeRandom();
+        IWisdom randomWisdom = RandomObjectFactory.makeRandomWisdom();
         wisdomService.addOrUpdateWisdom(randomWisdom);
         IVote randomVote = RandomObjectFactory.makeRandomVoteForWisdom(randomWisdom);
         randomVote.setAddedByUsername(null);
@@ -209,7 +207,7 @@ public class APIControllerTest {
 
     @Test
     public void addVoteEndpoint_SaysConflictIfVoteCollidesWithPreexistingVote() throws Exception {
-        IWisdom randomWisdom = RandomObjectFactory.makeRandom();
+        IWisdom randomWisdom = RandomObjectFactory.makeRandomWisdom();
         IVote randomVote = RandomObjectFactory.makeRandomVoteForWisdom(randomWisdom);
         wisdomService.addOrUpdateWisdom(randomWisdom);
         voteService.addOrUpdateVote(randomVote);
@@ -222,7 +220,7 @@ public class APIControllerTest {
 
     @Test
     public void addVoteEndpoint_SaysCreatedInBaseCase() throws Exception {
-        IWisdom randomWisdom = RandomObjectFactory.makeRandom();
+        IWisdom randomWisdom = RandomObjectFactory.makeRandomWisdom();
         wisdomService.addOrUpdateWisdom(randomWisdom);
         IVote randomVote = RandomObjectFactory.makeRandomVoteForWisdom(randomWisdom);
         mvc.perform(buildJsonPostRequest(randomVote, "/vote/add"))

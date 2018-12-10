@@ -12,6 +12,7 @@ import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -84,7 +85,7 @@ public class APIController {
     }
 
     public IWisdom populateRandomWisdom(){
-        return this.wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandom());
+        return this.wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandomWisdom());
     }
 
     @RequestMapping(value = "/wisdom/voterandom")
@@ -165,6 +166,7 @@ public class APIController {
         }
         else {
             user.setTimeAdded(TimeLord.getNow());
+            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
             return ResponseEntity.status(HttpStatus.CREATED).body(this.addUser(user));
         }
     }

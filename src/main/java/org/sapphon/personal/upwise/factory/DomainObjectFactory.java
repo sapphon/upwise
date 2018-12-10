@@ -6,9 +6,17 @@ import org.sapphon.personal.upwise.repository.jpa.UserJpa;
 import org.sapphon.personal.upwise.repository.jpa.VoteJpa;
 import org.sapphon.personal.upwise.repository.jpa.WisdomJpa;
 import org.sapphon.personal.upwise.time.TimeLord;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 public class DomainObjectFactory {
 
@@ -69,4 +77,7 @@ public class DomainObjectFactory {
         return new WisdomWithVotesPresentation(wisdom, votes);
     }
 
+    public static UserDetails createUserDetailsFromUser(IUser user) {
+        return new UserDetailsUserWrapper(user);
+    }
 }

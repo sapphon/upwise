@@ -1,6 +1,7 @@
 package org.sapphon.personal.upwise.configuration;
 
 import org.sapphon.personal.upwise.IUser;
+import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -29,13 +30,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth)
             throws Exception {
-        final InMemoryUserDetailsManagerConfigurer<AuthenticationManagerBuilder> inMemoryAuth = auth
-                .inMemoryAuthentication();
-        for(IUser user : userService.getAllUsers()){
-            inMemoryAuth.withUser(user.getLoginUsername()).password(passwordEncoder().encode(user.getPassword())).roles("USER");
-        }
-        inMemoryAuth.withUser("uwadmin").password(passwordEncoder().encode("Thunderfluff")).roles("ADMIN");
-        inMemoryAuth.withUser("uwuser").password(passwordEncoder().encode("upwise")).roles("USER");
+        auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
     }
 
     @Override

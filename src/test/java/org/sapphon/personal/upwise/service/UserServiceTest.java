@@ -5,8 +5,11 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.sapphon.personal.upwise.IUser;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
+import org.sapphon.personal.upwise.factory.RandomObjectFactory;
 import org.sapphon.personal.upwise.repository.UserRepository;
 import org.sapphon.personal.upwise.time.TimeLord;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +28,11 @@ public class UserServiceTest {
     public void before(){
         mockUserRepository = Mockito.mock(UserRepository.class);
         underTest = new UserService(mockUserRepository);
+    }
+
+    @Test
+    public void testFunctionsAsUserDetailsService(){
+        assertTrue(underTest instanceof UserDetailsService);
     }
 
     @Test
@@ -53,5 +61,16 @@ public class UserServiceTest {
         underTest.addOrUpdateUser(expected);
         verify(mockUserRepository).save(expected);
     }
+
+    @Test
+    public void loadsUserDetailsFromTheUserRepository() {
+        final IUser expectedUser = RandomObjectFactory.makeRandomUser();
+        when(mockUserRepository.getByLoginUsername(expectedUser.getLoginUsername())).thenReturn(expectedUser);
+        final UserDetails actualUserDetails = underTest.loadUserByUsername(expectedUser.getLoginUsername());
+        verify(mockUserRepository).getByLoginUsername(expectedUser.getLoginUsername());
+        assertEquals(expectedUser.getLoginUsername(), actualUserDetails.getUsername());
+        assertEquals(expectedUser.getPassword(), actualUserDetails.getPassword());
+    }
+
 
 }
