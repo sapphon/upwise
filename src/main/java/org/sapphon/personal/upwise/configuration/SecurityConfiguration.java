@@ -30,7 +30,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth)
             throws Exception {
-        auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(userService).passwordEncoder(userService.getPasswordEncoder());
     }
 
     @Override
@@ -55,10 +55,5 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 //anything not public requires authentication
                 .and().authorizeRequests().anyRequest().fullyAuthenticated()
                 .and().csrf().disable();
-    }
-
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 }
