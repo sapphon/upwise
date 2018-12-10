@@ -44,7 +44,7 @@ public class UserService implements UserDetailsService{
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         final IUser userWithLogin = this.getUserWithLogin(username);
         if(userWithLogin == null){
-            return null;
+            throw new UsernameNotFoundException("User not found");
         }
         else{
             return DomainObjectFactory.createUserDetailsFromUser(userWithLogin);

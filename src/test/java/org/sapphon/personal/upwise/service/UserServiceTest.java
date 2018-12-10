@@ -10,11 +10,13 @@ import org.sapphon.personal.upwise.repository.UserRepository;
 import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -73,7 +75,20 @@ public class UserServiceTest {
     }
 
     @Test
-    public void UsesTheSamePasswordEncoderEachTimeYouAskForOne() {
+    public void throwsExpectedExceptionWhenUserIsNotFound() {
+
+        when(mockUserRepository.getByLoginUsername(any())).thenReturn(null);
+        String caughtMsg = "";
+        try {
+            final UserDetails actualUserDetails = underTest.loadUserByUsername("sammybrown");
+        } catch (UsernameNotFoundException e) {
+            caughtMsg = e.getMessage();
+        }
+        assertEquals("User not found", caughtMsg);
+    }
+
+    @Test
+    public void usesTheSamePasswordEncoderEachTimeYouAskForOne() {
         assertSame(underTest.getPasswordEncoder(), underTest.getPasswordEncoder());
     }
 
