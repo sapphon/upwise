@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Navbar Fragment</title>
@@ -15,6 +15,7 @@
                     <li><a href="/wisdomleaderboard">Leaderboard</a></li>
                     <li><a href="/randomwisdom">Random</a></li>
                     <li><a href="/wisdomsearch">Search</a></li>
+                    <li><a sec:authorize="isAuthenticated()" th:href="@{'/user/' + ${#authentication.name}}" th:text="${'All About ' + #authentication.name}"/></a></li>
                     <li><a sec:authorize="isAuthenticated()" href="/logout">Log Out</a></li>
                     <li><a sec:authorize="isAnonymous()" href="/login">Log In</a></li>
                     <li><a sec:authorize="isAnonymous()" href="/register">Register</a></li>
