@@ -8,15 +8,20 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.sapphon.personal.upwise.IUser;
 import org.sapphon.personal.upwise.IVote;
 import org.sapphon.personal.upwise.IWisdom;
+import org.sapphon.personal.upwise.User;
+import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
+import org.sapphon.personal.upwise.service.UserService;
 import org.sapphon.personal.upwise.service.VoteService;
 import org.sapphon.personal.upwise.service.WisdomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,6 +32,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -48,6 +54,9 @@ public class APIControllerTest {
     private ObjectWriter inputMapper;
 
     private ObjectWriter outputMapper;
+
+    @Autowired
+    private UserService userService;
 
     @Before
     public void setUp() {
@@ -228,6 +237,51 @@ public class APIControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(outputMapper.writeValueAsString(randomVote)));
 
+    }
+
+    @Test
+    public void addUserEndpointSaysCreatedInBaseCase() throws Exception {
+        IUser randomUser = RandomObjectFactory.makeRandomUser();
+
+                mvc.perform(buildJsonPostRequest(randomUser, "/registration/add"))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    public void addUserEndpointSaysBadRequestIfNoUsername() throws Exception {
+        IUser userWithBlankOrNullLogin = RandomObjectFactory.makeRandomUser();
+        userWithBlankOrNullLogin.setLoginUsername("");
+
+        mvc.perform(buildJsonPostRequest(userWithBlankOrNullLogin, "/registration/add"))
+                .andExpect(status().isBadRequest());
+
+        userWithBlankOrNullLogin.setLoginUsername(null);
+
+        mvc.perform(buildJsonPostRequest(userWithBlankOrNullLogin, "/registration/add"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void addUserEndpointSaysBadRequestIfNoPassword() throws Exception {
+        IUser userWithBlankOrNullPassword = RandomObjectFactory.makeRandomUser();
+        userWithBlankOrNullPassword.setPassword("");
+
+        mvc.perform(buildJsonPostRequest(userWithBlankOrNullPassword, "/registration/add"))
+                .andExpect(status().isBadRequest());
+
+        userWithBlankOrNullPassword.setPassword(null);
+
+        mvc.perform(buildJsonPostRequest(userWithBlankOrNullPassword, "/registration/add"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void addUserEndpointSaysConflictIfSameUsernameAlreadyExists() throws Exception {
+        IUser randomUser = RandomObjectFactory.makeRandomUser();
+        userService.addOrUpdateUser(randomUser);
+        mvc.perform(buildJsonPostRequest(randomUser, "/registration/add"))
+                .andExpect(status().isConflict());
     }
 
     private MockHttpServletRequestBuilder buildJsonPostRequest(Object postBodyContent, String uri) throws JsonProcessingException {

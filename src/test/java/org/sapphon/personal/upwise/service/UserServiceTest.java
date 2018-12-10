@@ -72,5 +72,10 @@ public class UserServiceTest {
         assertEquals(expectedUser.getPassword(), actualUserDetails.getPassword());
     }
 
+    @Test
+    public void UsesTheSamePasswordEncoderEachTimeYouAskForOne() {
+        assertSame(underTest.getPasswordEncoder(), underTest.getPasswordEncoder());
+    }
+
 
 }

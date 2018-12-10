@@ -148,7 +148,8 @@ public class APIController {
     }
 
     private boolean validateUser(IUser user){
-        return user.getLoginUsername() != null && !user.getLoginUsername().isEmpty();
+        return user.getLoginUsername() != null && !user.getLoginUsername().isEmpty() &&
+                user.getPassword() != null && !user.getPassword().isEmpty();
     }
 
     private IWisdom addWisdom(IWisdom wisdom){
@@ -166,7 +167,7 @@ public class APIController {
         }
         else {
             user.setTimeAdded(TimeLord.getNow());
-            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+            user.setPassword(this.userService.getPasswordEncoder().encode(user.getPassword()));
             return ResponseEntity.status(HttpStatus.CREATED).body(this.addUser(user));
         }
     }
