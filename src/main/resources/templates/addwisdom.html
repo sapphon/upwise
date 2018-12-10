@@ -7,6 +7,7 @@
 
 <main>
 <div class="container">
+    <h2>Submit New Wisdom</h2>
     <form action="#" th:action="@{/addwisdom}" th:object="${wisdomToAdd}" method="post">
         <p>Wisdom: <input type="text" th:field="*{wisdomContent}" th:placeholder="#{placeholder.wisdomContent}"/></p>
         <p>Attribution: <input type="text" th:field="*{attribution}" th:placeholder="#{placeholder.wisdomAttribution}"/></p>

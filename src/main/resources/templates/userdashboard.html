@@ -6,57 +6,63 @@
 <div th:replace="fragments/navbar :: navbar"></div>
 
 <main>
-    <h2 th:text="#{title.userDashboard.submitted}">Wisdoms Submitted</h2>
-    <div class="wisdomsSubmittedList" th:unless="${#lists.isEmpty(allWisdomsSubmitted)}">
-        <table>
-            <thead>
-            <tr>
-                <th th:text="#{wisdom.wisdomContent}">Wisdom</th>
-                <th th:text="#{wisdom.attribution}">Wise Person</th>
-                <th th:text="#{wisdom.addedDate}">Submitted On</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="wisdom : ${allWisdomsSubmitted}">
-                <td th:text="${wisdom.wisdomContent}">A good programmer is someone who looks both ways before crossing a
-                    one-way street.
-                </td>
-                <td th:text="${wisdom.attribution}">Doug Linder</td>
-                <td th:text="${wisdom.timeAdded}">January 1, 1970 01:00:00 GMT</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="wisdomsSubmittedList" th:if="${#lists.isEmpty(allWisdomsSubmitted)}">
-        <p>You haven't submitted any wisdom yet. Do so <a href="/addwisdom">here</a>.</p>
-    </div>
-    <h2 th:text="#{title.userDashboard.votedFor}">Wisdoms Voted For</h2>
-    <div class="wisdomsVotedForList" th:unless="${#lists.isEmpty(allWisdomsVotedFor)}">
-        <table>
-            <thead>
-            <tr>
-                <th th:text="#{wisdom.wisdomContent}">Wisdom</th>
-                <th th:text="#{wisdom.attribution}">Wise Person</th>
-                <th th:text="#{wisdom.addedBy}">Submitted By</th>
-                <th th:text="#{wisdom.addedDate}">Submitted On</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="wisdom : ${allWisdomsVotedFor}">
-                <td th:text="${wisdom.wisdomContent}">A good programmer is someone who looks both ways before crossing a
-                    one-way street.
-                </td>
-                <td th:text="${wisdom.attribution}">Doug Linder</td>
-                <td th:text="${wisdom.addedByUsername}">intellijames</td>
-                <td th:text="${wisdom.timeAdded}">January 1, 1970 01:00:00 GMT</td>
-            </tr>
-            </tbody>
-        </table>
+    <div class="container">
+        <h2>User History</h2>
+        <h2 th:text="#{title.userDashboard.submitted}">Wisdoms Submitted</h2>
+        <div class="wisdomsSubmittedList" th:unless="${#lists.isEmpty(allWisdomsSubmitted)}">
+            <table>
+                <thead>
+                <tr>
+                    <th th:text="#{wisdom.wisdomContent}">Wisdom</th>
+                    <th th:text="#{wisdom.attribution}">Wise Person</th>
+                    <th th:text="#{wisdom.addedDate}">Submitted On</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="wisdom : ${allWisdomsSubmitted}">
+                    <td th:text="${wisdom.wisdomContent}">A good programmer is someone who looks both ways before
+                        crossing a
+                        one-way street.
+                    </td>
+                    <td th:text="${wisdom.attribution}">Doug Linder</td>
+                    <td th:text="${wisdom.timeAdded}">January 1, 1970 01:00:00 GMT</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="wisdomsSubmittedList" th:if="${#lists.isEmpty(allWisdomsSubmitted)}">
+            <p>You haven't submitted any wisdom yet. Do so <a href="/addwisdom">here</a>.</p>
+        </div>
+        <h2 th:text="#{title.userDashboard.votedFor}">Wisdoms Voted For</h2>
+        <div class="wisdomsVotedForList" th:unless="${#lists.isEmpty(allWisdomsVotedFor)}">
+            <table>
+                <thead>
+                <tr>
+                    <th th:text="#{wisdom.wisdomContent}">Wisdom</th>
+                    <th th:text="#{wisdom.attribution}">Wise Person</th>
+                    <th th:text="#{wisdom.addedBy}">Submitted By</th>
+                    <th th:text="#{wisdom.addedDate}">Submitted On</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="wisdom : ${allWisdomsVotedFor}">
+                    <td th:text="${wisdom.wisdomContent}">A good programmer is someone who looks both ways before
+                        crossing a
+                        one-way street.
+                    </td>
+                    <td th:text="${wisdom.attribution}">Doug Linder</td>
+                    <td th:text="${wisdom.addedByUsername}">intellijames</td>
+                    <td th:text="${wisdom.timeAdded}">January 1, 1970 01:00:00 GMT</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="wisdomsVotedForList" th:if="${#lists.isEmpty(allWisdomsVotedFor)}">
+            <p>You haven't voted for any wisdoms yet. Find one you might like <a href="/wisdomleaderboard">here</a>.</p>
+        </div>
     </div>
 
-    <div class="wisdomsVotedForList" th:if="${#lists.isEmpty(allWisdomsVotedFor)}">
-        <p>You haven't voted for any wisdoms yet. Find one you might like <a href="/wisdomleaderboard">here</a>.</p>
-    </div>
 </main>
 <a th:replace="fragments/footer :: scriptimports"></a>
 </body>

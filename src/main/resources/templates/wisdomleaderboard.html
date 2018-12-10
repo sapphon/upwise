@@ -6,7 +6,7 @@
 <div th:replace="fragments/navbar :: navbar"></div>
 <main>
 <div class="container">
-    <h1 th:text="#{title.leaderboard}">Wisdom Leaderboard</h1>
+    <h2 th:text="#{title.leaderboard}">Wisdom Leaderboard</h2>
     <div class="wisdomlist" th:unless="${#lists.isEmpty(allWisdoms)}">
         <div class="row" th:each="wisdom : ${allWisdoms}">
             <div class="col s12">
