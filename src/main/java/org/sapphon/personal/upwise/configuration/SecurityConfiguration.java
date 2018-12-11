@@ -37,11 +37,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception{
         http.
                 //login
-                formLogin().permitAll()
+                formLogin().loginPage("/login").passwordParameter("upwisePassword").usernameParameter("upwiseLoginUsername").permitAll()
                 //sauce for h2 console to work with spring security enabled
                 .and().headers().frameOptions().sameOrigin()
                 //h2 console requires admin
-                .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/h2")).hasRole("ADMIN")
+                .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/h2")).hasAuthority("ADMIN")
                 //public endpoints
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/loggedout")).permitAll()
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/randomwisdom")).permitAll()

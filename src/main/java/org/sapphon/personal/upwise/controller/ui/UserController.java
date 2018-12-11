@@ -57,4 +57,9 @@ public class UserController {
         model.addAttribute("statusCode", userRegistrationResponseEntity.getStatusCodeValue());
         return registrationForm(model);
     }
+
+    @GetMapping("/login")
+    public String getLoginPage(Model model){
+        return "login";
+    }
 }

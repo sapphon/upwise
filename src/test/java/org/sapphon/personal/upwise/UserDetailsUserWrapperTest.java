@@ -3,7 +3,11 @@ package org.sapphon.personal.upwise;
 import org.junit.Before;
 import org.junit.Test;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
+import org.sapphon.personal.upwise.time.TimeLord;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.Iterator;
 
 import static org.junit.Assert.*;
 
@@ -22,6 +26,15 @@ public class UserDetailsUserWrapperTest {
     public void getAuthoritiesAlwaysSaysUser() throws Exception {
         assertEquals(1, underTest.getAuthorities().size());
         assertEquals(new SimpleGrantedAuthority("USER"), underTest.getAuthorities().iterator().next());
+    }
+
+    @Test
+    public void getAuthoritiesAdminsMePersonallyUntilIGetARealDatabase() throws Exception {
+        UserDetailsUserWrapper uTest = new UserDetailsUserWrapper(new User("sapphon", "Connor S.", TimeLord.getNow(), "b"));
+        assertEquals(2, uTest.getAuthorities().size());
+        Iterator<? extends GrantedAuthority> authorityIterator = uTest.getAuthorities().iterator();
+        assertEquals(new SimpleGrantedAuthority("USER"), authorityIterator.next());
+        assertEquals(new SimpleGrantedAuthority("ADMIN"), authorityIterator.next());
     }
 
     @Test

