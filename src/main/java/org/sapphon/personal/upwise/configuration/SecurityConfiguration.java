@@ -45,6 +45,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 //public endpoints
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/loggedout")).permitAll()
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/randomwisdom")).permitAll()
+                .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/")).permitAll()
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/user/**")).permitAll()
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/wisdomleaderboard")).permitAll()
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/wisdomsearch")).permitAll()
