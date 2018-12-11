@@ -65,8 +65,8 @@ public class APIControllerTest {
     }
 
     @Test
-    public void getLeaderboardData() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/").accept(MediaType.APPLICATION_JSON))
+    public void getHealthCheckData() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/health").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("Upwise API is up")));
     }

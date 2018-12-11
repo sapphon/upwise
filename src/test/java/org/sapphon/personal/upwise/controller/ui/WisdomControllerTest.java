@@ -87,12 +87,16 @@ public class WisdomControllerTest {
     }
 
     @Test
-    public void getWisdomLeaderboard_WithWisdomAndVotes_ProducesCorrectOutputOnModel() throws Exception {
+    public void baseUrlServesYouTheWisdomLeaderboard() throws Exception {
         when(wisdomService.getAllWisdomsWithVotes()).thenReturn(newArrayList(DomainObjectFactory.createWisdomWithVotes(exampleWisdoms.get(0), newArrayList(exampleVotes.get(0), exampleVotes.get(1)))));
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/wisdomleaderboard").accept(MediaType.TEXT_HTML))
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/").accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
                 .andReturn();
+        verifyLeaderboard(mvcResult);
+    }
+
+    private void verifyLeaderboard(MvcResult mvcResult) {
         try {
             List<WisdomWithVotesPresentation> actualWisdoms = (List<WisdomWithVotesPresentation>) mvcResult.getModelAndView().getModel().values().iterator().next();
             assertEquals(exampleWisdoms.get(0), actualWisdoms.get(0));
@@ -101,6 +105,16 @@ public class WisdomControllerTest {
         } catch (Exception e) {
             Assert.fail("Model not as expected.");
         }
+    }
+
+    @Test
+    public void getWisdomLeaderboard_WithWisdomAndVotes_ProducesCorrectOutputOnModel() throws Exception {
+        when(wisdomService.getAllWisdomsWithVotes()).thenReturn(newArrayList(DomainObjectFactory.createWisdomWithVotes(exampleWisdoms.get(0), newArrayList(exampleVotes.get(0), exampleVotes.get(1)))));
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/wisdomleaderboard").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""))
+                .andReturn();
+        verifyLeaderboard(mvcResult);
     }
 
     @Test

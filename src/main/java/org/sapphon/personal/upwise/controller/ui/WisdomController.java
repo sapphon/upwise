@@ -17,6 +17,11 @@ public class WisdomController {
         this.wisdomService = wisdomService;
     }
 
+    @GetMapping(value= "/", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
+    public String getDefaultPage(Model model){
+        return this.getWisdomLeaderboardWithVotes(model);
+    }
+
     @GetMapping(value = "/wisdomleaderboard", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
     public String getWisdomLeaderboardWithVotes(Model model){
         model.addAttribute("allWisdoms", wisdomService.getAllWisdomsWithVotes());

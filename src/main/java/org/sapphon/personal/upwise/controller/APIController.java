@@ -36,8 +36,8 @@ public class APIController {
     }
 
 
-    @RequestMapping(value = "/")
-    public String defaultEndpoint(){
+    @RequestMapping(value = "/health")
+    public String healthEndpoint(){
         return this.getCannedResponse();
     }
 

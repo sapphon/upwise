@@ -33,8 +33,8 @@ public class DashboardControllerIntegration {
     }
 
     @Test
-    public void getLeaderboard() throws Exception {
-        ResponseEntity<String> response = template.getForEntity(base.toString(),
+    public void checkHealth() throws Exception {
+        ResponseEntity<String> response = template.getForEntity(base.toString() + "health",
                 String.class);
         assertThat(response.getBody(), equalTo("Upwise API is up"));
     }
