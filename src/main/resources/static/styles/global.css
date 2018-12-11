@@ -49,8 +49,13 @@ h3, h4, h5, h6{
 }
 
 button, .vote-up-button{
-    color: var(--color-2) !important;
+    color: var(--color-1) !important;
     background-color: var(--color-bg1) !important;
+}
+
+.toast{
+    color: var(--color-2) !important;
+    background-color: var(--color-bg2) !important;
 }
 
 .nav-wrapper {

@@ -17,9 +17,9 @@
 </main>
 <a th:replace="fragments/footer :: scriptimports"></a>
 <div th:if="${statusCode}" th:switch="${statusCode}">
-    <script th:case="201">M.toast({html: "Your wisdom was added!"})</script>
-    <script th:case="400">M.toast({html: "That's not a valid wisdom!"})</script>
-    <script th:case="409">M.toast({html: "That wisdom already exists!"})</script>
+    <script th:case="201">M.toast({html: "Your wisdom was added!", classes: "toast"})</script>
+    <script th:case="400">M.toast({html: "That's not a valid wisdom!", classes: "toast"})</script>
+    <script th:case="409">M.toast({html: "That wisdom already exists!", classes: "toast"})</script>
 </div>
 </body>
 <footer th:replace="fragments/footer :: footer"></footer>
