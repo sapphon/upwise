@@ -23,7 +23,7 @@
             <div class="divider"></div>
             <h5>Proponents (<span th:text="${#lists.size(wisdom.votes)}">#</span>):</h5>
             <div class="voterbadges" th:unless="${#lists.isEmpty(wisdom.votes)}">
-                <a th:each="vote : ${wisdom.votes}" th:href="@{'/user/' + ${vote.addedByUsername}}" class="waves-effect waves-light btn-small" ><span th:text="${vote.addedByUsername}">Bud Bundy</span><i class="material-icons left">child_care</i></a>
+                <a th:each="vote : ${wisdom.votes}" th:href="@{'/user/' + ${vote.addedByUsername}}" class="waves-effect waves-light btn-small user-button" ><span th:text="${vote.addedByUsername}">Bud Bundy</span><i class="material-icons left user-button">child_care</i></a>
             </div>
         </div>
         <p th:if="${#lists.isEmpty(wisdom.votes)}">0 votes</p>

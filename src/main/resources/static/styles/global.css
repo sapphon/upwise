@@ -25,6 +25,11 @@ a, th {
     color: var(--color-2) !important;
 }
 
+.user-button{
+    color: var(--color-2) !important;
+    background-color: var(--color-bg2) !important;
+}
+
 .input-field input[type=text]:focus {
     border-bottom: 1px solid var(--color-1);
     box-shadow: 0 1px 0 0 var(--color-1);
@@ -41,6 +46,11 @@ h1, h2, p, td{
 
 h3, h4, h5, h6{
     color: var(--color-2);
+}
+
+button, .vote-up-button{
+    color: var(--color-2) !important;
+    background-color: var(--color-bg1) !important;
 }
 
 .nav-wrapper {
