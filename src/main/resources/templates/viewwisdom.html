@@ -29,7 +29,7 @@
         <p th:if="${#lists.isEmpty(wisdom.votes)}">0 votes</p>
     </div>
 
-    <div th:if="${wisdom} == null"><p>Cannot show a wisdom - no wisdoms have been added!</p></div>
+    <div th:if="${wisdom} == null"><h2>Cannot show a wisdom - none available!</h2></div>
 </main>
 <a th:replace="fragments/footer :: scriptimports"></a>
 </body>
