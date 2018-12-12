@@ -53,6 +53,11 @@ button, .vote-up-button{
     background-color: var(--color-bg1) !important;
 }
 
+.vote-form-div-color2 .vote-up-button{
+    color: var(--color-2) !important;
+    background-color: var(--color-bg2) !important;
+}
+
 .toast{
     color: var(--color-2) !important;
     background-color: var(--color-bg2) !important;
@@ -84,8 +89,14 @@ button, .vote-up-button{
     margin-right: 10px;
 }
 
-.vote-button-label {
+
+.vote-form-div-color2 .vote-button-label {
     color: var(--color-1);
+    background-color: var(--color-bg1)
+}
+
+.vote-button-label {
+    color: var(--color-2);
     background-color: var(--color-bg2)
 }
 

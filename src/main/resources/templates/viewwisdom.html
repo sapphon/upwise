@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="fragments/head :: head(pageTitle='View Wisdom')"></head>
 
 <body>
@@ -21,12 +21,34 @@
             <h4 th:text="${wisdom.attribution}" class="almendra center">Doug Linder</h4>
             <!--<span><a th:href="@{'/user/' + waves-effect waves-light btn-small${wisdom.addedByUsername}}" th:text="${wisdom.addedByUsername}">intellijames</a> <p th:text="${wisdom.timeAdded}">January 1, 1970 01:00:00 GMT</p></span>-->
             <div class="divider"></div>
-            <h5>Proponents (<span th:text="${#lists.size(wisdom.votes)}">#</span>):</h5>
-            <div class="voterbadges" th:unless="${#lists.isEmpty(wisdom.votes)}">
-                <a th:each="vote : ${wisdom.votes}" th:href="@{'/user/' + ${vote.addedByUsername}}" class="waves-effect waves-light btn-small user-button" ><span th:text="${vote.addedByUsername}">Bud Bundy</span><i class="material-icons left user-button">face</i></a>
+            <div class="row">
+                <div class="voter-info col s6">
+                    <h5>Proponents (<span th:text="${#lists.size(wisdom.votes)}">#</span>):</h5>
+                    <div class="voterbadges" th:unless="${#lists.isEmpty(wisdom.votes)}">
+                        <a th:each="vote : ${wisdom.votes}" th:href="@{'/user/' + ${vote.addedByUsername}}"
+                           class="waves-effect waves-light btn-small user-button"><span
+                                th:text="${vote.addedByUsername}">Bud Bundy</span><i
+                                class="material-icons left user-button">face</i></a>
+                    </div>
+                    <p th:if="${#lists.isEmpty(wisdom.votes)}">0 votes</p>
+                </div>
+                <div class="vote-form-div-color2 col s6">
+                    <form method="POST" th:action="@{/addvote}">
+                        <p><input type="hidden" name="wisdomContent" th:value="${wisdom.wisdomContent}">
+                        </p>
+                        <p><input type="hidden" name="wisdomAttribution"
+                                  th:value="${wisdom.attribution}"></p>
+                        <button type="submit"
+                                class="btn-floating btn-large waves-effect waves-light vote-up-button">
+                            <i class="material-icons vote-up-button" sec:authorize="isAuthenticated()">trending_up</i>
+                            <i class="material-icons vote-up-button" sec:authorize="isAnonymous()">perm_identity</i>
+                        </button>
+                        <label class="vote-button-label" sec:authorize="isAuthenticated()">Vote for this wisdom!</label>
+                        <label class="vote-button-label" sec:authorize="isAnonymous()">Log in to vote!</label>
+                    </form>
+                </div>
             </div>
         </div>
-        <p th:if="${#lists.isEmpty(wisdom.votes)}">0 votes</p>
     </div>
 
     <div th:if="${wisdom} == null"><h2>Cannot show a wisdom - none available!</h2></div>
