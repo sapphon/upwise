@@ -21,6 +21,10 @@ public class WisdomWithVotesPresentation extends Wisdom {
         this.votes = votes;
     }
 
+    public boolean isVotedForBy(String username){
+        return getVotes().stream().anyMatch(vote -> vote.getAddedByUsername().equalsIgnoreCase(username));
+    }
+
 
     //region GettersSetters
     public List<IVote> getVotes() {

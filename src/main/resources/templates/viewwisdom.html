@@ -33,7 +33,9 @@
                     <p th:if="${#lists.isEmpty(wisdom.votes)}">0 votes</p>
                 </div>
                 <div class="vote-form-div-color2 col s6">
-                    <form method="POST" th:action="@{/addvote}">
+                    <div>
+                    <form method="POST" th:action="@{/addvote}"
+                          th:unless="${wisdom.isVotedForBy(#authentication.name)}">
                         <p><input type="hidden" name="wisdomContent" th:value="${wisdom.wisdomContent}">
                         </p>
                         <p><input type="hidden" name="wisdomAttribution"
@@ -46,11 +48,12 @@
                         <label class="vote-button-label" sec:authorize="isAuthenticated()">Vote for this wisdom!</label>
                         <label class="vote-button-label" sec:authorize="isAnonymous()">Log in to vote!</label>
                     </form>
+                    <h4 th:if="${wisdom.isVotedForBy(#authentication.name)}">Thanks for voting!</h4>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
     <div th:if="${wisdom} == null"><h2>Cannot show a wisdom - none available!</h2></div>
 </main>
 <a th:replace="fragments/footer :: scriptimports"></a>
