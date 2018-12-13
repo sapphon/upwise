@@ -26,19 +26,7 @@
                             </div>
                             <div th:if="${#lists.isEmpty(wisdom.votes)}">0 votes</div>
                             <div class="vote-form-div">
-                                <form method="POST" th:action="@{/addvote}">
-                                    <p><input type="hidden" name="wisdomContent" th:value="${wisdom.wisdomContent}">
-                                    </p>
-                                    <p><input type="hidden" name="wisdomAttribution"
-                                              th:value="${wisdom.attribution}"></p>
-                                    <button type="submit"
-                                            class="btn-floating btn-large waves-effect waves-light vote-up-button">
-                                        <i class="material-icons vote-up-button" sec:authorize="isAuthenticated()">trending_up</i>
-                                        <i class="material-icons vote-up-button" sec:authorize="isAnonymous()">perm_identity</i>
-                                    </button>
-                                    <label class="vote-button-label" sec:authorize="isAuthenticated()">Vote for this wisdom!</label>
-                                    <label class="vote-button-label" sec:authorize="isAnonymous()">Log in to vote!</label>
-                                </form>
+                                <div th:replace="fragments/voteform :: voteform(wisdom=${wisdom})"></div>
                             </div>
                         </div>
                     </div>
