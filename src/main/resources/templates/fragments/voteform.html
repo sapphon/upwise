@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="voteform">
+    <form method="POST" th:action="@{/addvote}"
+          th:unless="${wisdom.isVotedForBy(#authentication.name)}">
+        <p><input type="hidden" name="wisdomContent" th:value="${wisdom.wisdomContent}">
+        </p>
+        <p><input type="hidden" name="wisdomAttribution"
+                  th:value="${wisdom.attribution}"></p>
+        <button type="submit"
+                class="btn-floating btn-large waves-effect waves-light vote-up-button">
+            <i class="material-icons vote-up-button" sec:authorize="isAuthenticated()">trending_up</i>
+            <i class="material-icons vote-up-button" sec:authorize="isAnonymous()">perm_identity</i>
+        </button>
+        <label class="vote-button-label" sec:authorize="isAuthenticated()">Vote for this wisdom!</label>
+        <label class="vote-button-label" sec:authorize="isAnonymous()">Log in to vote!</label>
+    </form>
+    <h4 th:if="${wisdom.isVotedForBy(#authentication.name)}">Thanks for voting!</h4>
+</div>
+</body>
+</html>
