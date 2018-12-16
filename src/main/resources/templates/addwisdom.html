@@ -9,9 +9,9 @@
 <div class="container">
     <h2>Submit New Wisdom</h2>
     <form action="#" th:action="@{/addwisdom}" th:object="${wisdomToAdd}" method="post">
-        <p>Wisdom: <input type="text" th:field="*{wisdomContent}" th:placeholder="#{placeholder.wisdomContent}"/></p>
-        <p>Attribution: <input type="text" th:field="*{attribution}" th:placeholder="#{placeholder.wisdomAttribution}"/></p>
-        <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
+        <p>Wisdom: <input type="text" th:field="*{wisdomContent}" th:placeholder="#{placeholder.wisdomContent}" tabindex="1"/></p>
+        <p>Attribution: <input type="text" th:field="*{attribution}" th:placeholder="#{placeholder.wisdomAttribution}" tabindex="2"/></p>
+        <p><input type="submit" value="Submit" tabindex="3"/> <input type="reset" value="Reset" tabindex="4"/></p>
     </form>
 </div>
 </main>
