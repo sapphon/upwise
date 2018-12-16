@@ -18,7 +18,7 @@
 </main>
 <a th:replace="fragments/footer :: scriptimports"></a>
 <div th:if="${statusCode}" th:switch="${statusCode}">
-    <script th:case="201">M.toast({html: "Your username was registered!", classes: "toast"})</script>
+    <script th:case="201">M.toast({html: "Success!  You are also logged in!", classes: "toast"})</script>
     <script th:case="400">M.toast({html: "That account information isn't valid!", classes: "toast"})</script>
     <script th:case="409">M.toast({html: "That login already exists!", classes: "toast"})</script>
 </div>

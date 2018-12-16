@@ -6,11 +6,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
+import org.sapphon.personal.upwise.IUser;
 import org.sapphon.personal.upwise.IVote;
 import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.Wisdom;
 import org.sapphon.personal.upwise.controller.APIController;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
+import org.sapphon.personal.upwise.service.UserService;
 import org.sapphon.personal.upwise.service.VoteService;
 import org.sapphon.personal.upwise.service.WisdomService;
 import org.sapphon.personal.upwise.time.TimeLord;
@@ -18,12 +20,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.ui.Model;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.util.ArrayList;
@@ -33,6 +39,7 @@ import java.util.stream.Collectors;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -51,23 +58,25 @@ public class UserControllerTest {
     @MockBean
     private WisdomService wisdomService;
 
-
     @MockBean
     private VoteService voteService;
 
-    @InjectMocks
+    @Autowired
+    private UserService userService;
+
     private UserController underTest;
 
     private List<IWisdom> exampleWisdoms;
     private List<IVote> exampleVotes;
+    private APIController mockApiController;
 
     @Before
     public void setup() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setPrefix("templates/");
         viewResolver.setSuffix(".html");
-
-        this.underTest = new UserController(wisdomService, voteService, Mockito.mock(APIController.class));
+        mockApiController = Mockito.mock(APIController.class);
+        this.underTest = new UserController(wisdomService, voteService, mockApiController, userService);
 
         mvc = MockMvcBuilders.standaloneSetup(underTest)
                 .setViewResolvers(viewResolver)
@@ -119,6 +128,13 @@ public class UserControllerTest {
     @Test
     public void testCanGetRegistrationPage() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/register").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo("")));
+    }
+
+    @Test
+    public void testCanGetLoginPage() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/login").accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("")));
     }
