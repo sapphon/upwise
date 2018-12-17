@@ -33,10 +33,11 @@ public class UserService implements UserDetailsService{
     }
 
     public IUser getUserWithLogin(String login) {
-        return userRepo.getByLoginUsername(login);
+        return userRepo.getByLoginUsername(login == null ? null : login.toLowerCase());
     }
 
     public IUser addOrUpdateUser(IUser toAdd) {
+        toAdd.setLoginUsername(toAdd.getLoginUsername().toLowerCase());
         return userRepo.save(toAdd);
     }
 
@@ -47,6 +48,7 @@ public class UserService implements UserDetailsService{
             throw new UsernameNotFoundException("User not found");
         }
         else{
+            userWithLogin.setLoginUsername(userWithLogin.getLoginUsername().toLowerCase());
             return DomainObjectFactory.createUserDetailsFromUser(userWithLogin);
         }
     }

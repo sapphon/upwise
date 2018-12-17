@@ -49,28 +49,38 @@ public class UserServiceTest {
     }
 
     @Test
-    public void queriesRepoForUsersByLoginName() {
+    public void queriesRepoForUsersByLoginNameAndIgnoresCase() {
         IUser expected = DomainObjectFactory.createUser("lmccoy67", "Leonard McCoy", TimeLord.getNow(), "pword");
         when(mockUserRepository.getByLoginUsername("lmccoy67")).thenReturn(expected);
-        IUser actual = underTest.getUserWithLogin("lmccoy67");
+        IUser actual = underTest.getUserWithLogin("LmcCOY67");
         verify(mockUserRepository).getByLoginUsername("lmccoy67");
         assertSame(expected, actual);
     }
 
     @Test
-    public void addsToRepoWhenUserIsAdded(){
-        IUser expected = DomainObjectFactory.createUser("lmccoy67", "Leonard McCoy", TimeLord.getNow(), "drowp");
+    public void addsToRepoWhenRealUserIsAddedAndLowersCaseOfLoginIfNecessary(){
+        IUser expected = DomainObjectFactory.createUser("LmCCoy67", "Leonard McCoy", TimeLord.getNow(), "drowp");
         underTest.addOrUpdateUser(expected);
         verify(mockUserRepository).save(expected);
     }
 
     @Test
-    public void loadsUserDetailsFromTheUserRepository() {
+    public void addsToRepoWhenMockUserIsAddedAndLowersCaseOfLoginIfNecessary(){
+        IUser expected = Mockito.mock(IUser.class);
+        when(expected.getLoginUsername()).thenReturn("LMCcoy67");
+        underTest.addOrUpdateUser(expected);
+        verify(expected).setLoginUsername("lmccoy67");
+        verify(mockUserRepository).save(expected);
+    }
+
+    @Test
+    public void loadsUserDetailsFromTheUserRepositoryAndLowersCaseIfNecessary() {
         final IUser expectedUser = RandomObjectFactory.makeRandomUser();
-        when(mockUserRepository.getByLoginUsername(expectedUser.getLoginUsername())).thenReturn(expectedUser);
+        expectedUser.setLoginUsername("SthWithCapsAndLowers");
+        when(mockUserRepository.getByLoginUsername(expectedUser.getLoginUsername().toLowerCase())).thenReturn(expectedUser);
         final UserDetails actualUserDetails = underTest.loadUserByUsername(expectedUser.getLoginUsername());
-        verify(mockUserRepository).getByLoginUsername(expectedUser.getLoginUsername());
-        assertEquals(expectedUser.getLoginUsername(), actualUserDetails.getUsername());
+        verify(mockUserRepository).getByLoginUsername(expectedUser.getLoginUsername().toLowerCase());
+        assertEquals(expectedUser.getLoginUsername().toLowerCase(), actualUserDetails.getUsername());
         assertEquals(expectedUser.getPassword(), actualUserDetails.getPassword());
     }
 
