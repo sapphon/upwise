@@ -3,6 +3,7 @@ html{
     --color-bg2: #96acb7;
     --color-1: #40376e;
     --color-2: #48233c;
+    --color-placeholder: #9094a7;
 
 
 }
@@ -122,6 +123,28 @@ button, .vote-up-button{
 
 .almendra {
     font-family: 'Almendra SC', serif;
+}
+
+::-webkit-input-placeholder {
+    color:    var(--color-placeholder);
+}
+:-moz-placeholder {
+    color:    var(--color-placeholder);
+    opacity:  1;
+}
+::-moz-placeholder {
+    color:    var(--color-placeholder);
+    opacity:  1;
+}
+:-ms-input-placeholder {
+    color:    var(--color-placeholder);
+}
+::-ms-input-placeholder {
+    color:    var(--color-placeholder);
+}
+
+::placeholder {
+    color:    var(--color-placeholder);
 }
 
 @media screen and (max-width: 600px) {
