@@ -1,5 +1,5 @@
 # Upwise
-
+![build status image](https://travis-ci.org/sapphon/upwise.svg?branch=master)
 ## Synopsis
 
 Upwise is a voting system for pearls of wisdom.  Submit a saying or vote up someone else's.  See which are most popular.  That kind of thing.
