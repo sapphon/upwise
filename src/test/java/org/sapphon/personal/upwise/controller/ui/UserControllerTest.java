@@ -138,4 +138,14 @@ public class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("")));
     }
+
+
+    @Test
+    public void testLoginErrorSets400StatusCodeOnModel() throws Exception {
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/login").param("error", "").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo("")))
+                .andReturn();
+        assertEquals(400, result.getModelAndView().getModel().get("statusCode"));
+    }
 }
