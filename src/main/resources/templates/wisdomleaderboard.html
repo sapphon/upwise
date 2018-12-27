@@ -12,10 +12,10 @@
                 <div class="col s12">
                     <div class="card">
                         <div class="card-content">
-                        <span class="card-title" th:text="${wisdom.wisdomContent}">A good programmer is someone who looks both ways
+                        <a class="card-title" th:href="@{'/viewwisdom?wisdomContent=' + ${wisdom.wisdomContent} + '&wisdomAttribution=' + ${wisdom.attribution}}" th:text="${wisdom.wisdomContent}">A good programmer is someone who looks both ways
                             before crossing a
                             one-way street.
-                        </span>
+                        </a>
                             <div th:text="${wisdom.attribution}">Doug Linder</div>
                         </div>
                         <div class="card-action">
