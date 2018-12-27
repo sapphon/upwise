@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@DirtiesContext(classMode=DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@DirtiesContext(classMode=DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class VoteRepositoryTest {
 
 	@Autowired
@@ -46,6 +46,7 @@ public class VoteRepositoryTest {
 	}
 
 	@Test
+	@DirtiesContext
 	public void canSaveTwoRecordsThenGetTheRightOneById(){
 		IVote voteWeWantToFind = testVotes[0];
 		IVote voteWeDoNotWant = testVotes[1];
@@ -57,6 +58,7 @@ public class VoteRepositoryTest {
 	}
 
 	@Test
+	@DirtiesContext
 	public void canGetAllOfSeveralRecords(){
 		for(int i = 0; i < testVotes.length - 1; i++) {
 			voteRepo.save(testVotes[i].getWisdom(), testVotes[i].getAddedByUsername(), testVotes[i].getTimeAdded());
@@ -69,6 +71,7 @@ public class VoteRepositoryTest {
 	}
 
 	@Test
+	@DirtiesContext
 	public void canGetOneRecordBySubmitter(){
 		IVote voteWeWant = testVotes[0];
         IVote voteWeDoNotWant = testVotes[2];
@@ -83,6 +86,7 @@ public class VoteRepositoryTest {
 	}
 
 	@Test
+	@DirtiesContext
 	public void canGetBySubmitter_NewestFirst() {
 		String ourBoy = "hgrasam";
 		testVotes[0].setAddedByUsername(ourBoy);
@@ -96,6 +100,7 @@ public class VoteRepositoryTest {
 	}
 
     @Test
+	@DirtiesContext
 	public void canGetByWisdom() {
 		voteRepo.save(Arrays.asList(testVotes));
 
@@ -110,6 +115,7 @@ public class VoteRepositoryTest {
 	}
 
 	@Test
+	@DirtiesContext
 	public void canFindOneVoteByWisdomAndSubmitter() {
 		voteRepo.save(Arrays.asList(testVotes));
 
@@ -118,6 +124,4 @@ public class VoteRepositoryTest {
 		assertTrue(actual.isPresent());
 		assertEquals(testVotes[2], actual.get());
 	}
-
-
 }
