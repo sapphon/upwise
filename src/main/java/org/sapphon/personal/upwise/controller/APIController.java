@@ -71,40 +71,6 @@ public class APIController {
         return voteService.getAllVotes();
     }
 
-
-    @RequestMapping(value = "/wisdom/populaterandom")
-    public ResponseEntity<IWisdom> populateRandomWisdomEndpoint(){
-        int wisdomsBeforeAdd = this.wisdomService.getAllWisdoms().size();
-        IWisdom result = this.populateRandomWisdom();
-        if(wisdomsBeforeAdd < this.wisdomService.getAllWisdoms().size()) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(result);
-        }
-        else{
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
-    }
-
-    public IWisdom populateRandomWisdom(){
-        return this.wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandomWisdom());
-    }
-
-    @RequestMapping(value = "/wisdom/voterandom")
-    public IVote voteForRandomWisdomEndpoint(){
-       return this.voteForRandomWisdom();
-    }
-
-    public IVote voteForRandomWisdom(){
-        Random random = new Random();
-        List<IWisdom> allWisdoms = this.getAllWisdoms();
-        if(allWisdoms.size() > 0) {
-            IWisdom existingWisdom = allWisdoms.get(random.nextInt(allWisdoms.size()));
-            IVote randomVote = RandomObjectFactory.makeRandomWisdomlessVote();
-            randomVote.setWisdom(existingWisdom);
-            return this.voteService.addOrUpdateVote(randomVote);
-        }
-        return null;
-    }
-
     @RequestMapping(value = "/vote/add", method=RequestMethod.POST)
     public ResponseEntity<IVote> voteForWisdomEndpoint(@RequestBody IVote vote){
         Optional<IWisdom> wisdomMaybe = this.wisdomService.findWisdom(vote.getWisdom());
