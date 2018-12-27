@@ -12,6 +12,10 @@ You don't need this Git repo to use the public app, accessible [here.](https://u
 
 Please report any issues, or provide any other very welcome feedback, at the [issues page.](https://www.github.com/sapphon/upwise/issues)
 
+## Dev Tracker
+
+Upwise development is managed through a public [Trello board.](https://trello.com/b/uEDVy22W)
+
 ## API Reference
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/c35f8a9f2c2f8bb12d38)
