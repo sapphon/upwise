@@ -70,7 +70,7 @@ dependencies {
 
 	//runtimes
 	runtime('org.springframework.boot:spring-boot-devtools')
-	runtime('com.microsoft.sqlserver:mssql-jdbc')
+	runtime('mysql:mysql-connector-java')
 
 	//test stuff
 	testCompile('org.springframework.boot:spring-boot-starter-test')
@@ -80,17 +80,16 @@ dependencies {
 
 apply plugin: 'cf-app'
 cfConfig {
-
-	// See GettingStarted.md for information on updating these values
-	ccHost = "api.upwise.cfapps.io" // Change
-	space = "YOUR_SPACE" // Change
-	org = "YOUR_ORG" // Change
-
+	ccHost = "api.run.pivotal.io" // Change
+	space = "prod" // Change
+	org = "upwise" // Change
+	ccUser = "user"
+	ccPassword = "pass"
 	name = archivesBaseName
 	host = archivesBaseName
-	domain = "apps-your-pcf.cf.ford.com" // Change
+	domain = "upwise.cfapps.io" // Change
 	memory = 512
 	instances = 1
-	buildpack = "java_buildpack_offline"
+	buildpack = "java_buildpack"
 	filePath = "build/libs/" + archivesBaseName + "-" + version + ".jar"
 }
