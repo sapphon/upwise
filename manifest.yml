@@ -3,3 +3,5 @@ applications:
   path: ./build/libs/upwise-0.0.1-SNAPSHOT.jar
   memory: 768M
   buildpack: java_buildpack
+  services:
+    - mysql
