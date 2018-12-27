@@ -54,7 +54,11 @@ public class WisdomService {
     }
 
     public List<WisdomWithVotesPresentation> getWisdomsWithVotes(List<IWisdom> wisdoms) {
-        return wisdoms.stream().map(wisdom -> DomainObjectFactory.createWisdomWithVotes(wisdom, voteService.getByWisdom(wisdom))).collect(Collectors.toList());
+        return wisdoms.stream().map(this::getWisdomWithVotes).collect(Collectors.toList());
+    }
+
+    public WisdomWithVotesPresentation getWisdomWithVotes(IWisdom wisdom){
+        return DomainObjectFactory.createWisdomWithVotes(wisdom, voteService.getByWisdom(wisdom));
     }
 
     public boolean hasAnyWisdoms() {

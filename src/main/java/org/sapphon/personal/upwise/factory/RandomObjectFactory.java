@@ -43,4 +43,12 @@ public class RandomObjectFactory {
     public static IVote makeRandomVoteForWisdom(IWisdom wisdom) {
         return makeRandomWisdomlessVote().setWisdom(wisdom);
     }
+
+    public static List<IVote> makeRandomListOfWisdomlessVotes(){
+        List<IVote> toReturn = new ArrayList<>();
+        for(int i = 0; i < new Random().nextInt(20) + 1; i++){
+            toReturn.add(makeRandomWisdomlessVote());
+        }
+        return toReturn;
+    }
 }

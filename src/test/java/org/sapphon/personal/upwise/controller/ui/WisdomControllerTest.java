@@ -27,6 +27,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.Matchers.equalTo;
@@ -99,12 +100,21 @@ public class WisdomControllerTest {
     private void verifyLeaderboard(MvcResult mvcResult) {
         try {
             List<WisdomWithVotesPresentation> actualWisdoms = (List<WisdomWithVotesPresentation>) mvcResult.getModelAndView().getModel().values().iterator().next();
-            assertEquals(exampleWisdoms.get(0), actualWisdoms.get(0));
-            assertEquals(exampleVotes.get(0), actualWisdoms.get(0).getVotes().get(0));
-            assertEquals(exampleVotes.get(1), actualWisdoms.get(0).getVotes().get(1));
+            verifyWisdoms(actualWisdoms);
         } catch (Exception e) {
             Assert.fail("Model not as expected.");
         }
+    }
+
+    private void verifyWisdoms(List<WisdomWithVotesPresentation> actualWisdoms) {
+        assertEquals(exampleWisdoms.get(0), actualWisdoms.get(0));
+        assertEquals(exampleVotes.get(0), actualWisdoms.get(0).getVotes().get(0));
+        assertEquals(exampleVotes.get(1), actualWisdoms.get(0).getVotes().get(1));
+    }
+
+    private void verifyWisdom(MvcResult mvcResult) {
+        WisdomWithVotesPresentation actualWisdom = (WisdomWithVotesPresentation) mvcResult.getModelAndView().getModel().get("wisdom");
+        verifyWisdoms(newArrayList(actualWisdom));
     }
 
     @Test
@@ -116,6 +126,18 @@ public class WisdomControllerTest {
                 .andReturn();
         verifyLeaderboard(mvcResult);
     }
+
+    @Test
+    public void viewWisdomWithVotes_ProducesCorrectOutputOnModel() throws Exception {
+        when(wisdomService.getWisdomWithVotes(exampleWisdoms.get(0))).thenReturn(DomainObjectFactory.createWisdomWithVotes(exampleWisdoms.get(0), newArrayList(exampleVotes.get(0), exampleVotes.get(1))));
+        when(wisdomService.findWisdomByContentAndAttribution(exampleWisdoms.get(0).getWisdomContent(), exampleWisdoms.get(0).getAttribution())).thenReturn(Optional.of(exampleWisdoms.get(0)));
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(String.format("/viewwisdom?wisdomContent=%s&wisdomAttribution=%s", exampleWisdoms.get(0).getWisdomContent(), exampleWisdoms.get(0).getAttribution())).accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""))
+                .andReturn();
+        verifyWisdom(mvcResult);
+    }
+
 
     @Test
     public void setsANullWisdomOnTheModelForTheRandomWisdomPage_IfNoWisdomsExist() throws Exception{
@@ -131,4 +153,6 @@ public class WisdomControllerTest {
             Assert.fail("Model not as expected.");
         }
     }
+
+
 }

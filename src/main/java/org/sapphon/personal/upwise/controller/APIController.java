@@ -105,7 +105,7 @@ public class APIController {
         return null;
     }
 
-    @RequestMapping(value = "/vote/add")
+    @RequestMapping(value = "/vote/add", method=RequestMethod.POST)
     public ResponseEntity<IVote> voteForWisdomEndpoint(@RequestBody IVote vote){
         Optional<IWisdom> wisdomMaybe = this.wisdomService.findWisdom(vote.getWisdom());
         if(!validateWisdom(vote.getWisdom()) || !validateUsername(vote.getAddedByUsername()) || !wisdomMaybe.isPresent()){
