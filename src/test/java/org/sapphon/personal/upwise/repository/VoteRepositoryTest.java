@@ -43,7 +43,6 @@ public class VoteRepositoryTest {
 		testVotes[0] = DomainObjectFactory.createVote(testWisdoms[0], "stamat", TimeLord.getTimestampForMillis(2));
 		testVotes[1] = DomainObjectFactory.createVote(testWisdoms[1], "rnueter", TimeLord.getTimestampForMillis(1));
 		testVotes[2] = DomainObjectFactory.createVote(testWisdoms[0], "rnueter", TimeLord.getTimestampForMillis(0));
-		voteRepo.clear();
 	}
 
 	@Test
