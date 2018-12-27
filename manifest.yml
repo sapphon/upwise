@@ -4,4 +4,4 @@ applications:
   memory: 768M
   buildpack: java_buildpack
   services:
-    - mysql
+    - upwisedb
