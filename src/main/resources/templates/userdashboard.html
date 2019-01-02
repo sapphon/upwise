@@ -31,7 +31,8 @@
             </table>
         </div>
         <div class="wisdomsSubmittedList" th:if="${#lists.isEmpty(allWisdomsSubmitted)}">
-            <p>You haven't submitted any wisdom yet. Do so <a href="/addwisdom">here</a>.</p>
+            <p th:if="${#authentication.name} == ${userName}">You haven't submitted any wisdom yet. Do so <a href="/addwisdom">here</a>.</p>
+            <p th:unless="${#authentication.name} == ${userName}">This user hasn't submitted any wisdom yet.</p>
         </div>
         <h2 th:text="#{title.userDashboard.votedFor}">Wisdoms Voted For</h2>
         <div class="wisdomsVotedForList" th:unless="${#lists.isEmpty(allWisdomsVotedFor)}">
@@ -58,7 +59,8 @@
         </div>
 
         <div class="wisdomsVotedForList" th:if="${#lists.isEmpty(allWisdomsVotedFor)}">
-            <p>You haven't voted for any wisdoms yet. Find one you might like <a href="/wisdomleaderboard">here</a>.</p>
+            <p th:if="${#authentication.name} == ${userName}">You haven't voted for any wisdoms yet. Find one you might like <a href="/wisdomleaderboard">here</a>.</p>
+            <p th:unless="${#authentication.name} == ${userName}">This user hasn't voted for any wisdoms yet.</p>
         </div>
     </div>
 
