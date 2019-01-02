@@ -74,7 +74,7 @@ public class UserController {
     @GetMapping("/login")
     public String getLoginPage(Model model, String error){
         if(error != null){
-            model.addAttribute("statusCode", 400);
+            model.addAttribute("loginStatusCode", 400);
         }
         return "login";
     }

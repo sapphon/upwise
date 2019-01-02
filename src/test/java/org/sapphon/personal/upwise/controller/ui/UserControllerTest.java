@@ -147,7 +147,7 @@ public class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("")))
                 .andReturn();
-        assertEquals(400, result.getModelAndView().getModel().get("statusCode"));
+        assertEquals(400, result.getModelAndView().getModel().get("loginStatusCode"));
     }
 
 

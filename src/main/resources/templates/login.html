@@ -20,9 +20,7 @@
 
 </main>
 <a th:replace="fragments/footer :: scriptimports"></a>
-<div th:if="${statusCode}" th:switch="${statusCode}">
-    <script th:case="400">M.toast({html: "That account information isn't valid!", classes: "toast"})</script>
-</div>
+<div th:replace="fragments/eventresponse :: eventresponse"></div>
 </body>
 <footer th:replace="fragments/footer :: footer"></footer>
 </html>
