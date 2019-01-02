@@ -1,15 +1,13 @@
 package org.sapphon.personal.upwise.controller.ui;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
-import org.sapphon.personal.upwise.IUser;
-import org.sapphon.personal.upwise.IVote;
-import org.sapphon.personal.upwise.IWisdom;
-import org.sapphon.personal.upwise.Wisdom;
+import org.sapphon.personal.upwise.*;
 import org.sapphon.personal.upwise.controller.APIController;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
 import org.sapphon.personal.upwise.service.UserService;
@@ -61,8 +59,10 @@ public class UserControllerTest {
     @MockBean
     private VoteService voteService;
 
-    @Autowired
     private UserService userService;
+
+    @Autowired
+    private ObjectMapper mapper;
 
     private UserController underTest;
 
@@ -76,6 +76,7 @@ public class UserControllerTest {
         viewResolver.setPrefix("templates/");
         viewResolver.setSuffix(".html");
         mockApiController = Mockito.mock(APIController.class);
+        userService = Mockito.mock(UserService.class);
         this.underTest = new UserController(wisdomService, voteService, mockApiController, userService);
 
         mvc = MockMvcBuilders.standaloneSetup(underTest)
@@ -147,5 +148,38 @@ public class UserControllerTest {
                 .andExpect(content().string(equalTo("")))
                 .andReturn();
         assertEquals(400, result.getModelAndView().getModel().get("statusCode"));
+    }
+
+
+    @Test
+    public void testRegistrationErrorSets400StatusCodeOnModel() throws Exception {
+        when(mockApiController.addUserEndpoint(any())).thenReturn(new ResponseEntity(IUser.class, HttpStatus.BAD_REQUEST));
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/register").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo("")))
+                .andReturn();
+        assertEquals(400, result.getModelAndView().getModel().get("statusCode"));
+    }
+
+    @Test
+    public void testRegistrationSuccessSets201StatusCodeOnModel() throws Exception {
+        when(mockApiController.addUserEndpoint(any())).thenReturn(new ResponseEntity(IUser.class, HttpStatus.CREATED));
+        when(userService.getUserWithLogin(any())).thenReturn(new User("aaa", "bbb", TimeLord.getNow(), "ccc"));
+            MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/register").accept(MediaType.TEXT_HTML))
+                    .andExpect(status().isOk())
+                    .andExpect(content().string(equalTo("")))
+                    .andReturn();
+
+        assertEquals(201, result.getModelAndView().getModel().get("statusCode"));
+    }
+
+    @Test
+    public void testRegistrationConflictSets409StatusCodeOnModel() throws Exception {
+        when(mockApiController.addUserEndpoint(any())).thenReturn(new ResponseEntity(IUser.class, HttpStatus.CONFLICT));
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/register").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo("")))
+                .andReturn();
+        assertEquals(409, result.getModelAndView().getModel().get("statusCode"));
     }
 }

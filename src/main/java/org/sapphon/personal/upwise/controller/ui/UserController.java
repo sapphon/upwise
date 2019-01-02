@@ -2,6 +2,7 @@ package org.sapphon.personal.upwise.controller.ui;
 
 import org.sapphon.personal.upwise.IUser;
 import org.sapphon.personal.upwise.IVote;
+import org.sapphon.personal.upwise.User;
 import org.sapphon.personal.upwise.UserDetailsUserWrapper;
 import org.sapphon.personal.upwise.controller.APIController;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
@@ -60,7 +61,7 @@ public class UserController {
     }
 
     @PostMapping(value="/register",  produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
-    public String registrationSubmit(Model model, @ModelAttribute IUser userToRegister){
+    public String registrationSubmit(Model model, @ModelAttribute User userToRegister){
         ResponseEntity<IUser> userRegistrationResponseEntity = this.apiController.addUserEndpoint(userToRegister);
         if(userRegistrationResponseEntity.getStatusCodeValue() == 201){
             UserDetails details = DomainObjectFactory.createUserDetailsFromUser(userService.getUserWithLogin(userToRegister.getLoginUsername()));
