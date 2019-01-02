@@ -51,7 +51,7 @@
                         one-way street.
                     </td>
                     <td th:text="${wisdom.attribution}">Doug Linder</td>
-                    <td th:text="${wisdom.addedByUsername}">intellijames</td>
+                    <td><a th:text="${wisdom.addedByUsername}" th:href="@{'/user/' + ${wisdom.addedByUsername}}">intellijames</a></td>
                     <td th:text="${wisdom.timeAdded}">January 1, 1970 01:00:00 GMT</td>
                 </tr>
                 </tbody>
