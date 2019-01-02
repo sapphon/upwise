@@ -28,7 +28,7 @@ public class AddVoteController {
         }
         Vote voteToAdd = new Vote(new Wisdom(wisdomContent, wisdomAttribution, null, null), voterUsername, null);
         ResponseEntity<IVote> voteResponseEntity = this.apiController.voteForWisdomEndpoint(voteToAdd);
-         model.addAttribute("statusCode", voteResponseEntity.getStatusCodeValue());
+         model.addAttribute("addVoteStatusCode", voteResponseEntity.getStatusCodeValue());
         return "addvoteresult";
     }
 

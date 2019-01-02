@@ -67,7 +67,7 @@ public class AddVoteControllerTest {
                 .andExpect(content().string(""))
                 .andReturn();
         try {
-            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("statusCode");
+            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("addVoteStatusCode");
             assertEquals(new Integer(400), actualStatusCode);
         } catch (Exception e) {
             Assert.fail("Model not as expected.");
@@ -82,7 +82,7 @@ public class AddVoteControllerTest {
                 .andExpect(content().string(""))
                 .andReturn();
         try {
-            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("statusCode");
+            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("addVoteStatusCode");
             assertEquals(new Integer(409), actualStatusCode);
         } catch (Exception e) {
             Assert.fail("Model not as expected.");
@@ -97,7 +97,7 @@ public class AddVoteControllerTest {
                 .andExpect(content().string(""))
                 .andReturn();
         try {
-            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("statusCode");
+            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("addVoteStatusCode");
             assertEquals(new Integer(201), actualStatusCode);
         } catch (Exception e) {
             Assert.fail("Model not as expected.");
@@ -115,7 +115,7 @@ public class AddVoteControllerTest {
                 .andExpect(content().string(""))
                 .andReturn();
         try {
-            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("statusCode");
+            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("addVoteStatusCode");
             assertEquals(new Integer(201), actualStatusCode);
             verify(apiController).voteForWisdomEndpoint(captor.capture());
             assertEquals("malvo", captor.getValue().getAddedByUsername());
@@ -132,7 +132,7 @@ public class AddVoteControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(content().string(""))
                     .andReturn();
-            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("statusCode");
+            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("addVoteStatusCode");
             assertEquals(new Integer(201), actualStatusCode);
         } catch (Exception e) {
             Assert.fail("Should tolerate the lack of an authenticated principal.");

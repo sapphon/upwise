@@ -4,7 +4,7 @@
 <body>
 <div th:replace="fragments/navbar :: navbar"></div>
 <main>
-    <div th:switch="${statusCode}" class="container">
+    <div th:switch="${addVoteStatusCode}" class="container">
         <h2 th:case="201">Your vote was added successfully!</h2>
         <h2 th:case="400">That's not a valid vote!</h2>
         <h2 th:case="409">That vote exists already and was not added.</h2>
