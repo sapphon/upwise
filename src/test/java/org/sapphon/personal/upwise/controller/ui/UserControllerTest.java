@@ -158,7 +158,7 @@ public class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("")))
                 .andReturn();
-        assertEquals(400, result.getModelAndView().getModel().get("statusCode"));
+        assertEquals(400, result.getModelAndView().getModel().get("registrationStatusCode"));
     }
 
     @Test
@@ -170,7 +170,7 @@ public class UserControllerTest {
                     .andExpect(content().string(equalTo("")))
                     .andReturn();
 
-        assertEquals(201, result.getModelAndView().getModel().get("statusCode"));
+        assertEquals(201, result.getModelAndView().getModel().get("registrationStatusCode"));
     }
 
     @Test
@@ -180,6 +180,6 @@ public class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("")))
                 .andReturn();
-        assertEquals(409, result.getModelAndView().getModel().get("statusCode"));
+        assertEquals(409, result.getModelAndView().getModel().get("registrationStatusCode"));
     }
 }

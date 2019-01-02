@@ -67,7 +67,7 @@ public class UserController {
             UserDetails details = DomainObjectFactory.createUserDetailsFromUser(userService.getUserWithLogin(userToRegister.getLoginUsername()));
             SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(details.getUsername(), details.getPassword(), details.getAuthorities()));
         }
-        model.addAttribute("statusCode", userRegistrationResponseEntity.getStatusCodeValue());
+        model.addAttribute("registrationStatusCode", userRegistrationResponseEntity.getStatusCodeValue());
         return registrationForm(model);
     }
 
