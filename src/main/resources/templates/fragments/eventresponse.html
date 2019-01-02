@@ -19,6 +19,11 @@
         <script th:case="400">M.toast({html: "That's not a valid wisdom!", classes: "toast"})</script>
         <script th:case="409">M.toast({html: "That wisdom already exists!", classes: "toast"})</script>
     </div>
+    <div th:if="${addVoteStatusCode}" th:switch="${addVoteStatusCode}">
+        <script th:case="201">M.toast({html: "Your vote was added successfully!", classes: "toast"})</script>
+        <script th:case="400">M.toast({html: "That's not a valid vote!", classes: "toast"})</script>
+        <script th:case="409">M.toast({html: "That vote exists already and was not added.", classes: "toast"})</script>
+    </div>
 </div>
 </body>
 </html>
