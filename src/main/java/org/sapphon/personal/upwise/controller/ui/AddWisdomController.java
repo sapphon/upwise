@@ -35,7 +35,7 @@ public class AddWisdomController {
         }
 
         ResponseEntity<IWisdom> wisdomResponseEntity = this.apiController.addWisdomEndpoint(wisdomToAdd);
-        model.addAttribute("statusCode", wisdomResponseEntity.getStatusCodeValue());
+        model.addAttribute("addWisdomStatusCode", wisdomResponseEntity.getStatusCodeValue());
         return wisdomForm(model);
     }
 

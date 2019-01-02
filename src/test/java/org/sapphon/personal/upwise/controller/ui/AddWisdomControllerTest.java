@@ -117,7 +117,7 @@ public class AddWisdomControllerTest {
                 .andExpect(content().string(""))
                 .andReturn();
         try {
-            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("statusCode");
+            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("addWisdomStatusCode");
             assertEquals(new Integer(400), actualStatusCode);
         } catch (Exception e) {
             Assert.fail("Model not as expected.");
@@ -132,7 +132,7 @@ public class AddWisdomControllerTest {
                 .andExpect(content().string(""))
                 .andReturn();
         try {
-            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("statusCode");
+            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("addWisdomStatusCode");
             assertEquals(new Integer(409), actualStatusCode);
         } catch (Exception e) {
             Assert.fail("Model not as expected.");
@@ -148,7 +148,7 @@ public class AddWisdomControllerTest {
                 .andExpect(content().string(""))
                 .andReturn();
         try {
-            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("statusCode");
+            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("addWisdomStatusCode");
             assertEquals(new Integer(201), actualStatusCode);
         } catch (Exception e) {
             Assert.fail("Model not as expected.");
@@ -166,7 +166,7 @@ public class AddWisdomControllerTest {
                 .andExpect(content().string(""))
                 .andReturn();
         try {
-            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("statusCode");
+            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("addWisdomStatusCode");
             assertEquals(new Integer(201), actualStatusCode);
             verify(apiController).addWisdomEndpoint(captor.capture());
             assertEquals("miriam", captor.getValue().getAddedByUsername());
@@ -183,7 +183,7 @@ public class AddWisdomControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(content().string(""))
                     .andReturn();
-            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("statusCode");
+            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("addWisdomStatusCode");
             assertEquals(new Integer(201), actualStatusCode);
         } catch (Exception e) {
             Assert.fail("Should tolerate the lack of an authenticated principal.");
