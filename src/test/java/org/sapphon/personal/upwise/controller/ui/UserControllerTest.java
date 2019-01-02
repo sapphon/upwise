@@ -152,17 +152,18 @@ public class UserControllerTest {
 
 
     @Test
-    public void testRegistrationErrorSets400StatusCodeOnModel() throws Exception {
+    public void testRegistrationErrorSets400StatusCodeOnModel_AndSendsYouToTryAgain() throws Exception {
         when(mockApiController.addUserEndpoint(any())).thenReturn(new ResponseEntity(IUser.class, HttpStatus.BAD_REQUEST));
         MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/register").accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("")))
                 .andReturn();
         assertEquals(400, result.getModelAndView().getModel().get("registrationStatusCode"));
+        assertEquals("register", result.getModelAndView().getViewName());
     }
 
     @Test
-    public void testRegistrationSuccessSets201StatusCodeOnModel() throws Exception {
+    public void testRegistrationSuccessSets201StatusCodeOnModel_AndRedirectsToUserPage() throws Exception {
         when(mockApiController.addUserEndpoint(any())).thenReturn(new ResponseEntity(IUser.class, HttpStatus.CREATED));
         when(userService.getUserWithLogin(any())).thenReturn(new User("aaa", "bbb", TimeLord.getNow(), "ccc"));
             MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/register").accept(MediaType.TEXT_HTML))
@@ -171,15 +172,17 @@ public class UserControllerTest {
                     .andReturn();
 
         assertEquals(201, result.getModelAndView().getModel().get("registrationStatusCode"));
+        assertEquals("userdashboard", result.getModelAndView().getViewName());
     }
 
     @Test
-    public void testRegistrationConflictSets409StatusCodeOnModel() throws Exception {
+    public void testRegistrationConflictSets409StatusCodeOnModel_AndSendsYouToTryAgain() throws Exception {
         when(mockApiController.addUserEndpoint(any())).thenReturn(new ResponseEntity(IUser.class, HttpStatus.CONFLICT));
         MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/register").accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("")))
                 .andReturn();
         assertEquals(409, result.getModelAndView().getModel().get("registrationStatusCode"));
+        assertEquals("register", result.getModelAndView().getViewName());
     }
 }

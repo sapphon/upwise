@@ -63,11 +63,12 @@ public class UserController {
     @PostMapping(value="/register",  produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
     public String registrationSubmit(Model model, @ModelAttribute User userToRegister){
         ResponseEntity<IUser> userRegistrationResponseEntity = this.apiController.addUserEndpoint(userToRegister);
+        model.addAttribute("registrationStatusCode", userRegistrationResponseEntity.getStatusCodeValue());
         if(userRegistrationResponseEntity.getStatusCodeValue() == 201){
             UserDetails details = DomainObjectFactory.createUserDetailsFromUser(userService.getUserWithLogin(userToRegister.getLoginUsername()));
             SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(details.getUsername(), details.getPassword(), details.getAuthorities()));
+            return getUserDashboard(model, details.getUsername());
         }
-        model.addAttribute("registrationStatusCode", userRegistrationResponseEntity.getStatusCodeValue());
         return registrationForm(model);
     }
 
