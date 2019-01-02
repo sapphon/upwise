@@ -54,6 +54,4 @@ public class WisdomController {
         }
         return "viewwisdom";
     }
-
-
 }

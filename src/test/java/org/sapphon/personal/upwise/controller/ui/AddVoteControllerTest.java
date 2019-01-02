@@ -7,8 +7,9 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.sapphon.personal.upwise.IVote;
-import org.sapphon.personal.upwise.IWisdom;
 import org.sapphon.personal.upwise.controller.APIController;
+import org.sapphon.personal.upwise.presentation.WisdomWithVotesPresentation;
+import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +23,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.ui.ExtendedModelMap;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.security.Principal;
@@ -41,6 +43,9 @@ public class AddVoteControllerTest {
     @MockBean
     private APIController apiController;
 
+    @MockBean
+    private WisdomController wisdomController;
+
     @Autowired
     private MockMvc mvc;
 
@@ -53,7 +58,7 @@ public class AddVoteControllerTest {
         viewResolver.setPrefix("templates/");
         viewResolver.setSuffix(".html");
 
-        mvc = MockMvcBuilders.standaloneSetup(new AddVoteController(apiController))
+        mvc = MockMvcBuilders.standaloneSetup(new AddVoteController(apiController, wisdomController))
                 .setViewResolvers(viewResolver)
                 .build();
 
@@ -139,6 +144,48 @@ public class AddVoteControllerTest {
         }
     }
 
+    @Test
+    public void testDefaultsToViewWisdom_IfNoDestinationViewIsSet() throws Exception {
+        try {
+            when(apiController.voteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(IVote.class, HttpStatus.CREATED));
+            when(wisdomController.viewWisdom(any(), any(), any())).thenReturn("viewwisdom");
+            MvcResult mvcResult = makeMockMvcPostWithBlankParams()
+                    .andExpect(status().isOk())
+                    .andExpect(content().string(""))
+                    .andReturn();
+            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("addVoteStatusCode");
+            assertEquals(new Integer(201), actualStatusCode);
+            assertEquals("viewwisdom", mvcResult.getModelAndView().getViewName());
+        } catch (Exception e) {
+            Assert.fail("Should tolerate lack of destination view.");
+        }
+    }
+
+    @Test
+    public void testShowsLeaderboard_IfDestinationViewIsSetToLeaderboard() throws Exception {
+        try {
+            when(apiController.voteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(IVote.class, HttpStatus.CREATED));
+            when(wisdomController.getWisdomLeaderboardWithVotes(any())).thenReturn("wisdomleaderboard");
+            MvcResult mvcResult = makeMockMvcPostWithParamValues("jay", "jorb", "jim", "wisdomleaderboard")
+                    .andExpect(status().isOk())
+                    .andExpect(content().string(""))
+                    .andReturn();
+            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("addVoteStatusCode");
+            assertEquals(new Integer(201), actualStatusCode);
+            assertEquals("wisdomleaderboard", mvcResult.getModelAndView().getViewName());
+        } catch (Exception e) {
+            Assert.fail("Destination view not set as expected.");
+        }
+    }
+
+
+    private ResultActions makeMockMvcPostWithParamValues(String username, String content, String wiseMan, String redirectUrl) throws Exception {
+        return mvc.perform(MockMvcRequestBuilders.post("/" + urlUnderTest).accept(MediaType.TEXT_HTML)
+                .param("voterUsername", username)
+                .param("wisdomContent", content)
+                .param("wisdomAttribution", wiseMan)
+                .param("destinationViewName", redirectUrl));
+    }
 
     private ResultActions makeMockMvcPostWithParamValues(String username, String content, String wiseMan) throws Exception {
         return mvc.perform(MockMvcRequestBuilders.post("/" + urlUnderTest).accept(MediaType.TEXT_HTML)

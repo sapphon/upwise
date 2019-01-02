@@ -16,20 +16,26 @@ import java.security.Principal;
 public class AddVoteController {
 
     private APIController apiController;
+    private WisdomController wisdomController;
 
-    public AddVoteController(APIController apiController){
+    public AddVoteController(APIController apiController, WisdomController wisdomController){
         this.apiController = apiController;
+        this.wisdomController = wisdomController;
     }
 
     @PostMapping("/addvote")
-    public String voteSubmit(Model model, Principal loggedInUser, @RequestParam(required=false) String voterUsername, @RequestParam String wisdomContent, @RequestParam String wisdomAttribution) {
+    public String voteSubmit(Model model, Principal loggedInUser, @RequestParam(required=false) String voterUsername, @RequestParam String wisdomContent, @RequestParam String wisdomAttribution, @RequestParam(required=false) String destinationViewName) {
         if(loggedInUser != null && loggedInUser.getName() != null && !loggedInUser.getName().isEmpty()){
             voterUsername = loggedInUser.getName();
         }
+
         Vote voteToAdd = new Vote(new Wisdom(wisdomContent, wisdomAttribution, null, null), voterUsername, null);
         ResponseEntity<IVote> voteResponseEntity = this.apiController.voteForWisdomEndpoint(voteToAdd);
          model.addAttribute("addVoteStatusCode", voteResponseEntity.getStatusCodeValue());
-        return "addvoteresult";
+        if(destinationViewName == null || destinationViewName.isEmpty() || destinationViewName.equalsIgnoreCase("viewwisdom")){
+            return wisdomController.viewWisdom(model, wisdomContent, wisdomAttribution);
+        }
+        else return wisdomController.getWisdomLeaderboardWithVotes(model);
     }
 
 }
