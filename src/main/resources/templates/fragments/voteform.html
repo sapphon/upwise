@@ -12,6 +12,7 @@
         </p>
         <p><input type="hidden" name="wisdomAttribution"
                   th:value="${wisdom.attribution}"></p>
+        <p><input type="hidden" name="destinationViewName" th:value="${callback}"></p>
         <button type="submit"
                 class="btn-floating btn-large waves-effect waves-light vote-up-button">
             <i class="material-icons vote-up-button" sec:authorize="isAuthenticated()">trending_up</i>

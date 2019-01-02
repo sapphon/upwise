@@ -26,7 +26,7 @@
                             </div>
                             <div th:if="${#lists.isEmpty(wisdom.votes)}">0 votes</div>
                             <div class="vote-form-div">
-                                <div th:replace="fragments/voteform :: voteform(wisdom=${wisdom})"></div>
+                                <div th:replace="fragments/voteform :: voteform(wisdom=${wisdom}, callback='wisdomleaderboard')"></div>
                             </div>
                         </div>
                     </div>
