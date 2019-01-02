@@ -7,7 +7,7 @@
 
 <main>
     <div class="container">
-        <h2>User History</h2>
+        <h2 th:text="'User History for: ' + ${userName}">User History for Bob Robertson</h2>
         <h2 th:text="#{title.userDashboard.submitted}">Wisdoms Submitted</h2>
         <div class="wisdomsSubmittedList" th:unless="${#lists.isEmpty(allWisdomsSubmitted)}">
             <table>
