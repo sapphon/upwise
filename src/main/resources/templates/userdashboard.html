@@ -46,10 +46,9 @@
                 </thead>
                 <tbody>
                 <tr th:each="wisdom : ${allWisdomsVotedFor}">
-                    <td th:text="${wisdom.wisdomContent}">A good programmer is someone who looks both ways before
+                    <td><a th:href="@{'/viewwisdom?wisdomContent=' + ${wisdom.wisdomContent} + '&wisdomAttribution=' + ${wisdom.attribution}}" th:text="${wisdom.wisdomContent}">A good programmer is someone who looks both ways before
                         crossing a
-                        one-way street.
-                    </td>
+                        one-way street.</a></td>
                     <td th:text="${wisdom.attribution}">Doug Linder</td>
                     <td><a th:text="${wisdom.addedByUsername}" th:href="@{'/user/' + ${wisdom.addedByUsername}}">intellijames</a></td>
                     <td th:text="${wisdom.timeAdded}">January 1, 1970 01:00:00 GMT</td>
