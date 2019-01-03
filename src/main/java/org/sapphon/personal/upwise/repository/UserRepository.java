@@ -1,7 +1,6 @@
 package org.sapphon.personal.upwise.repository;
 
-import org.sapphon.personal.upwise.IUser;
-import org.sapphon.personal.upwise.IWisdom;
+import org.sapphon.personal.upwise.model.IUser;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.repository.jpa.UserJpa;
 import org.sapphon.personal.upwise.repository.jpa.UserRepositoryJpa;

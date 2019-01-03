@@ -1,7 +1,7 @@
 package org.sapphon.personal.upwise.repository;
 
-import org.sapphon.personal.upwise.IVote;
-import org.sapphon.personal.upwise.IWisdom;
+import org.sapphon.personal.upwise.model.IVote;
+import org.sapphon.personal.upwise.model.IWisdom;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.repository.jpa.VoteJpa;
 import org.sapphon.personal.upwise.repository.jpa.VoteRepositoryJpa;

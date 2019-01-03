@@ -1,8 +1,8 @@
 package org.sapphon.personal.upwise.presentation;
 
-import org.sapphon.personal.upwise.IVote;
-import org.sapphon.personal.upwise.IWisdom;
-import org.sapphon.personal.upwise.Wisdom;
+import org.sapphon.personal.upwise.model.IVote;
+import org.sapphon.personal.upwise.model.IWisdom;
+import org.sapphon.personal.upwise.model.Wisdom;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;

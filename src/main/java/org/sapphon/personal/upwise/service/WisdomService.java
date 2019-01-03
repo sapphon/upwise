@@ -1,6 +1,6 @@
 package org.sapphon.personal.upwise.service;
 
-import org.sapphon.personal.upwise.IWisdom;
+import org.sapphon.personal.upwise.model.IWisdom;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.presentation.WisdomWithVotesPresentation;
 import org.sapphon.personal.upwise.repository.WisdomRepository;

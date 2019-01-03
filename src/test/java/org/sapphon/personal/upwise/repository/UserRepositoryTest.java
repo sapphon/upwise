@@ -7,7 +7,7 @@ import org.junit.Test;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
-import org.sapphon.personal.upwise.IUser;
+import org.sapphon.personal.upwise.model.IUser;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.beans.factory.annotation.Autowired;

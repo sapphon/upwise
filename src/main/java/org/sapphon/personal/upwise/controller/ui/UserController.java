@@ -1,9 +1,8 @@
 package org.sapphon.personal.upwise.controller.ui;
 
-import org.sapphon.personal.upwise.IUser;
-import org.sapphon.personal.upwise.IVote;
-import org.sapphon.personal.upwise.User;
-import org.sapphon.personal.upwise.UserDetailsUserWrapper;
+import org.sapphon.personal.upwise.model.IUser;
+import org.sapphon.personal.upwise.model.IVote;
+import org.sapphon.personal.upwise.model.User;
 import org.sapphon.personal.upwise.controller.APIController;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.service.UserService;

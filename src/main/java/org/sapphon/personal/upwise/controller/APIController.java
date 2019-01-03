@@ -1,10 +1,9 @@
 package org.sapphon.personal.upwise.controller;
 
-import org.sapphon.personal.upwise.IUser;
-import org.sapphon.personal.upwise.IVote;
-import org.sapphon.personal.upwise.IWisdom;
+import org.sapphon.personal.upwise.model.IUser;
+import org.sapphon.personal.upwise.model.IVote;
+import org.sapphon.personal.upwise.model.IWisdom;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
-import org.sapphon.personal.upwise.factory.RandomObjectFactory;
 import org.sapphon.personal.upwise.service.UserService;
 import org.sapphon.personal.upwise.service.VoteService;
 import org.sapphon.personal.upwise.service.WisdomService;
@@ -12,7 +11,6 @@ import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

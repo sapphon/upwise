@@ -1,9 +1,8 @@
 package org.sapphon.personal.upwise.repository.jpa;
 
-import org.sapphon.personal.upwise.AbstractWisdom;
+import org.sapphon.personal.upwise.model.AbstractWisdom;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
 import java.sql.Timestamp;
 
 @Entity

@@ -1,6 +1,4 @@
-package org.sapphon.personal.upwise;
-
-import org.sapphon.personal.upwise.repository.WisdomRepository;
+package org.sapphon.personal.upwise.model;
 
 import java.sql.Timestamp;
 

@@ -1,21 +1,17 @@
 package org.sapphon.personal.upwise.service;
 
-import groovy.transform.ASTTest;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.sapphon.personal.upwise.IVote;
-import org.sapphon.personal.upwise.IWisdom;
-import org.sapphon.personal.upwise.Wisdom;
+import org.sapphon.personal.upwise.model.IVote;
+import org.sapphon.personal.upwise.model.IWisdom;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
 import org.sapphon.personal.upwise.presentation.WisdomWithVotesPresentation;
 import org.sapphon.personal.upwise.repository.WisdomRepository;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

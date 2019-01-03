@@ -1,9 +1,9 @@
 package org.sapphon.personal.upwise.controller.ui;
 
 
-import org.sapphon.personal.upwise.IVote;
-import org.sapphon.personal.upwise.Vote;
-import org.sapphon.personal.upwise.Wisdom;
+import org.sapphon.personal.upwise.model.IVote;
+import org.sapphon.personal.upwise.model.Vote;
+import org.sapphon.personal.upwise.model.Wisdom;
 import org.sapphon.personal.upwise.controller.APIController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

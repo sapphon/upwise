@@ -3,7 +3,7 @@ package org.sapphon.personal.upwise.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.sapphon.personal.upwise.IUser;
+import org.sapphon.personal.upwise.model.IUser;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
 import org.sapphon.personal.upwise.repository.UserRepository;

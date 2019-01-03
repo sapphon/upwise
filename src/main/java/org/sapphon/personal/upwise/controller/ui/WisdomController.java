@@ -1,6 +1,6 @@
 package org.sapphon.personal.upwise.controller.ui;
 
-import org.sapphon.personal.upwise.IWisdom;
+import org.sapphon.personal.upwise.model.IWisdom;
 import org.sapphon.personal.upwise.service.WisdomService;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;

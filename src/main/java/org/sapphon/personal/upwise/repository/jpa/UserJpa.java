@@ -1,6 +1,6 @@
 package org.sapphon.personal.upwise.repository.jpa;
 
-import org.sapphon.personal.upwise.AbstractUser;
+import org.sapphon.personal.upwise.model.AbstractUser;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

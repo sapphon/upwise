@@ -1,8 +1,8 @@
 package org.sapphon.personal.upwise.presentation;
 
 import org.junit.Test;
-import org.sapphon.personal.upwise.IVote;
-import org.sapphon.personal.upwise.IWisdom;
+import org.sapphon.personal.upwise.model.IVote;
+import org.sapphon.personal.upwise.model.IWisdom;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
 
 import java.util.List;

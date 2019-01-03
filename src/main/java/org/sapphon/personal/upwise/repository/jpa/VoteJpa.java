@@ -1,14 +1,9 @@
 package org.sapphon.personal.upwise.repository.jpa;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import org.sapphon.personal.upwise.AbstractVote;
-import org.sapphon.personal.upwise.AbstractWisdom;
-import org.sapphon.personal.upwise.IWisdom;
+import org.sapphon.personal.upwise.model.AbstractVote;
+import org.sapphon.personal.upwise.model.IWisdom;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
 import java.sql.Timestamp;
 
 @Entity

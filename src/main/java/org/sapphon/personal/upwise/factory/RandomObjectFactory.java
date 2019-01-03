@@ -1,9 +1,9 @@
 package org.sapphon.personal.upwise.factory;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.sapphon.personal.upwise.IUser;
-import org.sapphon.personal.upwise.IVote;
-import org.sapphon.personal.upwise.IWisdom;
+import org.sapphon.personal.upwise.model.IUser;
+import org.sapphon.personal.upwise.model.IVote;
+import org.sapphon.personal.upwise.model.IWisdom;
 import org.sapphon.personal.upwise.time.TimeLord;
 
 import java.util.ArrayList;

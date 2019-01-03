@@ -1,4 +1,4 @@
-package org.sapphon.personal.upwise;
+package org.sapphon.personal.upwise.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 

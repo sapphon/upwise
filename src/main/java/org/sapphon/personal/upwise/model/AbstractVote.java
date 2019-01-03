@@ -1,6 +1,5 @@
-package org.sapphon.personal.upwise;
+package org.sapphon.personal.upwise.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.sapphon.personal.upwise.repository.jpa.WisdomJpa;

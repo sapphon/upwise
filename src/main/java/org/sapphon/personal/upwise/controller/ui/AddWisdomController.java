@@ -1,8 +1,8 @@
 package org.sapphon.personal.upwise.controller.ui;
 
 
-import org.sapphon.personal.upwise.IWisdom;
-import org.sapphon.personal.upwise.Wisdom;
+import org.sapphon.personal.upwise.model.IWisdom;
+import org.sapphon.personal.upwise.model.Wisdom;
 import org.sapphon.personal.upwise.controller.APIController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
