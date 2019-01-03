@@ -10,4 +10,6 @@ public interface IAnalyticsEvent {
     String getEventDescription();
     String getEventInitiator();
     Timestamp getEventOccurrenceTime();
+
+    void setEventOccurrenceTime(Timestamp newTime);
 }

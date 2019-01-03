@@ -33,6 +33,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import sun.security.x509.IssuerAlternativeNameExtension;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -271,7 +272,7 @@ public class APIControllerTest {
     public void addUserEndpointSaysCreatedInBaseCase() throws Exception {
         IUser randomUser = RandomObjectFactory.makeRandomUser();
 
-                mvc.perform(buildJsonPostRequest(randomUser, "/registration/add"))
+        mvc.perform(buildJsonPostRequest(randomUser, "/registration/add"))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
     }
@@ -342,10 +343,13 @@ public class APIControllerTest {
     }
 
     @Test
-    public void addAnalyticsEventEndpointSaysBadRequestIfTimestampIsMissing() throws Exception {
+    public void addAnalyticsEventEndpointSaysOKIfTimestampIsMissing_ButSetsOne() throws Exception {
         IAnalyticsEvent eventWithNoTimestamp = DomainObjectFactory.createAnalyticsEvent("description", "user", null);
-        mvc.perform(buildJsonPostRequest(eventWithNoTimestamp, "/analytics/add"))
-                .andExpect(status().isBadRequest());
+        final MvcResult mvcResult = mvc.perform(buildJsonPostRequest(eventWithNoTimestamp, "/analytics/add"))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        assertFalse("Should not have any null values after request processing", mvcResult.getResponse().getContentAsString().contains("null"));
     }
 
     private MockHttpServletRequestBuilder buildJsonPostRequest(Object postBodyContent, String uri) throws JsonProcessingException {

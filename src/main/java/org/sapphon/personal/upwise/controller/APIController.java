@@ -155,14 +155,14 @@ public class APIController {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
         else {
+            event.setEventOccurrenceTime(TimeLord.getNow());
             return ResponseEntity.status(HttpStatus.CREATED).body(this.analyticsService.saveEvent(event));
         }
     }
 
     private boolean validateAnalyticsEvent(IAnalyticsEvent event) {
         return event.getEventDescription() != null && !event.getEventDescription().isEmpty()
-                && event.getEventInitiator() != null && !event.getEventInitiator().isEmpty()
-                && event.getEventOccurrenceTime() != null;
+                && event.getEventInitiator() != null && !event.getEventInitiator().isEmpty();
     }
 
     private IUser addUser(IUser user) {

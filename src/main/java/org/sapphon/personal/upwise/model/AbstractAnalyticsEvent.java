@@ -75,6 +75,7 @@ public abstract class AbstractAnalyticsEvent implements IAnalyticsEvent {
         this.eventInitiator = newInitiator;
     }
 
+    @Override
     public void setEventOccurrenceTime(Timestamp newTime){
         this.eventTime = newTime;
     }
