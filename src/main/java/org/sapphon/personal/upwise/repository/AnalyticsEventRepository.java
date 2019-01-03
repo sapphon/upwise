@@ -28,9 +28,9 @@ public class AnalyticsEventRepository {
     }
 
     public IAnalyticsEvent save(IAnalyticsEvent eventToSave) {
-        IAnalyticsEvent userFound = jpaAnalyticsEventRepo.findByEventDescriptionAndEventInitiatorAndEventTime(eventToSave.getEventDescription(), eventToSave.getEventInitiator(), eventToSave.getEventOccurrenceTime());
-        if(userFound != null){
-            return userFound;
+        IAnalyticsEvent eventFound = jpaAnalyticsEventRepo.findByEventDescriptionAndEventInitiatorAndEventTime(eventToSave.getEventDescription(), eventToSave.getEventInitiator(), eventToSave.getEventOccurrenceTime());
+        if(eventFound != null){
+            return eventFound;
         }
         else{
             return jpaAnalyticsEventRepo.save(DomainObjectFactory.createAnalyticsEventJpa(eventToSave));
