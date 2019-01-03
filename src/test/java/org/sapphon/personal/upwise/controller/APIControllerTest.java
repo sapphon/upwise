@@ -8,13 +8,17 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.sapphon.personal.upwise.factory.DomainObjectFactory;
+import org.sapphon.personal.upwise.model.IAnalyticsEvent;
 import org.sapphon.personal.upwise.model.IUser;
 import org.sapphon.personal.upwise.model.IVote;
 import org.sapphon.personal.upwise.model.IWisdom;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
+import org.sapphon.personal.upwise.service.AnalyticsService;
 import org.sapphon.personal.upwise.service.UserService;
 import org.sapphon.personal.upwise.service.VoteService;
 import org.sapphon.personal.upwise.service.WisdomService;
+import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,6 +30,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultHandler;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import sun.security.x509.IssuerAlternativeNameExtension;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertTrue;
@@ -54,6 +59,9 @@ public class APIControllerTest {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AnalyticsService analyticsService;
+
     @Before
     public void setUp() {
         inputMapper = new ObjectMapper().configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true).writer().withDefaultPrettyPrinter();
@@ -70,6 +78,13 @@ public class APIControllerTest {
     @Test
     public void getAllWisdomsEndpoint() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/wisdom/all").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo("[]")));
+    }
+
+    @Test
+    public void getAllAnalyticsEndpoint() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/analytics/all").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("[]")));
     }
@@ -91,7 +106,7 @@ public class APIControllerTest {
     }
 
     @Test
-    public void getAllCanReturnRealValues_IntegrationTest() throws Exception {
+    public void getAllWisdomsCanReturnRealValues_IntegrationTest() throws Exception {
         IWisdom[] testWisdoms = new IWisdom[2];
         testWisdoms[0] = wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandomWisdom());
         testWisdoms[1] = wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandomWisdom());
@@ -103,6 +118,23 @@ public class APIControllerTest {
                         "[" +
                                 outputMapper.writeValueAsString(testWisdoms[0]) + "," +
                                 outputMapper.writeValueAsString(testWisdoms[1]) +
+                                "]"))
+                .andReturn();
+    }
+
+    @Test
+    public void getAllAnalyticsCanReturnRealValues_IntegrationTest() throws Exception {
+        IAnalyticsEvent[] testAnalytics = new IAnalyticsEvent[2];
+        testAnalytics[0] = analyticsService.saveEvent(RandomObjectFactory.makeRandomEvent());
+        testAnalytics[1] = analyticsService.saveEvent(RandomObjectFactory.makeRandomEvent());
+
+        mvc.perform(MockMvcRequestBuilders.get("/analytics/all").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(
+                        "[" +
+                                outputMapper.writeValueAsString(testAnalytics[0]) + "," +
+                                outputMapper.writeValueAsString(testAnalytics[1]) +
                                 "]"))
                 .andReturn();
     }
@@ -278,6 +310,42 @@ public class APIControllerTest {
         userService.addOrUpdateUser(randomUser);
         mvc.perform(buildJsonPostRequest(randomUser, "/registration/add"))
                 .andExpect(status().isConflict());
+    }
+
+    @Test
+    public void addAnalyticsEventEndpointSaysConflictIfSameEventAlreadyExists() throws Exception {
+        IAnalyticsEvent randomEvent = RandomObjectFactory.makeRandomEvent();
+        analyticsService.saveEvent(randomEvent);
+        mvc.perform(buildJsonPostRequest(randomEvent, "/analytics/add"))
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    public void addAnalyticsEventEndpointSaysCreatedInBaseCase() throws Exception {
+        IAnalyticsEvent randomEvent = RandomObjectFactory.makeRandomEvent();
+        mvc.perform(buildJsonPostRequest(randomEvent, "/analytics/add"))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void addAnalyticsEventEndpointSaysBadRequestIfActionIsMissing() throws Exception {
+        IAnalyticsEvent eventWithNoAction = DomainObjectFactory.createAnalyticsEvent(null, "user", TimeLord.getNow());
+        mvc.perform(buildJsonPostRequest(eventWithNoAction, "/analytics/add"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void addAnalyticsEventEndpointSaysBadRequestIfUsernameIsMissing() throws Exception {
+        IAnalyticsEvent eventWithNoUser = DomainObjectFactory.createAnalyticsEvent("description", null, TimeLord.getNow());
+        mvc.perform(buildJsonPostRequest(eventWithNoUser, "/analytics/add"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void addAnalyticsEventEndpointSaysBadRequestIfTimestampIsMissing() throws Exception {
+        IAnalyticsEvent eventWithNoTimestamp = DomainObjectFactory.createAnalyticsEvent("description", "user", null);
+        mvc.perform(buildJsonPostRequest(eventWithNoTimestamp, "/analytics/add"))
+                .andExpect(status().isBadRequest());
     }
 
     private MockHttpServletRequestBuilder buildJsonPostRequest(Object postBodyContent, String uri) throws JsonProcessingException {

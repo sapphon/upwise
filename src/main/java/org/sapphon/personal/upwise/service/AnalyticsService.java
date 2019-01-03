@@ -21,7 +21,11 @@ public class AnalyticsService {
         return this.eventRepository.getAll();
     }
 
-    public void saveEvent(IAnalyticsEvent eventToSave){
-        this.eventRepository.save(eventToSave);
+    public IAnalyticsEvent saveEvent(IAnalyticsEvent eventToSave){
+        return this.eventRepository.save(eventToSave);
+    }
+
+    public boolean eventExists(IAnalyticsEvent event){
+        return this.eventRepository.find(event.getEventDescription(), event.getEventInitiator(), event.getEventOccurrenceTime()).isPresent();
     }
 }

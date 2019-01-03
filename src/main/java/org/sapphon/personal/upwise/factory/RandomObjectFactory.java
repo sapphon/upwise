@@ -1,16 +1,12 @@
 package org.sapphon.personal.upwise.factory;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.sapphon.personal.upwise.model.IUser;
-import org.sapphon.personal.upwise.model.IVote;
-import org.sapphon.personal.upwise.model.IWisdom;
+import org.sapphon.personal.upwise.model.*;
 import org.sapphon.personal.upwise.time.TimeLord;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import static com.google.common.collect.Lists.newArrayList;
 
 public class RandomObjectFactory {
     public static IWisdom makeRandomWisdom(){
@@ -38,6 +34,10 @@ public class RandomObjectFactory {
     public static IUser makeRandomUser(){
         Random random = new Random();
         return DomainObjectFactory.createUser(randomNonEmptyOfMaxLength(32), randomNonEmptyOfMaxLength(128), TimeLord.getTimestampForMillis(random.nextLong()), randomNonEmptyOfMaxLength(16));
+    }
+
+    public static IAnalyticsEvent makeRandomEvent(){
+        return DomainObjectFactory.createAnalyticsEvent(randomNonEmptyOfMaxLength(32), randomNonEmptyOfMaxLength(16), TimeLord.getTimestampForMillis(new Random().nextLong()));
     }
 
     public static IVote makeRandomVoteForWisdom(IWisdom wisdom) {

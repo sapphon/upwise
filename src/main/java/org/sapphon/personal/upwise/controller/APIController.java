@@ -1,9 +1,11 @@
 package org.sapphon.personal.upwise.controller;
 
+import org.sapphon.personal.upwise.model.IAnalyticsEvent;
 import org.sapphon.personal.upwise.model.IUser;
 import org.sapphon.personal.upwise.model.IVote;
 import org.sapphon.personal.upwise.model.IWisdom;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
+import org.sapphon.personal.upwise.service.AnalyticsService;
 import org.sapphon.personal.upwise.service.UserService;
 import org.sapphon.personal.upwise.service.VoteService;
 import org.sapphon.personal.upwise.service.WisdomService;
@@ -25,12 +27,14 @@ public class APIController {
 
     private final VoteService voteService;
     private final UserService userService;
+    private final AnalyticsService analyticsService;
 
     @Autowired
-    public APIController(WisdomService wisdomService, VoteService voteService, UserService userService) {
+    public APIController(WisdomService wisdomService, VoteService voteService, UserService userService, AnalyticsService analyticsService) {
         this.wisdomService = wisdomService;
         this.voteService = voteService;
         this.userService = userService;
+        this.analyticsService = analyticsService;
     }
 
 
@@ -134,6 +138,31 @@ public class APIController {
             user.setPassword(this.userService.getPasswordEncoder().encode(user.getPassword()));
             return ResponseEntity.status(HttpStatus.CREATED).body(this.addUser(user));
         }
+    }
+
+    @RequestMapping(value = "/analytics/all")
+    public List<IAnalyticsEvent> getAllAnalyticsEventsEndpoint(){
+        return this.analyticsService.getAllEvents();
+    }
+
+
+    @RequestMapping(value = "/analytics/add", method = RequestMethod.POST)
+    public ResponseEntity<IAnalyticsEvent> addAnalyticsEventEndpoint(@RequestBody IAnalyticsEvent event) {
+        if(!validateAnalyticsEvent(event)){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        else if(this.analyticsService.eventExists(event)){
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.CREATED).body(this.analyticsService.saveEvent(event));
+        }
+    }
+
+    private boolean validateAnalyticsEvent(IAnalyticsEvent event) {
+        return event.getEventDescription() != null && !event.getEventDescription().isEmpty()
+                && event.getEventInitiator() != null && !event.getEventInitiator().isEmpty()
+                && event.getEventOccurrenceTime() != null;
     }
 
     private IUser addUser(IUser user) {

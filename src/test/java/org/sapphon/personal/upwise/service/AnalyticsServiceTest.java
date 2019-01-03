@@ -58,4 +58,11 @@ public class AnalyticsServiceTest {
         verify(mockAnalyticsRepo).save(testEvents[0]);
     }
 
+    @Test
+    public void saveEventReturnsSavedBoi() throws Exception {
+        when(mockAnalyticsRepo.save(testEvents[0])).thenReturn(testEvents[0]);
+        final IAnalyticsEvent actualEvent = underTest.saveEvent(testEvents[0]);
+        assertEquals(testEvents[0], actualEvent);
+    }
+
 }
