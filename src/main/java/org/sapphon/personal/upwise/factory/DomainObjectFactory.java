@@ -2,6 +2,7 @@ package org.sapphon.personal.upwise.factory;
 
 import org.sapphon.personal.upwise.model.*;
 import org.sapphon.personal.upwise.presentation.WisdomWithVotesPresentation;
+import org.sapphon.personal.upwise.repository.jpa.AnalyticsEventJpa;
 import org.sapphon.personal.upwise.repository.jpa.UserJpa;
 import org.sapphon.personal.upwise.repository.jpa.VoteJpa;
 import org.sapphon.personal.upwise.repository.jpa.WisdomJpa;
@@ -74,6 +75,18 @@ public class DomainObjectFactory {
 
     public static UserDetails createUserDetailsFromUser(IUser user) {
         return new UserDetailsUserWrapper(user);
+    }
+
+    public static AnalyticsEventJpa createAnalyticsEventJpa(IAnalyticsEvent event) {
+        return new AnalyticsEventJpa(event.getEventDescription(), event.getEventInitiator(), event.getEventOccurrenceTime());
+    }
+
+    public static IAnalyticsEvent createAnalyticsEvent(AnalyticsEventJpa eventJpa) {
+        return new BasicAnalyticsEvent(eventJpa.getEventDescription(), eventJpa.getEventInitiator(), eventJpa.getEventOccurrenceTime());
+    }
+
+    public static IAnalyticsEvent createAnalyticsEvent(String description, String user, Timestamp time) {
+        return new BasicAnalyticsEvent(description, user, time);
     }
 
 }
