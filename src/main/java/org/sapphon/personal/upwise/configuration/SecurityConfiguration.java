@@ -35,8 +35,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 formLogin().loginPage("/login").passwordParameter("upwisePassword").usernameParameter("upwiseLoginUsername").permitAll()
                 //sauce for h2 console to work with spring security enabled
                 .and().headers().frameOptions().sameOrigin()
-                //h2 console requires admin
+                //h2 console and analytics require admin
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/h2")).hasAuthority("ADMIN")
+                .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/allanalytics")).hasAuthority("ADMIN")
                 //public endpoints
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/loggedout")).permitAll()
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/randomwisdom")).permitAll()

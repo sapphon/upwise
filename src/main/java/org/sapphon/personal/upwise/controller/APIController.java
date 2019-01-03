@@ -155,7 +155,7 @@ public class APIController {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
         else {
-            event.setEventOccurrenceTime(TimeLord.getNow());
+            event.setEventTime(TimeLord.getNow());
             return ResponseEntity.status(HttpStatus.CREATED).body(this.analyticsService.saveEvent(event));
         }
     }

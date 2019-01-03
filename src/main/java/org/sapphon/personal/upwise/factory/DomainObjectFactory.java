@@ -78,11 +78,11 @@ public class DomainObjectFactory {
     }
 
     public static AnalyticsEventJpa createAnalyticsEventJpa(IAnalyticsEvent event) {
-        return new AnalyticsEventJpa(event.getEventDescription(), event.getEventInitiator(), event.getEventOccurrenceTime());
+        return new AnalyticsEventJpa(event.getEventDescription(), event.getEventInitiator(), event.getEventTime());
     }
 
     public static IAnalyticsEvent createAnalyticsEvent(AnalyticsEventJpa eventJpa) {
-        return new BasicAnalyticsEvent(eventJpa.getEventDescription(), eventJpa.getEventInitiator(), eventJpa.getEventOccurrenceTime());
+        return new BasicAnalyticsEvent(eventJpa.getEventDescription(), eventJpa.getEventInitiator(), eventJpa.getEventTime());
     }
 
     public static IAnalyticsEvent createAnalyticsEvent(String description, String user, Timestamp time) {

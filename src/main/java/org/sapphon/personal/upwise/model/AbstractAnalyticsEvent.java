@@ -63,7 +63,7 @@ public abstract class AbstractAnalyticsEvent implements IAnalyticsEvent {
     }
 
     @Override
-    public Timestamp getEventOccurrenceTime() {
+    public Timestamp getEventTime() {
         return eventTime;
     }
 
@@ -76,7 +76,7 @@ public abstract class AbstractAnalyticsEvent implements IAnalyticsEvent {
     }
 
     @Override
-    public void setEventOccurrenceTime(Timestamp newTime){
+    public void setEventTime(Timestamp newTime){
         this.eventTime = newTime;
     }
     //endregion

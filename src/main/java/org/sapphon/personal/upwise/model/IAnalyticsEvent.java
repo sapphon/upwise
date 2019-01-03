@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 public interface IAnalyticsEvent {
     String getEventDescription();
     String getEventInitiator();
-    Timestamp getEventOccurrenceTime();
+    Timestamp getEventTime();
 
-    void setEventOccurrenceTime(Timestamp newTime);
+    void setEventTime(Timestamp newTime);
 }

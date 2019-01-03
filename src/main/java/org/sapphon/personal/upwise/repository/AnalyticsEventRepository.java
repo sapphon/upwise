@@ -2,11 +2,8 @@ package org.sapphon.personal.upwise.repository;
 
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.model.IAnalyticsEvent;
-import org.sapphon.personal.upwise.model.IUser;
 import org.sapphon.personal.upwise.repository.jpa.AnalyticsEventJpa;
 import org.sapphon.personal.upwise.repository.jpa.AnalyticsEventRepositoryJpa;
-import org.sapphon.personal.upwise.repository.jpa.UserJpa;
-import org.sapphon.personal.upwise.repository.jpa.UserRepositoryJpa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -26,7 +23,7 @@ public class AnalyticsEventRepository {
     }
 
     public IAnalyticsEvent save(IAnalyticsEvent eventToSave) {
-        IAnalyticsEvent eventFound = jpaAnalyticsEventRepo.findByEventDescriptionAndEventInitiatorAndEventTime(eventToSave.getEventDescription(), eventToSave.getEventInitiator(), eventToSave.getEventOccurrenceTime());
+        IAnalyticsEvent eventFound = jpaAnalyticsEventRepo.findByEventDescriptionAndEventInitiatorAndEventTime(eventToSave.getEventDescription(), eventToSave.getEventInitiator(), eventToSave.getEventTime());
         if(eventFound != null){
             return eventFound;
         }

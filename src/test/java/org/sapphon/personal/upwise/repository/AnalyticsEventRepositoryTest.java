@@ -6,8 +6,6 @@ import org.junit.runner.RunWith;
 import org.sapphon.personal.upwise.TestHelper;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.model.IAnalyticsEvent;
-import org.sapphon.personal.upwise.model.IWisdom;
-import org.sapphon.personal.upwise.model.User;
 import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,7 +50,7 @@ public class AnalyticsEventRepositoryTest {
         assertEquals(eventWeWantToFind, actual);
         assertEquals("WISDOM VIEW", actual.getEventDescription());
         assertEquals("garbage", actual.getEventInitiator());
-        assertEquals(eventWeWantToFind.getEventOccurrenceTime(), actual.getEventOccurrenceTime());
+        assertEquals(eventWeWantToFind.getEventTime(), actual.getEventTime());
     }
 
     @Test
@@ -73,7 +71,7 @@ public class AnalyticsEventRepositoryTest {
     @Test
     public void canFindOneRecord() {
         final IAnalyticsEvent expected = analyticsRepo.save(testEvents[0]);
-        assertEquals(expected, analyticsRepo.find(testEvents[0].getEventDescription(), testEvents[0].getEventInitiator(), testEvents[0].getEventOccurrenceTime()).get());
+        assertEquals(expected, analyticsRepo.find(testEvents[0].getEventDescription(), testEvents[0].getEventInitiator(), testEvents[0].getEventTime()).get());
         assertEquals(Optional.empty(), analyticsRepo.find("this", "that", TimeLord.getNowWithOffset(-10000)));
     }
 }

@@ -26,6 +26,6 @@ public class AnalyticsService {
     }
 
     public boolean eventExists(IAnalyticsEvent event){
-        return this.eventRepository.find(event.getEventDescription(), event.getEventInitiator(), event.getEventOccurrenceTime()).isPresent();
+        return this.eventRepository.find(event.getEventDescription(), event.getEventInitiator(), event.getEventTime()).isPresent();
     }
 }
