@@ -73,15 +73,20 @@ public class APIController {
 
     @RequestMapping(value = "/vote/add", method=RequestMethod.POST)
     public ResponseEntity<IVote> voteForWisdomEndpoint(@RequestBody IVote vote){
+        ResponseEntity<IVote> toReturn;
         Optional<IWisdom> wisdomMaybe = this.wisdomService.findWisdom(vote.getWisdom());
+
         if(!validateWisdom(vote.getWisdom()) || !validateUsername(vote.getAddedByUsername()) || !wisdomMaybe.isPresent()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            toReturn = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         else if(voteService.getByWisdomAndVoterUsername(wisdomMaybe.get(), vote.getAddedByUsername()).isPresent()){
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            toReturn = ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.voteForWisdom(vote, wisdomMaybe.get()));
+        else {
+            toReturn = ResponseEntity.status(HttpStatus.CREATED).body(this.voteForWisdom(vote, wisdomMaybe.get()));
+        }
+        addAnalyticsEventEndpoint(AnalyticsFactory.createAddVoteEvent(toReturn.getStatusCode(), vote));
+        return toReturn;
     }
 
     private boolean validateUsername(String voterUsername) {
@@ -96,7 +101,7 @@ public class APIController {
 
     @RequestMapping(value = "/wisdom/add", method = RequestMethod.POST)
     public ResponseEntity<IWisdom> addWisdomEndpoint(@RequestBody IWisdom wisdom) {
-        ResponseEntity toReturn;
+        ResponseEntity<IWisdom> toReturn;
         if(!validateWisdom(wisdom)){
             toReturn = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

@@ -30,9 +30,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -282,6 +280,28 @@ public class APIControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(outputMapper.writeValueAsString(randomVote)));
 
+    }
+
+    @Test
+    public void addVoteEndpoint_TriggersAnalyticsCreation() throws Exception {
+        assertEquals(0, analyticsService.getAllEvents().size());
+
+        IWisdom randomWisdom = RandomObjectFactory.makeRandomWisdom();
+        wisdomService.addOrUpdateWisdom(randomWisdom);
+        IVote randomVote = RandomObjectFactory.makeRandomVoteForWisdom(randomWisdom);
+        final MvcResult result = mvc.perform(buildJsonPostRequest(randomVote, "/vote/add"))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(outputMapper.writeValueAsString(randomVote)))
+                .andReturn();
+
+        assertEquals(1, analyticsService.getAllEvents().size());
+        final IAnalyticsEvent expectedEvent = AnalyticsFactory.createAddVoteEvent(HttpStatus.CREATED, randomVote);
+        final IAnalyticsEvent actualEvent = analyticsService.getAllEvents().get(0);
+        assertEquals(expectedEvent.getEventType(), actualEvent.getEventType());
+        assertEquals(expectedEvent.getEventInitiator(), actualEvent.getEventInitiator());
+        assertEquals(expectedEvent.getEventDescription(), actualEvent.getEventDescription());
+        assertNotNull(actualEvent.getEventTime());
     }
 
     @Test
