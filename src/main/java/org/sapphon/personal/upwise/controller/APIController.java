@@ -135,17 +135,20 @@ public class APIController {
 
     @RequestMapping(value = "/registration/add", method = RequestMethod.POST)
     public ResponseEntity<IUser> addUserEndpoint(@RequestBody IUser user) {
+        ResponseEntity<IUser> toReturn;
         if(!validateUser(user)){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            toReturn =  ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         else if(this.userService.getUserWithLogin(user.getLoginUsername()) != null){
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            toReturn = ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
         else {
             user.setTimeAdded(TimeLord.getNow());
             user.setPassword(this.userService.getPasswordEncoder().encode(user.getPassword()));
-            return ResponseEntity.status(HttpStatus.CREATED).body(this.addUser(user));
+            toReturn = ResponseEntity.status(HttpStatus.CREATED).body(this.addUser(user));
         }
+        addAnalyticsEventEndpoint(AnalyticsFactory.createAddUserEvent(toReturn.getStatusCode(), user));
+        return toReturn;
     }
 
     @RequestMapping(value = "/analytics/all")

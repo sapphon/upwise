@@ -32,7 +32,7 @@ public abstract class AbstractVote implements IVote {
     //region EqualsHashCodeToString
     @Override
     public String toString() {
-        return "VOTE: " + addedByUsername + "voted for " + wisdom + " on date " + timeAdded;
+        return "VOTE: " + addedByUsername + " voted for " + wisdom + " on date " + timeAdded;
     }
 
 	@Override

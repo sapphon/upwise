@@ -25,10 +25,20 @@ public class AnalyticsFactory {
     }
 
     public static IAnalyticsEvent createAddWisdomEvent(HttpStatus status, IWisdom wisdom){
-        return createAnalyticsEvent(String.format("[%s %s]: %s", status.toString(), status.getReasonPhrase(), wisdom.toString()), wisdom.getAddedByUsername(), AnalyticsAction.ADDWISDOM);
+        return createAnalyticsEvent(formatStatusString(status, wisdom), wisdom.getAddedByUsername(), AnalyticsAction.ADDWISDOM);
     }
 
     public static IAnalyticsEvent createAddVoteEvent(HttpStatus status, IVote vote){
-        return createAnalyticsEvent(String.format("[%s %s]: %s", status.toString(), status.getReasonPhrase(), vote.toString()), vote.getAddedByUsername(), AnalyticsAction.ADDVOTE);
+        return createAnalyticsEvent(formatStatusString(status, vote), vote.getAddedByUsername(), AnalyticsAction.ADDVOTE);
+    }
+
+    public static IAnalyticsEvent createAddUserEvent(HttpStatus status, IUser user) {
+        return createAnalyticsEvent(formatStatusString(status, user), user.getLoginUsername(), AnalyticsAction.ADDUSER);
+    }
+
+
+
+    private static String formatStatusString(HttpStatus status, Object responseObject) {
+        return String.format("[%s %s]: %s", status.toString(), status.getReasonPhrase(), responseObject.toString());
     }
 }

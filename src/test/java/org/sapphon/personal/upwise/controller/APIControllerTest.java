@@ -314,6 +314,23 @@ public class APIControllerTest {
     }
 
     @Test
+    public void addUserEndpointTriggersAnalyticsCreation() throws Exception {
+        assertEquals(0, analyticsService.getAllEvents().size());
+        IUser randomUser = RandomObjectFactory.makeRandomUser();
+        mvc.perform(buildJsonPostRequest(randomUser, "/registration/add"))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+        assertEquals(1, analyticsService.getAllEvents().size());
+        randomUser.setLoginUsername(randomUser.getLoginUsername().toLowerCase());
+        final IAnalyticsEvent expectedEvent = AnalyticsFactory.createAddUserEvent(HttpStatus.CREATED, randomUser);
+        final IAnalyticsEvent actualEvent = analyticsService.getAllEvents().get(0);
+        assertEquals(expectedEvent.getEventType(), actualEvent.getEventType());
+        assertEquals(expectedEvent.getEventInitiator(), actualEvent.getEventInitiator());
+        assertEquals(expectedEvent.getEventDescription(), actualEvent.getEventDescription());
+        assertNotNull(actualEvent.getEventTime());
+    }
+
+    @Test
     public void addUserEndpointSaysBadRequestIfNoUsername() throws Exception {
         IUser userWithBlankOrNullLogin = RandomObjectFactory.makeRandomUser();
         userWithBlankOrNullLogin.setLoginUsername("");
