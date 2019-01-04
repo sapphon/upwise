@@ -1,10 +1,12 @@
 package org.sapphon.personal.upwise.model;
 
+import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import java.sql.Timestamp;
 
 @MappedSuperclass
 public abstract class AbstractAnalyticsEvent implements IAnalyticsEvent {
+    @Column(length=1024)
     private String eventDescription;
     private String eventInitiator;
     private Timestamp eventTime;
