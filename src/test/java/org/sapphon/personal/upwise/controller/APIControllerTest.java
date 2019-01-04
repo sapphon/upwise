@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.sapphon.personal.upwise.factory.DomainObjectFactory;
+import org.sapphon.personal.upwise.factory.AnalyticsFactory;
 import org.sapphon.personal.upwise.model.*;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
 import org.sapphon.personal.upwise.service.AnalyticsService;
@@ -19,6 +19,7 @@ import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -29,6 +30,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -180,6 +182,24 @@ public class APIControllerTest {
     }
 
     @Test
+    public void addWisdomEndpoint_SaysCreatedInBaseCase() throws Exception {
+        IWisdom randomWisdom = RandomObjectFactory.makeRandomWisdom();
+        mvc.perform(buildJsonPostRequest(randomWisdom, "/wisdom/add"))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void addWisdomTriggersAnalyticsCreation() throws Exception {
+        assertEquals(0, analyticsService.getAllEvents().size());
+        IWisdom randomWisdom = RandomObjectFactory.makeRandomWisdom();
+        mvc.perform(buildJsonPostRequest(randomWisdom, "/wisdom/add"))
+                .andExpect(status().isCreated());
+
+        assertEquals(1, analyticsService.getAllEvents().size());
+        assertEquals(analyticsService.getAllEvents().get(0), AnalyticsFactory.createAddWisdomEvent(HttpStatus.CREATED, randomWisdom));
+    }
+
+    @Test
     public void addVoteEndpoint_SaysBadRequestIfNoWisdomContent() throws Exception {
         IWisdom randomWisdom = RandomObjectFactory.makeRandomWisdom();
         randomWisdom.setWisdomContent(null);
@@ -326,28 +346,28 @@ public class APIControllerTest {
 
     @Test
     public void addAnalyticsEventEndpointSaysBadRequestIfActionIsMissing() throws Exception {
-        IAnalyticsEvent eventWithNoAction = DomainObjectFactory.createAnalyticsEvent("description", "user", TimeLord.getNow(), null);
+        IAnalyticsEvent eventWithNoAction = AnalyticsFactory.createAnalyticsEvent("description", "user", TimeLord.getNow(), null);
         mvc.perform(buildJsonPostRequest(eventWithNoAction, "/analytics/add"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     public void addAnalyticsEventEndpointAcceptsEmptyDescriptions() throws Exception {
-        IAnalyticsEvent eventWithNoDescription = DomainObjectFactory.createAnalyticsEvent(null, "user", TimeLord.getNow(), AnalyticsAction.LOGIN);
+        IAnalyticsEvent eventWithNoDescription = AnalyticsFactory.createAnalyticsEvent(null, "user", TimeLord.getNow(), AnalyticsAction.LOGIN);
         mvc.perform(buildJsonPostRequest(eventWithNoDescription, "/analytics/add"))
                 .andExpect(status().isCreated());
     }
 
     @Test
     public void addAnalyticsEventEndpointSaysBadRequestIfUsernameIsMissing() throws Exception {
-        IAnalyticsEvent eventWithNoUser = DomainObjectFactory.createAnalyticsEvent("description", null, TimeLord.getNow(), AnalyticsAction.ADDUSER);
+        IAnalyticsEvent eventWithNoUser = AnalyticsFactory.createAnalyticsEvent("description", null, TimeLord.getNow(), AnalyticsAction.ADDUSER);
         mvc.perform(buildJsonPostRequest(eventWithNoUser, "/analytics/add"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     public void addAnalyticsEventEndpointSaysOKIfTimestampIsMissing_ButSetsOne() throws Exception {
-        IAnalyticsEvent eventWithNoTimestamp = DomainObjectFactory.createAnalyticsEvent("description", "user", null, AnalyticsAction.ADDVOTE);
+        IAnalyticsEvent eventWithNoTimestamp = AnalyticsFactory.createAnalyticsEvent("description", "user", null, AnalyticsAction.ADDVOTE);
         final MvcResult mvcResult = mvc.perform(buildJsonPostRequest(eventWithNoTimestamp, "/analytics/add"))
                 .andExpect(status().isCreated())
                 .andReturn();

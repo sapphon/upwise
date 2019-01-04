@@ -77,16 +77,4 @@ public class DomainObjectFactory {
         return new UserDetailsUserWrapper(user);
     }
 
-    public static AnalyticsEventJpa createAnalyticsEventJpa(IAnalyticsEvent event) {
-        return new AnalyticsEventJpa(event.getEventDescription(), event.getEventInitiator(), event.getEventTime(), event.getEventType());
-    }
-
-    public static IAnalyticsEvent createAnalyticsEvent(AnalyticsEventJpa eventJpa) {
-        return new BasicAnalyticsEvent(eventJpa.getEventDescription(), eventJpa.getEventInitiator(), eventJpa.getEventTime(), eventJpa.getEventType());
-    }
-
-    public static IAnalyticsEvent createAnalyticsEvent(String description, String user, Timestamp time, AnalyticsAction eventType) {
-        return new BasicAnalyticsEvent(description, user, time, eventType);
-    }
-
 }

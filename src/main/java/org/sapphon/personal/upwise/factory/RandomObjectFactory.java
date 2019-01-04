@@ -37,7 +37,7 @@ public class RandomObjectFactory {
     }
 
     public static IAnalyticsEvent makeRandomEvent(){
-        return DomainObjectFactory.createAnalyticsEvent(randomNonEmptyOfMaxLength(32), randomNonEmptyOfMaxLength(16), TimeLord.getTimestampForMillis(new Random().nextLong()), chooseRandomType());
+        return AnalyticsFactory.createAnalyticsEvent(randomNonEmptyOfMaxLength(32), randomNonEmptyOfMaxLength(16), TimeLord.getTimestampForMillis(new Random().nextLong()), chooseRandomType());
     }
 
     private static AnalyticsAction chooseRandomType() {

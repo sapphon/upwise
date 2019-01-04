@@ -1,9 +1,7 @@
 package org.sapphon.personal.upwise.controller;
 
-import org.sapphon.personal.upwise.model.IAnalyticsEvent;
-import org.sapphon.personal.upwise.model.IUser;
-import org.sapphon.personal.upwise.model.IVote;
-import org.sapphon.personal.upwise.model.IWisdom;
+import org.sapphon.personal.upwise.factory.AnalyticsFactory;
+import org.sapphon.personal.upwise.model.*;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.service.AnalyticsService;
 import org.sapphon.personal.upwise.service.UserService;
@@ -98,14 +96,19 @@ public class APIController {
 
     @RequestMapping(value = "/wisdom/add", method = RequestMethod.POST)
     public ResponseEntity<IWisdom> addWisdomEndpoint(@RequestBody IWisdom wisdom) {
+        ResponseEntity toReturn;
         if(!validateWisdom(wisdom)){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            toReturn = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         else if(this.wisdomService.findWisdomByContentAndAttribution(wisdom.getWisdomContent(), wisdom.getAttribution()).isPresent()){
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            toReturn = ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-        wisdom.setTimeAdded(TimeLord.getNow());
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.addWisdom(wisdom));
+        else {
+            wisdom.setTimeAdded(TimeLord.getNow());
+            toReturn = ResponseEntity.status(HttpStatus.CREATED).body(this.addWisdom(wisdom));
+        }
+        addAnalyticsEventEndpoint(AnalyticsFactory.createAddWisdomEvent(toReturn.getStatusCode(), wisdom));
+        return toReturn;
     }
 
     private boolean validateWisdom(IWisdom wisdom) {

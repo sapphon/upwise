@@ -1,6 +1,6 @@
 package org.sapphon.personal.upwise.repository;
 
-import org.sapphon.personal.upwise.factory.DomainObjectFactory;
+import org.sapphon.personal.upwise.factory.AnalyticsFactory;
 import org.sapphon.personal.upwise.model.IAnalyticsEvent;
 import org.sapphon.personal.upwise.repository.jpa.AnalyticsEventJpa;
 import org.sapphon.personal.upwise.repository.jpa.AnalyticsEventRepositoryJpa;
@@ -28,7 +28,7 @@ public class AnalyticsEventRepository {
             return eventFound;
         }
         else{
-            return jpaAnalyticsEventRepo.save(DomainObjectFactory.createAnalyticsEventJpa(eventToSave));
+            return jpaAnalyticsEventRepo.save(AnalyticsFactory.createAnalyticsEventJpa(eventToSave));
         }
     }
 
@@ -42,7 +42,7 @@ public class AnalyticsEventRepository {
 
     public List<IAnalyticsEvent> getAll() {
         List<IAnalyticsEvent> toReturn = new ArrayList<>();
-        jpaAnalyticsEventRepo.findAll().forEach((j) -> toReturn.add(DomainObjectFactory.createAnalyticsEvent(j)));
+        jpaAnalyticsEventRepo.findAll().forEach((j) -> toReturn.add(AnalyticsFactory.createAnalyticsEvent(j)));
         return toReturn;
     }
 
