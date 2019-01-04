@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.sapphon.personal.upwise.TestHelper;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
+import org.sapphon.personal.upwise.factory.RandomObjectFactory;
 import org.sapphon.personal.upwise.model.IAnalyticsEvent;
 import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +32,9 @@ public class AnalyticsEventRepositoryTest {
 
     @Before
     public void setUp() throws Exception {
-        testEvents = new IAnalyticsEvent[4];
-        testEvents[0] = DomainObjectFactory.createAnalyticsEvent("WISDOM VIEW", "garbage", TimeLord.getNowWithOffset(-1000));
-        testEvents[1] = DomainObjectFactory.createAnalyticsEvent("LOG IN", "trash", TimeLord.getNowWithOffset(-900));
-        testEvents[2] = DomainObjectFactory.createAnalyticsEvent("WISDOM SUBMIT", "waste", TimeLord.getNowWithOffset(-1));
-        testEvents[3] = DomainObjectFactory.createAnalyticsEvent("WISDOM VIEW", "refuse", TimeLord.getNowWithOffset(10));
+        testEvents = new IAnalyticsEvent[2];
+        testEvents[0] = RandomObjectFactory.makeRandomEvent();
+        testEvents[1] = RandomObjectFactory.makeRandomEvent();
     }
 
     @Test
@@ -48,15 +47,16 @@ public class AnalyticsEventRepositoryTest {
 
         final IAnalyticsEvent actual = analyticsRepo.getById(2L);
         assertEquals(eventWeWantToFind, actual);
-        assertEquals("WISDOM VIEW", actual.getEventDescription());
-        assertEquals("garbage", actual.getEventInitiator());
+        assertEquals(eventWeWantToFind.getEventDescription(), actual.getEventDescription());
+        assertEquals(eventWeWantToFind.getEventInitiator(), actual.getEventInitiator());
         assertEquals(eventWeWantToFind.getEventTime(), actual.getEventTime());
+        assertEquals(eventWeWantToFind.getEventType(), actual.getEventType());
     }
 
     @Test
     public void canSaveAndCount() {
         analyticsRepo.save(Arrays.asList(testEvents));
-        assertEquals(4, analyticsRepo.getCount());
+        assertEquals(2, analyticsRepo.getCount());
     }
 
     @Test

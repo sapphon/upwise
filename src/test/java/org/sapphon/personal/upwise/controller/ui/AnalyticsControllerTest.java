@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.sapphon.personal.upwise.TestHelper;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
+import org.sapphon.personal.upwise.model.AnalyticsAction;
 import org.sapphon.personal.upwise.model.IAnalyticsEvent;
 import org.sapphon.personal.upwise.service.AnalyticsService;
 import org.sapphon.personal.upwise.time.TimeLord;
@@ -50,7 +51,7 @@ public class AnalyticsControllerTest {
 
     @Test
     public void getAnalyticsPageSetsAnalyticsOnModel() throws Exception {
-        final ArrayList<IAnalyticsEvent> expectedEvents = newArrayList(DomainObjectFactory.createAnalyticsEvent("rim", "farge", TimeLord.getNow()), DomainObjectFactory.createAnalyticsEvent("gord", "drog", TimeLord.getNow()));
+        final ArrayList<IAnalyticsEvent> expectedEvents = newArrayList(DomainObjectFactory.createAnalyticsEvent("rim", "farge", TimeLord.getNow(), AnalyticsAction.LOGIN), DomainObjectFactory.createAnalyticsEvent("gord", "drog", TimeLord.getNow(), AnalyticsAction.VIEWWISDOM));
         analyticsService.saveEvent(expectedEvents.get(0));
         analyticsService.saveEvent(expectedEvents.get(1));
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/allanalytics").accept(MediaType.TEXT_HTML))

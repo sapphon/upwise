@@ -8,24 +8,30 @@
         <h2 th:text="#{title.analytics}">Analytics</h2>
         <div class="eventlist" th:unless="${#lists.isEmpty(events)}">
             <div class="row">
-                <div class="col s4">
+                <div class="col s3">
                     <h4>EVENT TYPE</h4>
                 </div>
-                <div class="col s4">
+                <div class="col s3">
+                    <h4>EVENT DETAILS</h4>
+                </div>
+                <div class="col s3">
                     <h4>EVENT INSTIGATOR</h4>
                 </div>
-                <div class="col s4">
+                <div class="col s3">
                     <h4>EVENT TIMESTAMP</h4>
                 </div>
             </div>
             <div class="row" th:each="event : ${events}">
-                <div class="col s4">
+                <div class="col s3">
+                    <p th:text="${event.eventType}">Attack</p>
+                </div>
+                <div class="col s3">
                     <p th:text="${event.eventDescription}">Harpoon Throw</p>
                 </div>
-                <div class="col s4">
+                <div class="col s3">
                     <p th:text="${event.eventInitiator}">Ahab the Captain</p>
                 </div>
-                <div class="col s4">
+                <div class="col s3">
                     <p th:text="${event.eventTime}">2019-01-01 11:11:11.11111</p>
                 </div>
             </div>

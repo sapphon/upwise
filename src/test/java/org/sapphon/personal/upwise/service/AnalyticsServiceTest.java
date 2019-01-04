@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
+import org.sapphon.personal.upwise.factory.RandomObjectFactory;
 import org.sapphon.personal.upwise.model.IAnalyticsEvent;
 import org.sapphon.personal.upwise.repository.AnalyticsEventRepository;
 import org.sapphon.personal.upwise.time.TimeLord;
@@ -32,11 +33,8 @@ public class AnalyticsServiceTest {
     @Before
     public void beforeEach(){
 
-        testEvents = new IAnalyticsEvent[4];
-        testEvents[0] = DomainObjectFactory.createAnalyticsEvent("WISDOM VIEW", "garbage", TimeLord.getNowWithOffset(-1000));
-        testEvents[1] = DomainObjectFactory.createAnalyticsEvent("LOG IN", "trash", TimeLord.getNowWithOffset(-900));
-        testEvents[2] = DomainObjectFactory.createAnalyticsEvent("WISDOM SUBMIT", "waste", TimeLord.getNowWithOffset(-1));
-        testEvents[3] = DomainObjectFactory.createAnalyticsEvent("WISDOM VIEW", "refuse", TimeLord.getNowWithOffset(10));
+        testEvents = new IAnalyticsEvent[1];
+        testEvents[0] = RandomObjectFactory.makeRandomEvent();
 
 
         mockAnalyticsRepo = Mockito.mock(AnalyticsEventRepository.class);

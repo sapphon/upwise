@@ -1,6 +1,7 @@
 package org.sapphon.personal.upwise.repository.jpa;
 
 import org.sapphon.personal.upwise.model.AbstractAnalyticsEvent;
+import org.sapphon.personal.upwise.model.AnalyticsAction;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,7 +18,7 @@ public class AnalyticsEventJpa extends AbstractAnalyticsEvent {
 
     protected AnalyticsEventJpa(){}
 
-    public AnalyticsEventJpa(String eventDescription, String eventInitiator, Timestamp timeOccurred) {
-        super(eventDescription, eventInitiator, timeOccurred);
+    public AnalyticsEventJpa(String eventDescription, String eventInitiator, Timestamp timeOccurred, AnalyticsAction eventType) {
+        super(eventDescription, eventInitiator, timeOccurred, eventType);
     }
 }

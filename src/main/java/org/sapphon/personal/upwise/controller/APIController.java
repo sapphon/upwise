@@ -161,8 +161,9 @@ public class APIController {
     }
 
     private boolean validateAnalyticsEvent(IAnalyticsEvent event) {
-        return event.getEventDescription() != null && !event.getEventDescription().isEmpty()
-                && event.getEventInitiator() != null && !event.getEventInitiator().isEmpty();
+        return event.getEventType() != null
+                && event.getEventInitiator() != null
+                && !event.getEventInitiator().isEmpty();
     }
 
     private IUser addUser(IUser user) {

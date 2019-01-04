@@ -37,7 +37,12 @@ public class RandomObjectFactory {
     }
 
     public static IAnalyticsEvent makeRandomEvent(){
-        return DomainObjectFactory.createAnalyticsEvent(randomNonEmptyOfMaxLength(32), randomNonEmptyOfMaxLength(16), TimeLord.getTimestampForMillis(new Random().nextLong()));
+        return DomainObjectFactory.createAnalyticsEvent(randomNonEmptyOfMaxLength(32), randomNonEmptyOfMaxLength(16), TimeLord.getTimestampForMillis(new Random().nextLong()), chooseRandomType());
+    }
+
+    private static AnalyticsAction chooseRandomType() {
+        final int randomIndex = new Random().nextInt(AnalyticsAction.values().length - 1);
+        return AnalyticsAction.values()[randomIndex];
     }
 
     public static IVote makeRandomVoteForWisdom(IWisdom wisdom) {

@@ -9,10 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
-import org.sapphon.personal.upwise.model.IAnalyticsEvent;
-import org.sapphon.personal.upwise.model.IUser;
-import org.sapphon.personal.upwise.model.IVote;
-import org.sapphon.personal.upwise.model.IWisdom;
+import org.sapphon.personal.upwise.model.*;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
 import org.sapphon.personal.upwise.service.AnalyticsService;
 import org.sapphon.personal.upwise.service.UserService;
@@ -30,7 +27,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultHandler;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import sun.security.x509.IssuerAlternativeNameExtension;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertFalse;
@@ -330,21 +326,28 @@ public class APIControllerTest {
 
     @Test
     public void addAnalyticsEventEndpointSaysBadRequestIfActionIsMissing() throws Exception {
-        IAnalyticsEvent eventWithNoAction = DomainObjectFactory.createAnalyticsEvent(null, "user", TimeLord.getNow());
+        IAnalyticsEvent eventWithNoAction = DomainObjectFactory.createAnalyticsEvent("description", "user", TimeLord.getNow(), null);
         mvc.perform(buildJsonPostRequest(eventWithNoAction, "/analytics/add"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
+    public void addAnalyticsEventEndpointAcceptsEmptyDescriptions() throws Exception {
+        IAnalyticsEvent eventWithNoDescription = DomainObjectFactory.createAnalyticsEvent(null, "user", TimeLord.getNow(), AnalyticsAction.LOGIN);
+        mvc.perform(buildJsonPostRequest(eventWithNoDescription, "/analytics/add"))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
     public void addAnalyticsEventEndpointSaysBadRequestIfUsernameIsMissing() throws Exception {
-        IAnalyticsEvent eventWithNoUser = DomainObjectFactory.createAnalyticsEvent("description", null, TimeLord.getNow());
+        IAnalyticsEvent eventWithNoUser = DomainObjectFactory.createAnalyticsEvent("description", null, TimeLord.getNow(), AnalyticsAction.ADDUSER);
         mvc.perform(buildJsonPostRequest(eventWithNoUser, "/analytics/add"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     public void addAnalyticsEventEndpointSaysOKIfTimestampIsMissing_ButSetsOne() throws Exception {
-        IAnalyticsEvent eventWithNoTimestamp = DomainObjectFactory.createAnalyticsEvent("description", "user", null);
+        IAnalyticsEvent eventWithNoTimestamp = DomainObjectFactory.createAnalyticsEvent("description", "user", null, AnalyticsAction.ADDVOTE);
         final MvcResult mvcResult = mvc.perform(buildJsonPostRequest(eventWithNoTimestamp, "/analytics/add"))
                 .andExpect(status().isCreated())
                 .andReturn();
