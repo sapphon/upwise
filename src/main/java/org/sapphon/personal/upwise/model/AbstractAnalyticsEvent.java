@@ -25,7 +25,7 @@ public abstract class AbstractAnalyticsEvent implements IAnalyticsEvent {
     //region ToStringEqualsHashCode
     @Override
     public String toString() {
-        return "EVENT: " + eventType + "with description '" + eventDescription + "' happened at " + eventTime + " done by " + eventInitiator + ".";
+        return "EVENT: " + eventType + " with description '" + eventDescription + "' happened at " + eventTime + " done by " + eventInitiator + ".";
     }
 
     @Override
