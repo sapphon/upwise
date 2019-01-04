@@ -38,7 +38,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 //h2 console and analytics require admin
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/h2")).hasAuthority("ADMIN")
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/allanalytics")).hasAuthority("ADMIN")
-                //public endpoints
+                //public UI endpoints
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/loggedout")).permitAll()
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/randomwisdom")).permitAll()
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/viewwisdom")).permitAll()
@@ -54,6 +54,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/wisdom/all")).permitAll()
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/vote/all")).permitAll()
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/wisdom/random")).permitAll()
+                .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/health")).permitAll()
                 //anything not public requires authentication
                 .and().authorizeRequests().anyRequest().fullyAuthenticated()
                 .and().csrf().disable();
