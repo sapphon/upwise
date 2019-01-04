@@ -50,6 +50,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/loggedout")
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/scripts/**")).permitAll()
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/styles/**")).permitAll()
+                //public API endpoints
+                .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/wisdom/all")).permitAll()
                 //anything not public requires authentication
                 .and().authorizeRequests().anyRequest().fullyAuthenticated()
                 .and().csrf().disable();
