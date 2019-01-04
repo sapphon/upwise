@@ -10,6 +10,6 @@ import java.util.Optional;
 
 @Repository("jpaAnalyticsEventRepo")
 public interface AnalyticsEventRepositoryJpa extends CrudRepository<AnalyticsEventJpa, Long> {
-    List<AnalyticsEventJpa> findAll();
+    List<AnalyticsEventJpa> findAllByOrderByEventTimeDesc();
     AnalyticsEventJpa findByEventDescriptionAndEventInitiatorAndEventTime(String description, String initiator, Timestamp time);
 }

@@ -14,8 +14,10 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.Assert.assertEquals;
@@ -60,12 +62,14 @@ public class AnalyticsEventRepositoryTest {
     }
 
     @Test
-    public void canSaveAndRetrieveAll() {
+    public void canSaveAndRetrieveAll_InOrderFromNewestToOldest() {
         for(IAnalyticsEvent event : testEvents){
+            event.setEventTime(TimeLord.getNow());
             analyticsRepo.save(event);
         }
+        List<IAnalyticsEvent> sortedExpectation = newArrayList(testEvents).stream().sorted(Comparator.comparing(IAnalyticsEvent::getEventTime).reversed()).collect(Collectors.toList());
         final List<IAnalyticsEvent> actual = analyticsRepo.getAll();
-        TestHelper.assertListEquals(newArrayList(testEvents), actual);
+        TestHelper.assertListEquals(sortedExpectation, actual);
     }
 
     @Test

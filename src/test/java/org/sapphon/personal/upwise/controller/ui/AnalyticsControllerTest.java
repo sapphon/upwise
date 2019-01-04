@@ -18,7 +18,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.Assert.*;
@@ -57,7 +59,7 @@ public class AnalyticsControllerTest {
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/allanalytics").accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andReturn();
-        TestHelper.assertListEquals(expectedEvents, (List)mvcResult.getModelAndView().getModel().get("events"));
+        TestHelper.assertListEquals(expectedEvents.stream().sorted(Comparator.comparing(IAnalyticsEvent::getEventTime).reversed()).collect(Collectors.toList()), (List)mvcResult.getModelAndView().getModel().get("events"));
     }
 
 }

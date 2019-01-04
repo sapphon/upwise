@@ -42,7 +42,7 @@ public class AnalyticsEventRepository {
 
     public List<IAnalyticsEvent> getAll() {
         List<IAnalyticsEvent> toReturn = new ArrayList<>();
-        jpaAnalyticsEventRepo.findAll().forEach((j) -> toReturn.add(AnalyticsFactory.createAnalyticsEvent(j)));
+        jpaAnalyticsEventRepo.findAllByOrderByEventTimeDesc().forEach((j) -> toReturn.add(AnalyticsFactory.createAnalyticsEvent(j)));
         return toReturn;
     }
 
