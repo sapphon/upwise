@@ -49,9 +49,7 @@ public class WisdomController {
     public String viewWisdom(Model model, @RequestParam("wisdomContent") String wisdomContent, @RequestParam("wisdomAttribution") String wisdomAttribution )
     {
         Optional<IWisdom> wisdomFound = wisdomService.findWisdomByContentAndAttribution(wisdomContent, wisdomAttribution);
-        if(wisdomFound.isPresent()) {
-            model.addAttribute("wisdom", wisdomService.getWisdomWithVotes(wisdomFound.get()));
-        }
+        wisdomFound.ifPresent(iWisdom -> model.addAttribute("wisdom", wisdomService.getWisdomWithVotes(iWisdom)));
         return "viewwisdom";
     }
 }
