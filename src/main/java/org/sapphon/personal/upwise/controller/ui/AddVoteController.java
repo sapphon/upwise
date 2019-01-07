@@ -33,7 +33,7 @@ public class AddVoteController {
         ResponseEntity<IVote> voteResponseEntity = this.apiController.voteForWisdomEndpoint(voteToAdd);
          model.addAttribute("addVoteStatusCode", voteResponseEntity.getStatusCodeValue());
         if(destinationViewName == null || destinationViewName.isEmpty() || destinationViewName.equalsIgnoreCase("viewwisdom")){
-            return wisdomController.viewWisdom(model, wisdomContent, wisdomAttribution);
+            return wisdomController.viewWisdom(model, loggedInUser, wisdomContent, wisdomAttribution);
         }
         else return wisdomController.getWisdomLeaderboardWithVotes(model, loggedInUser);
     }

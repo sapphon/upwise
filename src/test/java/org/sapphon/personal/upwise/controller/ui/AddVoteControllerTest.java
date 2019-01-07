@@ -145,7 +145,7 @@ public class AddVoteControllerTest {
     public void testDefaultsToViewWisdom_IfNoDestinationViewIsSet() throws Exception {
         try {
             when(apiController.voteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(IVote.class, HttpStatus.CREATED));
-            when(wisdomController.viewWisdom(any(), any(), any())).thenReturn("viewwisdom");
+            when(wisdomController.viewWisdom(any(), any(), any(), any())).thenReturn("viewwisdom");
             MvcResult mvcResult = makeMockMvcPostWithBlankParams()
                     .andExpect(status().isOk())
                     .andExpect(content().string(""))

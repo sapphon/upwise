@@ -1,8 +1,6 @@
 package org.sapphon.personal.upwise.controller.ui;
 
 import org.sapphon.personal.upwise.factory.AnalyticsFactory;
-import org.sapphon.personal.upwise.factory.DomainObjectFactory;
-import org.sapphon.personal.upwise.model.AnalyticsAction;
 import org.sapphon.personal.upwise.model.IWisdom;
 import org.sapphon.personal.upwise.service.AnalyticsService;
 import org.sapphon.personal.upwise.service.WisdomService;
@@ -35,7 +33,7 @@ public class WisdomController {
 
     @GetMapping(value = "/wisdomleaderboard", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
     public String getWisdomLeaderboardWithVotes(Model model, Principal principal){
-        analyticsService.saveEvent(AnalyticsFactory.createAnalyticsEvent("[none]", principal == null ? "[anonymous]" : principal.getName(), AnalyticsAction.VIEWLEADERBOARD));
+        analyticsService.saveEvent(AnalyticsFactory.createViewLeaderboardEvent(principal == null ? "[anonymous]" : principal.getName()));
         model.addAttribute("allWisdoms", wisdomService.getAllWisdomsWithVotes());
         return "wisdomleaderboard";
     }
@@ -46,20 +44,23 @@ public class WisdomController {
     }
 
     @GetMapping(value = "/randomwisdom", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
-    public String getRandomWisdom(Model model)
+    public String getRandomWisdom(Model model, Principal loggedInUser)
     {
         if(wisdomService.hasAnyWisdoms()) {
             IWisdom chosen = chooseRandomWisdom(wisdomService.getAllWisdoms());
-            return this.viewWisdom(model, chosen.getWisdomContent(), chosen.getAttribution());
+            return this.viewWisdom(model, loggedInUser, chosen.getWisdomContent(), chosen.getAttribution());
         }
         return "viewwisdom";
     }
 
     @GetMapping(value = "/viewwisdom", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
-    public String viewWisdom(Model model, @RequestParam("wisdomContent") String wisdomContent, @RequestParam("wisdomAttribution") String wisdomAttribution )
+    public String viewWisdom(Model model, Principal loggedInUser, @RequestParam("wisdomContent") String wisdomContent, @RequestParam("wisdomAttribution") String wisdomAttribution)
     {
         Optional<IWisdom> wisdomFound = wisdomService.findWisdomByContentAndAttribution(wisdomContent, wisdomAttribution);
-        wisdomFound.ifPresent(iWisdom -> model.addAttribute("wisdom", wisdomService.getWisdomWithVotes(iWisdom)));
+        if(wisdomFound.isPresent()) {
+            model.addAttribute("wisdom", wisdomService.getWisdomWithVotes(wisdomFound.get()));
+            this.analyticsService.saveEvent(AnalyticsFactory.createViewWisdomEvent(loggedInUser == null ? "[anonymous]" : loggedInUser.getName(), wisdomFound.get()));
+        }
         return "viewwisdom";
     }
 

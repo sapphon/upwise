@@ -102,7 +102,7 @@ public class WisdomControllerTest {
                 .andExpect(content().string(equalTo("")));
         verify(analyticsService, times(1)).saveEvent(captor.capture());
         assertEquals(AnalyticsAction.VIEWLEADERBOARD, captor.getValue().getEventType());
-        assertEquals("[none]", captor.getValue().getEventDescription());
+        assertEquals("[No details]", captor.getValue().getEventDescription());
         assertEquals("[anonymous]", captor.getValue().getEventInitiator());
         assertEquals(null, captor.getValue().getEventTime());
     }
@@ -159,7 +159,7 @@ public class WisdomControllerTest {
     }
 
     @Test
-    public void viewWisdomWithVotes() throws Exception {
+    public void viewWisdomWithVotesPopulatesModelAndView() throws Exception {
         when(wisdomService.getWisdomWithVotes(exampleWisdoms.get(0))).thenReturn(DomainObjectFactory.createWisdomWithVotes(exampleWisdoms.get(0), newArrayList(exampleVotes.get(0), exampleVotes.get(1))));
         when(wisdomService.findWisdomByContentAndAttribution(exampleWisdoms.get(0).getWisdomContent(), exampleWisdoms.get(0).getAttribution())).thenReturn(Optional.of(exampleWisdoms.get(0)));
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(String.format("/viewwisdom?wisdomContent=%s&wisdomAttribution=%s", exampleWisdoms.get(0).getWisdomContent(), exampleWisdoms.get(0).getAttribution())).accept(MediaType.TEXT_HTML))
@@ -168,6 +168,40 @@ public class WisdomControllerTest {
                 .andReturn();
         verifyWisdom(mvcResult);
         assertEquals("viewwisdom", mvcResult.getModelAndView().getViewName());
+    }
+
+    @Test
+    public void testViewWisdomSavesCorrectAnalyticsEvent_WhetherUserIsLoggedInOrNot() throws Exception {
+        ArgumentCaptor<IAnalyticsEvent> captor = ArgumentCaptor.forClass(IAnalyticsEvent.class);
+
+        when(wisdomService.getWisdomWithVotes(exampleWisdoms.get(0))).thenReturn(DomainObjectFactory.createWisdomWithVotes(exampleWisdoms.get(0), newArrayList(exampleVotes.get(0), exampleVotes.get(1))));
+        when(wisdomService.findWisdomByContentAndAttribution(exampleWisdoms.get(0).getWisdomContent(), exampleWisdoms.get(0).getAttribution())).thenReturn(Optional.of(exampleWisdoms.get(0)));
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(String.format("/viewwisdom?wisdomContent=%s&wisdomAttribution=%s", exampleWisdoms.get(0).getWisdomContent(), exampleWisdoms.get(0).getAttribution())).accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""))
+                .andReturn();
+        verify(analyticsService).saveEvent(captor.capture());
+        IAnalyticsEvent actual = captor.getValue();
+        assertEquals(AnalyticsAction.VIEWWISDOM, actual.getEventType());
+        assertEquals(exampleWisdoms.get(0).toString(), actual.getEventDescription());
+        assertEquals("[anonymous]", actual.getEventInitiator());
+        assertEquals(null, actual.getEventTime());
+    }
+
+    @Test
+    public void testViewWisdomSavesUsernameOnAnalytics_IfUserIsLoggedIn() throws Exception {
+        ArgumentCaptor<IAnalyticsEvent> captor = ArgumentCaptor.forClass(IAnalyticsEvent.class);
+
+        when(wisdomService.getWisdomWithVotes(exampleWisdoms.get(0))).thenReturn(DomainObjectFactory.createWisdomWithVotes(exampleWisdoms.get(0), newArrayList(exampleVotes.get(0), exampleVotes.get(1))));
+        when(wisdomService.findWisdomByContentAndAttribution(exampleWisdoms.get(0).getWisdomContent(), exampleWisdoms.get(0).getAttribution())).thenReturn(Optional.of(exampleWisdoms.get(0)));
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(String.format("/viewwisdom?wisdomContent=%s&wisdomAttribution=%s", exampleWisdoms.get(0).getWisdomContent(), exampleWisdoms.get(0).getAttribution())).accept(MediaType.TEXT_HTML).principal(new BasicUserPrincipal("aKindaLongUserLoginNameWithCaps")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""))
+                .andReturn();
+        verify(analyticsService).saveEvent(captor.capture());
+        IAnalyticsEvent actual = captor.getValue();
+
+        assertEquals("aKindaLongUserLoginNameWithCaps", actual.getEventInitiator());
     }
 
 
