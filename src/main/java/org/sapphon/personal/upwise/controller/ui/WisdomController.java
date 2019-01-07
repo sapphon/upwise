@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -48,7 +49,8 @@ public class WisdomController {
     public String getRandomWisdom(Model model)
     {
         if(wisdomService.hasAnyWisdoms()) {
-            model.addAttribute("wisdom", wisdomService.getAllWisdomsWithVotes().get(new Random().nextInt(wisdomService.getAllWisdomsWithVotes().size())));
+            IWisdom chosen = chooseRandomWisdom(wisdomService.getAllWisdoms());
+            return this.viewWisdom(model, chosen.getWisdomContent(), chosen.getAttribution());
         }
         return "viewwisdom";
     }
@@ -59,5 +61,9 @@ public class WisdomController {
         Optional<IWisdom> wisdomFound = wisdomService.findWisdomByContentAndAttribution(wisdomContent, wisdomAttribution);
         wisdomFound.ifPresent(iWisdom -> model.addAttribute("wisdom", wisdomService.getWisdomWithVotes(iWisdom)));
         return "viewwisdom";
+    }
+
+    private IWisdom chooseRandomWisdom(List<IWisdom> toChooseFrom){
+        return toChooseFrom.get(new Random().nextInt(toChooseFrom.size()));
     }
 }

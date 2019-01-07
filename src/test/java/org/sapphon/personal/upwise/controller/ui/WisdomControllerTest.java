@@ -129,6 +129,7 @@ public class WisdomControllerTest {
 
     private void verifyLeaderboard(MvcResult mvcResult) {
         try {
+            assertEquals("wisdomleaderboard", mvcResult.getModelAndView().getViewName());
             List<WisdomWithVotesPresentation> actualWisdoms = (List<WisdomWithVotesPresentation>) mvcResult.getModelAndView().getModel().values().iterator().next();
             verifyWisdoms(actualWisdoms);
         } catch (Exception e) {
@@ -158,7 +159,7 @@ public class WisdomControllerTest {
     }
 
     @Test
-    public void viewWisdomWithVotes_ProducesCorrectOutputOnModel() throws Exception {
+    public void viewWisdomWithVotes() throws Exception {
         when(wisdomService.getWisdomWithVotes(exampleWisdoms.get(0))).thenReturn(DomainObjectFactory.createWisdomWithVotes(exampleWisdoms.get(0), newArrayList(exampleVotes.get(0), exampleVotes.get(1))));
         when(wisdomService.findWisdomByContentAndAttribution(exampleWisdoms.get(0).getWisdomContent(), exampleWisdoms.get(0).getAttribution())).thenReturn(Optional.of(exampleWisdoms.get(0)));
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(String.format("/viewwisdom?wisdomContent=%s&wisdomAttribution=%s", exampleWisdoms.get(0).getWisdomContent(), exampleWisdoms.get(0).getAttribution())).accept(MediaType.TEXT_HTML))
@@ -166,11 +167,12 @@ public class WisdomControllerTest {
                 .andExpect(content().string(""))
                 .andReturn();
         verifyWisdom(mvcResult);
+        assertEquals("viewwisdom", mvcResult.getModelAndView().getViewName());
     }
 
 
     @Test
-    public void setsANullWisdomOnTheModelForTheRandomWisdomPage_IfNoWisdomsExist() throws Exception{
+    public void setsANullWisdomOnTheModelForTheRandomWisdomPageAndServesViewWisdom_IfNoWisdomsExist() throws Exception{
         when(wisdomService.hasAnyWisdoms()).thenReturn(false);
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/randomwisdom").accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
@@ -178,6 +180,7 @@ public class WisdomControllerTest {
                 .andReturn();
         try {
             WisdomWithVotesPresentation actualWisdom = (WisdomWithVotesPresentation) mvcResult.getModelAndView().getModel().get("wisdom");
+            assertEquals("viewwisdom", mvcResult.getModelAndView().getViewName());
             assertNull(actualWisdom);
         } catch (Exception e) {
             Assert.fail("Model not as expected.");
