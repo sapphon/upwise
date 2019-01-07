@@ -8,9 +8,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.junit.Assert.*;
+import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -21,21 +24,38 @@ public class SecurityConfigurationTest {
 
     @Autowired
     private MockMvc mvc;
+    private static List<String> apiStateChangingEndpoints = newArrayList("/wisdom/add", "/vote/add", "/registration/add", "/analytics/add");
+    private static List<String> apiStaticEndpoints = newArrayList("/wisdom/all", "/wisdom/random", "/vote/all", "/health");
+
+    private static List<String> uiStateChangingEndpoints = newArrayList("/addwisdom", "/addvote");
+    private static List<String> uiStaticEndpoints = newArrayList("/login", "/loggedout", "/randomwisdom", "/viewwisdom?wisdomContent=whatever&wisdomAttribution=whatever", "/", "/user/whatever", "/wisdomleaderboard", "/wisdomsearch", "/register", "/scripts/materialize-auto-init.js", "/styles/global.css");
+
 
     @Test
     public void testAPIRedirectsUnauthenticatedRequestsToPostEndpoints() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.post("/wisdom/add").accept(MediaType.APPLICATION_JSON)).andExpect(status().is3xxRedirection());
-        mvc.perform(MockMvcRequestBuilders.post("/vote/add").accept(MediaType.APPLICATION_JSON)).andExpect(status().is3xxRedirection());
-        mvc.perform(MockMvcRequestBuilders.post("/registration/add").accept(MediaType.APPLICATION_JSON)).andExpect(status().is3xxRedirection());
-        mvc.perform(MockMvcRequestBuilders.post("/analytics/add").accept(MediaType.APPLICATION_JSON)).andExpect(status().is3xxRedirection());
+        checkEndpoints("POST", apiStateChangingEndpoints, MediaType.APPLICATION_JSON, status().is3xxRedirection());
     }
 
     @Test
     public void testAPIAcceptsUnauthenticatedRequestsToGetEndpoints() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/wisdom/all").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
-        mvc.perform(MockMvcRequestBuilders.get("/vote/all").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
-        mvc.perform(MockMvcRequestBuilders.get("/wisdom/random").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
-        mvc.perform(MockMvcRequestBuilders.get("/health").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        checkEndpoints("GET", apiStaticEndpoints, MediaType.APPLICATION_JSON, status().isOk());
     }
+
+    @Test
+    public void testUIRedirectsUnauthenticatedRequestsToPostEndpoints() throws Exception {
+        checkEndpoints("POST", uiStateChangingEndpoints, MediaType.TEXT_HTML, status().is3xxRedirection());
+    }
+
+    @Test
+    public void testUIAcceptsUnauthenticatedRequestsToGetEndpoints()  throws Exception  {
+        checkEndpoints("GET", uiStaticEndpoints, MediaType.TEXT_HTML, status().isOk());
+    }
+
+    private void checkEndpoints(String method, List<String> endpoints, MediaType mediaTypesAccepted, ResultMatcher expectation) throws Exception{
+        for (String endpoint : endpoints){
+            mvc.perform((method.equalsIgnoreCase("post") ? MockMvcRequestBuilders.post(endpoint) : MockMvcRequestBuilders.get(endpoint)).accept(mediaTypesAccepted)).andExpect(expectation);
+        }
+    }
+
 
 }
