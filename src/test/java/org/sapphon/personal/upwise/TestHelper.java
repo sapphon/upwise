@@ -5,6 +5,8 @@ import org.sapphon.personal.upwise.repository.jpa.WisdomJpa;
 import javax.persistence.GeneratedValue;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.List;
 import static org.junit.Assert.*;
 
@@ -49,5 +51,9 @@ public class TestHelper {
 		T foundAnnotation = getFieldAnnotation(c, fieldName, annotationClass);
 		assertNotNull(foundAnnotation);
 		return foundAnnotation;
+	}
+
+	public static void assertTimestampBetweenInclusive(Timestamp toMeasure, Timestamp before, Timestamp after){
+		assertTrue("Timestamp not within acceptable range", toMeasure.compareTo(before) >= 0 && toMeasure.compareTo(after) <= 0);
 	}
 }

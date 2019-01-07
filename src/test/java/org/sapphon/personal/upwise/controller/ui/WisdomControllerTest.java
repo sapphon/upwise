@@ -1,16 +1,18 @@
 package org.sapphon.personal.upwise.controller.ui;
 
+import org.apache.http.auth.BasicUserPrincipal;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
-import org.sapphon.personal.upwise.model.IVote;
-import org.sapphon.personal.upwise.model.IWisdom;
-import org.sapphon.personal.upwise.model.Wisdom;
+import org.sapphon.personal.upwise.factory.AnalyticsFactory;
+import org.sapphon.personal.upwise.model.*;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
 import org.sapphon.personal.upwise.presentation.WisdomWithVotesPresentation;
+import org.sapphon.personal.upwise.service.AnalyticsService;
 import org.sapphon.personal.upwise.service.WisdomService;
 import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -48,6 +51,9 @@ public class WisdomControllerTest {
     @MockBean
     private WisdomService wisdomService;
 
+    @MockBean
+    private AnalyticsService analyticsService;
+
     @InjectMocks
     private WisdomController underTest;
 
@@ -60,7 +66,7 @@ public class WisdomControllerTest {
         viewResolver.setPrefix("templates/");
         viewResolver.setSuffix(".html");
 
-        this.underTest = new WisdomController(wisdomService);
+        this.underTest = new WisdomController(wisdomService, analyticsService);
 
         mvc = MockMvcBuilders.standaloneSetup(underTest)
                 .setViewResolvers(viewResolver)
@@ -80,11 +86,35 @@ public class WisdomControllerTest {
     }
 
     @Test
-    public void getWisdomLeaderboardCollaboratesWithWisdomService() throws Exception {
+    public void getWisdomLeaderboardCollaboratesWithWisdomServiceAndAnalyticsService() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/wisdomleaderboard").accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("")));
         verify(wisdomService, times(1)).getAllWisdomsWithVotes();
+        verify(analyticsService, times(1)).saveEvent(any());
+    }
+
+    @Test
+    public void testGetLeaderboardSavesCorrectAnalyticsEvent_WhetherUserIsLoggedInOrNot() throws Exception {
+        ArgumentCaptor<IAnalyticsEvent> captor = ArgumentCaptor.forClass(IAnalyticsEvent.class);
+        mvc.perform(MockMvcRequestBuilders.get("/wisdomleaderboard").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo("")));
+        verify(analyticsService, times(1)).saveEvent(captor.capture());
+        assertEquals(AnalyticsAction.VIEWLEADERBOARD, captor.getValue().getEventType());
+        assertEquals("[none]", captor.getValue().getEventDescription());
+        assertEquals("[anonymous]", captor.getValue().getEventInitiator());
+        assertEquals(null, captor.getValue().getEventTime());
+    }
+
+    @Test
+    public void testGetLeaderboardSavesUsernameOnAnalyticsEventIfUserLoggedIn() throws Exception {
+        ArgumentCaptor<IAnalyticsEvent> captor = ArgumentCaptor.forClass(IAnalyticsEvent.class);
+        mvc.perform(MockMvcRequestBuilders.get("/wisdomleaderboard").accept(MediaType.TEXT_HTML).principal(new BasicUserPrincipal("myDude")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo("")));
+        verify(analyticsService, times(1)).saveEvent(captor.capture());
+        assertEquals("myDude", captor.getValue().getEventInitiator());
     }
 
     @Test

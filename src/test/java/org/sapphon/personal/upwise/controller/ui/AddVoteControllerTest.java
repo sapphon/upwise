@@ -162,7 +162,7 @@ public class AddVoteControllerTest {
     public void testShowsLeaderboard_IfDestinationViewIsSetToLeaderboard() throws Exception {
         try {
             when(apiController.voteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(IVote.class, HttpStatus.CREATED));
-            when(wisdomController.getWisdomLeaderboardWithVotes(any())).thenReturn("wisdomleaderboard");
+            when(wisdomController.getWisdomLeaderboardWithVotes(any(), any())).thenReturn("wisdomleaderboard");
             MvcResult mvcResult = makeMockMvcPostWithParamValues("jay", "jorb", "jim", "wisdomleaderboard")
                     .andExpect(status().isOk())
                     .andExpect(content().string(""))

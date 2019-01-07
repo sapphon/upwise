@@ -2,13 +2,17 @@ package org.sapphon.personal.upwise.service;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.sapphon.personal.upwise.TestHelper;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
 import org.sapphon.personal.upwise.model.IAnalyticsEvent;
 import org.sapphon.personal.upwise.repository.AnalyticsEventRepository;
 import org.sapphon.personal.upwise.time.TimeLord;
 
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,4 +67,15 @@ public class AnalyticsServiceTest {
         assertEquals(testEvents[0], actualEvent);
     }
 
+    @Test
+    public void testAnalyticsServiceSetsCurrentTimeFromTimeLordOnEventWhenSaving_IfNoTimePopulated() {
+        Timestamp timeBefore = TimeLord.getNow();
+        ArgumentCaptor<IAnalyticsEvent> captor = ArgumentCaptor.forClass(IAnalyticsEvent.class);
+        testEvents[0].setEventTime(null);
+        underTest.saveEvent(testEvents[0]);
+        Timestamp timeAfter = TimeLord.getNow();
+        verify(mockAnalyticsRepo).save(captor.capture());
+        assertNotNull(captor.getValue().getEventTime());
+        TestHelper.assertTimestampBetweenInclusive(captor.getValue().getEventTime(), timeBefore, timeAfter);
+    }
 }

@@ -2,6 +2,7 @@ package org.sapphon.personal.upwise.service;
 
 import org.sapphon.personal.upwise.model.IAnalyticsEvent;
 import org.sapphon.personal.upwise.repository.AnalyticsEventRepository;
+import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,9 @@ public class AnalyticsService {
     }
 
     public IAnalyticsEvent saveEvent(IAnalyticsEvent eventToSave){
+        if(eventToSave.getEventTime() == null){
+            eventToSave.setEventTime(TimeLord.getNow());
+        }
         return this.eventRepository.save(eventToSave);
     }
 

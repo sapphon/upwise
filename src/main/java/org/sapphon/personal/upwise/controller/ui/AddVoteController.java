@@ -35,7 +35,7 @@ public class AddVoteController {
         if(destinationViewName == null || destinationViewName.isEmpty() || destinationViewName.equalsIgnoreCase("viewwisdom")){
             return wisdomController.viewWisdom(model, wisdomContent, wisdomAttribution);
         }
-        else return wisdomController.getWisdomLeaderboardWithVotes(model);
+        else return wisdomController.getWisdomLeaderboardWithVotes(model, loggedInUser);
     }
 
 }
