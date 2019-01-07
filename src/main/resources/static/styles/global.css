@@ -100,7 +100,7 @@ button, .vote-up-button{
     color: var(--color-2);
     background-color: var(--color-bg2)
 }
-
+/*region font_definitions*/
 .cinzel {
     font-family: 'Cinzel', serif;
 }
@@ -124,7 +124,9 @@ button, .vote-up-button{
 .almendra {
     font-family: 'Almendra SC', serif;
 }
+/*endregion*/
 
+/*region placeholder_color_browser_switch*/
 ::-webkit-input-placeholder {
     color:    var(--color-placeholder);
 }
@@ -146,9 +148,12 @@ button, .vote-up-button{
 ::placeholder {
     color:    var(--color-placeholder);
 }
+/*endregion*/
 
+/*region screen_size*/
 @media screen and (max-width: 600px) {
     h1 {
         font-size: 3.5rem;
     }
 }
+/*endregion*/
