@@ -9,8 +9,11 @@
     <div th:if="${loginStatusCode}" th:switch="${loginStatusCode}">
         <script th:case="400">M.toast({html: "That account information isn't valid!", classes: "toast"})</script>
     </div>
+    <div th:if="${logoutStatusCode}" th:switch="${logoutStatusCode}">
+        <script th:case="200">M.toast({html: "You are now logged out.", classes: "toast"})</script>
+    </div>
     <div th:if="${registrationStatusCode}" th:switch="${registrationStatusCode}">
-        <script th:case="201">M.toast({html: "Success!  You are also logged in!", classes: "toast"})</script>
+        <script th:case="201">M.toast({html: "Success!  You are also logged in.", classes: "toast"})</script>
         <script th:case="400">M.toast({html: "That account information isn't valid!", classes: "toast"})</script>
         <script th:case="409">M.toast({html: "That login already exists!", classes: "toast"})</script>
     </div>

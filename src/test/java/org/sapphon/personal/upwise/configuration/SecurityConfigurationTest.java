@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -28,7 +29,7 @@ public class SecurityConfigurationTest {
     private static List<String> apiStaticEndpoints = newArrayList("/wisdom/all", "/wisdom/random", "/vote/all", "/health");
 
     private static List<String> uiStateChangingEndpoints = newArrayList("/addwisdom", "/addvote");
-    private static List<String> uiStaticEndpoints = newArrayList("/login", "/loggedout", "/randomwisdom", "/viewwisdom?wisdomContent=whatever&wisdomAttribution=whatever", "/", "/user/whatever", "/wisdomleaderboard", "/wisdomsearch", "/register", "/scripts/materialize-auto-init.js", "/styles/global.css");
+    private static List<String> uiStaticEndpoints = newArrayList("/login", "/randomwisdom", "/viewwisdom?wisdomContent=whatever&wisdomAttribution=whatever", "/", "/user/whatever", "/wisdomleaderboard", "/wisdomsearch", "/register", "/scripts/materialize-auto-init.js", "/styles/global.css");
 
 
     @Test
@@ -55,6 +56,11 @@ public class SecurityConfigurationTest {
         for (String endpoint : endpoints){
             mvc.perform((method.equalsIgnoreCase("post") ? MockMvcRequestBuilders.post(endpoint) : MockMvcRequestBuilders.get(endpoint)).accept(mediaTypesAccepted)).andExpect(expectation);
         }
+    }
+
+    @Test
+    public void testLogoutRedirectsToLoginPageWithLoggedOutParam_ButDoesNotRequireAuth() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.post("/logout").accept(MediaType.APPLICATION_JSON)).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/login?loggedout"));
     }
 
 

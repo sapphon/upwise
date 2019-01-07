@@ -16,10 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.stream.Collectors;
 
@@ -48,11 +45,6 @@ public class UserController {
         return "userdashboard";
     }
 
-    @GetMapping("/loggedout")
-    public String getLogoutPage(Model model){
-        return "loggedout";
-    }
-
     @GetMapping("/register")
     public String registrationForm(Model model){
         model.addAttribute("userToRegister", DomainObjectFactory.createUser(null, null, null, null));
@@ -72,9 +64,12 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String getLoginPage(Model model, String error){
+    public String getLoginPage(Model model, @RequestParam(required=false) String error, @RequestParam(required=false) String loggedout){
         if(error != null){
             model.addAttribute("loginStatusCode", 400);
+        }
+        else if(loggedout != null){
+            model.addAttribute("logoutStatusCode", 200);
         }
         return "login";
     }

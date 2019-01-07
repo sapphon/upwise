@@ -147,6 +147,15 @@ public class UserControllerTest {
         assertEquals(400, result.getModelAndView().getModel().get("loginStatusCode"));
     }
 
+    @Test
+    public void testLogoutSets200StatusCodeOnModel() throws Exception {
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/login").param("loggedout", "").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo("")))
+                .andReturn();
+        assertEquals(200, result.getModelAndView().getModel().get("logoutStatusCode"));
+    }
+
 
     @Test
     public void testRegistrationErrorSets400StatusCodeOnModel_AndSendsYouToTryAgain() throws Exception {

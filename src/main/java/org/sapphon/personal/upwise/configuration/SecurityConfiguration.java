@@ -31,15 +31,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception{
         http.
-                //login
+                //log in or out
                 formLogin().loginPage("/login").passwordParameter("upwisePassword").usernameParameter("upwiseLoginUsername").permitAll()
+                .and().logout().logoutUrl("/logout").logoutSuccessUrl("/login?loggedout").permitAll()
                 //sauce for h2 console to work with spring security enabled
                 .and().headers().frameOptions().sameOrigin()
                 //h2 console and analytics require admin
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/h2")).hasAuthority("ADMIN")
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/allanalytics")).hasAuthority("ADMIN")
                 //public UI endpoints
-                .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/loggedout")).permitAll()
+                //.and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/loggedout")).permitAll()
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/randomwisdom")).permitAll()
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/viewwisdom")).permitAll()
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/")).permitAll()
@@ -47,7 +48,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/wisdomleaderboard")).permitAll()
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/wisdomsearch")).permitAll()
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/register")).permitAll()
-                .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/loggedout")
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/scripts/**")).permitAll()
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/styles/**")).permitAll()
                 //public API endpoints
