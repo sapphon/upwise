@@ -159,7 +159,7 @@ public class APIController {
 
     @RequestMapping(value = "/analytics/add", method = RequestMethod.POST)
     public ResponseEntity<IAnalyticsEvent> addAnalyticsEventEndpoint(@RequestBody IAnalyticsEvent event) {
-        if(!validateAnalyticsEvent(event)){
+        if(!analyticsService.isEventValid(event)){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         else if(this.analyticsService.eventExists(event)){
@@ -169,12 +169,6 @@ public class APIController {
             event.setEventTime(TimeLord.getNow());
             return ResponseEntity.status(HttpStatus.CREATED).body(this.analyticsService.saveEvent(event));
         }
-    }
-
-    private boolean validateAnalyticsEvent(IAnalyticsEvent event) {
-        return event.getEventType() != null
-                && event.getEventInitiator() != null
-                && !event.getEventInitiator().isEmpty();
     }
 
     private IUser addUser(IUser user) {

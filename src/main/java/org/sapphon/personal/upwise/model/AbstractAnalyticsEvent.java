@@ -82,6 +82,7 @@ public abstract class AbstractAnalyticsEvent implements IAnalyticsEvent {
         this.eventDescription = newDescription;
     }
 
+    @Override
     public void setEventInitiator(String newInitiator) {
         this.eventInitiator = newInitiator;
     }
@@ -92,5 +93,6 @@ public abstract class AbstractAnalyticsEvent implements IAnalyticsEvent {
     public void setEventTime(Timestamp newTime) {
         this.eventTime = newTime;
     }
+
     //endregion
 }

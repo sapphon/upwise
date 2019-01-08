@@ -4,6 +4,7 @@ import org.sapphon.personal.upwise.model.IAnalyticsEvent;
 import org.sapphon.personal.upwise.repository.AnalyticsEventRepository;
 import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,24 +13,36 @@ import java.util.List;
 public class AnalyticsService {
 
     private AnalyticsEventRepository eventRepository;
+    @Value("${upwise.analytics.record.anonymous:true}")
+    private boolean recordAnonymousAnalytics;
 
     @Autowired
-    public AnalyticsService(AnalyticsEventRepository eventRepository){
+    public AnalyticsService(AnalyticsEventRepository eventRepository) {
         this.eventRepository = eventRepository;
     }
 
-    public List<IAnalyticsEvent> getAllEvents(){
+    public List<IAnalyticsEvent> getAllEvents() {
         return this.eventRepository.getAll();
     }
 
-    public IAnalyticsEvent saveEvent(IAnalyticsEvent eventToSave){
-        if(eventToSave.getEventTime() == null){
+    public IAnalyticsEvent saveEvent(IAnalyticsEvent eventToSave) {
+        if(!isEventValid(eventToSave)){
+            return null;
+        }
+        if (eventToSave.getEventTime() == null) {
             eventToSave.setEventTime(TimeLord.getNow());
         }
         return this.eventRepository.save(eventToSave);
     }
 
-    public boolean eventExists(IAnalyticsEvent event){
+    public boolean eventExists(IAnalyticsEvent event) {
         return this.eventRepository.find(event.getEventDescription(), event.getEventInitiator(), event.getEventTime()).isPresent();
+    }
+
+    public boolean isEventValid(IAnalyticsEvent event) {
+        return event.getEventType() != null
+                && event.getEventInitiator() != null
+                && !event.getEventInitiator().isEmpty()
+                && (recordAnonymousAnalytics || !event.getEventInitiator().equals("[anonymous]"));
     }
 }

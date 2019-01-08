@@ -13,4 +13,5 @@ public interface IAnalyticsEvent {
     Timestamp getEventTime();
 
     void setEventTime(Timestamp newTime);
+    void setEventInitiator(String newInitiator);
 }
