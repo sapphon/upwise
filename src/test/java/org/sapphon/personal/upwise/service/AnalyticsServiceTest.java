@@ -40,7 +40,7 @@ public class AnalyticsServiceTest {
 
 
         mockAnalyticsRepo = Mockito.mock(AnalyticsEventRepository.class);
-        underTest = new AnalyticsService(mockAnalyticsRepo);
+        underTest = new AnalyticsService(mockAnalyticsRepo, false);
     }
 
     @Test
@@ -79,7 +79,7 @@ public class AnalyticsServiceTest {
 
     @Test
     public void testAnalyticsServiceReliesOnPropertyToDecideWhetherToRecordAnonymousEventsAndPropertyDefaultsTrue() {
-        final Value recordAnonymousAnalytics = TestHelper.assertFieldHasAnnotationOfTypeAndGet(AnalyticsService.class, "recordAnonymousAnalytics", Value.class);
+        final Value recordAnonymousAnalytics = TestHelper.assertConstructorHasAnnotationOfTypeAndGet(AnalyticsService.class, newArrayList(AnalyticsEventRepository.class, boolean.class), 1, Value.class);
         final String[] propertyAndDefault = recordAnonymousAnalytics.value().split(":");
         assertEquals(2, propertyAndDefault.length);
         assertEquals("${upwise.analytics.record.anonymous", propertyAndDefault[0]);

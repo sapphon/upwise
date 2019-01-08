@@ -1,13 +1,17 @@
 package org.sapphon.personal.upwise;
 
+import org.sapphon.personal.upwise.repository.AnalyticsEventRepository;
 import org.sapphon.personal.upwise.repository.jpa.WisdomJpa;
 
 import javax.persistence.GeneratedValue;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.Assert.*;
 
 public class TestHelper {
@@ -45,6 +49,24 @@ public class TestHelper {
 		for (Class current : annotationsToCheckFor) {
 			assertNotNull(getFieldAnnotation(c, fieldName, current));
 		}
+	}
+
+	public static <T extends Annotation> T assertConstructorHasAnnotationOfTypeAndGet(Class<?> c, List<Class> argumentClasses, int argumentIndex, Class<T> expectedAnnotationClass){
+		T foundAnnotation = null;
+		try{
+			final Constructor<?> targetedConstructor = c.getConstructor(argumentClasses.stream().toArray(Class[]::new));
+			final Annotation[] parameterAnnotationMatrix = targetedConstructor.getParameterAnnotations()[argumentIndex];
+			for (Annotation annotation : parameterAnnotationMatrix){
+				if(annotation.annotationType().equals(expectedAnnotationClass)){
+					foundAnnotation = (T) annotation;
+				}
+			}
+
+		}
+		catch(NoSuchMethodException exception){
+		}
+		assertNotNull(foundAnnotation);
+		return foundAnnotation;
 	}
 
 	public static <T extends Annotation> T assertFieldHasAnnotationOfTypeAndGet(Class c, String fieldName, Class<T> annotationClass) {

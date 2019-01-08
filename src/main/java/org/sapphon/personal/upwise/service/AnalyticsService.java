@@ -13,12 +13,12 @@ import java.util.List;
 public class AnalyticsService {
 
     private AnalyticsEventRepository eventRepository;
-    @Value("${upwise.analytics.record.anonymous:true}")
     private boolean recordAnonymousAnalytics;
 
     @Autowired
-    public AnalyticsService(AnalyticsEventRepository eventRepository) {
+    public AnalyticsService(AnalyticsEventRepository eventRepository, @Value("${upwise.analytics.record.anonymous:true}") boolean recordAnonymousAnalytics) {
         this.eventRepository = eventRepository;
+        this.recordAnonymousAnalytics = recordAnonymousAnalytics;
     }
 
     public List<IAnalyticsEvent> getAllEvents() {
