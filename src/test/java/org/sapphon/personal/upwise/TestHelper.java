@@ -78,4 +78,8 @@ public class TestHelper {
 	public static void assertTimestampBetweenInclusive(Timestamp toMeasure, Timestamp before, Timestamp after){
 		assertTrue("Timestamp not within acceptable range", toMeasure.compareTo(before) >= 0 && toMeasure.compareTo(after) <= 0);
 	}
+
+	public static void assertAnnotatedPropertyAndDefault(String propertyString, String expectedPropertyName, String expectedPropertyDefault) {
+        assertEquals("${"+expectedPropertyName+":"+expectedPropertyDefault+"}", propertyString);
+    }
 }

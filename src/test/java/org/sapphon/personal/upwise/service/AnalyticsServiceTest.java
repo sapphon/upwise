@@ -80,10 +80,7 @@ public class AnalyticsServiceTest {
     @Test
     public void testAnalyticsServiceReliesOnPropertyToDecideWhetherToRecordAnonymousEventsAndPropertyDefaultsTrue() {
         final Value recordAnonymousAnalytics = TestHelper.assertConstructorHasAnnotationOfTypeAndGet(AnalyticsService.class, newArrayList(AnalyticsEventRepository.class, boolean.class), 1, Value.class);
-        final String[] propertyAndDefault = recordAnonymousAnalytics.value().split(":");
-        assertEquals(2, propertyAndDefault.length);
-        assertEquals("${upwise.analytics.record.anonymous", propertyAndDefault[0]);
-        assertEquals("true}", propertyAndDefault[1]);
+        TestHelper.assertAnnotatedPropertyAndDefault(recordAnonymousAnalytics.value(), "upwise.analytics.record.anonymous", "true");
     }
 
     @Test
@@ -93,5 +90,6 @@ public class AnalyticsServiceTest {
         underTest.saveEvent(testEvents[0]);
         verify(mockAnalyticsRepo, times(0)).save(captor.capture());
     }
+
 
 }
