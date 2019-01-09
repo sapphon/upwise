@@ -7,25 +7,25 @@
 <body>
 <div th:fragment="eventresponse">
     <div th:if="${loginStatusCode}" th:switch="${loginStatusCode}">
-        <script th:case="400">M.toast({html: "That account information isn't valid!", classes: "toast"})</script>
+        <script th:case="400">M.toast({html: "[[#{text.eventResponse.login.invalid}]]", classes: "toast"})</script>
     </div>
     <div th:if="${logoutStatusCode}" th:switch="${logoutStatusCode}">
-        <script th:case="200">M.toast({html: "You are now logged out.", classes: "toast"})</script>
+        <script th:case="200">M.toast({html: "[[#{text.eventResponse.logout.success}]]", classes: "toast"})</script>
     </div>
     <div th:if="${registrationStatusCode}" th:switch="${registrationStatusCode}">
-        <script th:case="201">M.toast({html: "Success!  You are also logged in.", classes: "toast"})</script>
-        <script th:case="400">M.toast({html: "That account information isn't valid!", classes: "toast"})</script>
-        <script th:case="409">M.toast({html: "That login already exists!", classes: "toast"})</script>
+        <script th:case="201">M.toast({html: "[[#{text.eventResponse.registrationAdd.success}]]", classes: "toast"})</script>
+        <script th:case="400">M.toast({html: "[[#{text.eventResponse.registrationAdd.invalid}]]", classes: "toast"})</script>
+        <script th:case="409">M.toast({html: "[[#{text.eventResponse.registrationAdd.conflict}]]", classes: "toast"})</script>
     </div>
     <div th:if="${addWisdomStatusCode}" th:switch="${addWisdomStatusCode}">
-        <script th:case="201">M.toast({html: "Your wisdom was added!", classes: "toast"})</script>
-        <script th:case="400">M.toast({html: "That's not a valid wisdom!", classes: "toast"})</script>
-        <script th:case="409">M.toast({html: "That wisdom already exists!", classes: "toast"})</script>
+        <script th:case="201">M.toast({html: "[[#{text.eventResponse.wisdomAdd.success}]]", classes: "toast"})</script>
+        <script th:case="400">M.toast({html: "[[#{text.eventResponse.wisdomAdd.invalid}]]", classes: "toast"})</script>
+        <script th:case="409">M.toast({html: "[[#{text.eventResponse.wisdomAdd.conflict}]]", classes: "toast"})</script>
     </div>
     <div th:if="${addVoteStatusCode}" th:switch="${addVoteStatusCode}">
-        <script th:case="201">M.toast({html: "Your vote was added successfully!", classes: "toast"})</script>
-        <script th:case="400">M.toast({html: "That's not a valid vote!", classes: "toast"})</script>
-        <script th:case="409">M.toast({html: "That vote exists already and was not added.", classes: "toast"})</script>
+        <script th:case="201">M.toast({html: "[[#{text.eventResponse.voteAdd.success}]]", classes: "toast"})</script>
+        <script th:case="400">M.toast({html: "[[#{text.eventResponse.voteAdd.invalid}]]", classes: "toast"})</script>
+        <script th:case="409">M.toast({html: "[[#{text.eventResponse.voteAdd.conflict}]]", classes: "toast"})</script>
     </div>
 </div>
 </body>
