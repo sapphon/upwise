@@ -1,9 +1,11 @@
 package org.sapphon.personal.upwise.service;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.sapphon.personal.upwise.model.IVote;
 import org.sapphon.personal.upwise.model.IWisdom;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
@@ -17,11 +19,15 @@ import static org.mockito.Mockito.verify;
 @RunWith(SpringRunner.class)
 public class VoteServiceTest {
 
-    @Mock
     private VoteRepository voteRepository;
 
-    @InjectMocks
     public VoteService underTest;
+
+    @Before
+    public void setup(){
+        voteRepository = Mockito.mock(VoteRepository.class);
+        underTest = new VoteService(voteRepository);
+    }
 
     @Test
     public void getAllVotesAsksTheRepositoryForAllVotes() {

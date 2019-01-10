@@ -11,9 +11,11 @@ import java.util.Optional;
 
 @Service
 public class VoteService {
-    @Autowired
     private VoteRepository voteRepository;
 
+    public VoteService(VoteRepository voteRepository) {
+        this.voteRepository = voteRepository;
+    }
 
     public List<IVote> getAllVotes(){
         return this.voteRepository.getAll();

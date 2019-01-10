@@ -1,9 +1,12 @@
 package org.sapphon.personal.upwise.service;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.sapphon.personal.upwise.controller.ui.UserController;
 import org.sapphon.personal.upwise.model.IVote;
 import org.sapphon.personal.upwise.model.IWisdom;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
@@ -27,21 +30,25 @@ import static org.sapphon.personal.upwise.TestHelper.assertListEquals;
 @RunWith(SpringRunner.class)
 public class WisdomServiceTest {
 
-    @Mock
     private WisdomRepository wisdomRepo;
 
-    @Mock
     private VoteService voteService;
 
-    @InjectMocks
     private WisdomService underTest;
+
+    @Before
+    public void setup() {
+        voteService = Mockito.mock(VoteService.class);
+        wisdomRepo = Mockito.mock(WisdomRepository.class);
+
+        this.underTest = new WisdomService(wisdomRepo, voteService);
+    }
 
     @Test
     public void usesTheWisdomRepositoryToFindAllWisdomsAndReturnsThemWhenAllWisdomsIsCalled() {
         List<IWisdom> expectedResults = RandomObjectFactory.makeRandomListOfWisdoms();
 
         when(wisdomRepo.getAll()).thenReturn(expectedResults);
-
         List<IWisdom> actual = underTest.getAllWisdoms();
 
         verify(wisdomRepo).getAll();
