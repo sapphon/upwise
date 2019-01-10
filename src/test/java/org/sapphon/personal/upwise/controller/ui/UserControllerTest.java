@@ -16,7 +16,6 @@ import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -50,10 +48,8 @@ public class UserControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    @MockBean
     private WisdomService wisdomService;
 
-    @MockBean
     private VoteService voteService;
 
     private UserService userService;
@@ -73,6 +69,9 @@ public class UserControllerTest {
         viewResolver.setPrefix("templates/");
         viewResolver.setSuffix(".html");
         mockApiController = Mockito.mock(APIController.class);
+        voteService = Mockito.mock(VoteService.class);
+        wisdomService = Mockito.mock(WisdomService.class);
+
         userService = Mockito.mock(UserService.class);
         this.underTest = new UserController(wisdomService, voteService, mockApiController, userService);
 
@@ -80,13 +79,13 @@ public class UserControllerTest {
                 .setViewResolvers(viewResolver)
                 .build();
 
-        this.exampleWisdoms = new ArrayList<IWisdom>();
+        this.exampleWisdoms = new ArrayList<>();
         exampleWisdoms.add(new Wisdom("A good programmer is someone who looks both ways before crossing a one-way street.", "Doug Linder", "jcrouc15", TimeLord.getNow()));
         exampleWisdoms.add(new Wisdom("[Javascript] doesn't exactly allow you to fall into a pit of success.", "Nick Reuter", "cshaugh1", TimeLord.getNow()));
         exampleWisdoms.add(new Wisdom("It's done, it just doesn't work.", "Chris Boyer", "tsatam", TimeLord.getNow()));
         exampleWisdoms.add(new Wisdom("May we be judged by the quality of our commits, not by the content of our Google searches.", "Connor Shaughnessy", "awalte35", TimeLord.getNow()));
 
-        this.exampleVotes = new ArrayList<IVote>();
+        this.exampleVotes = new ArrayList<>();
         exampleVotes.add(RandomObjectFactory.makeRandomVoteForWisdom(exampleWisdoms.get(0)));
         exampleVotes.add(RandomObjectFactory.makeRandomVoteForWisdom(exampleWisdoms.get(0)));
         exampleVotes.add(RandomObjectFactory.makeRandomVoteForWisdom(exampleWisdoms.get(1)));

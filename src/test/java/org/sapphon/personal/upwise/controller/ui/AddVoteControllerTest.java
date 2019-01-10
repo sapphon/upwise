@@ -11,7 +11,6 @@ import org.sapphon.personal.upwise.controller.APIController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,11 +36,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class AddVoteControllerTest {
 
-    @MockBean
-    private APIController apiController;
+    private APIController mockApiController;
 
-    @MockBean
-    private WisdomController wisdomController;
+    private WisdomController mockWisdomController;
 
     @Autowired
     private MockMvc mvc;
@@ -55,15 +52,16 @@ public class AddVoteControllerTest {
         viewResolver.setPrefix("templates/");
         viewResolver.setSuffix(".html");
 
-        mvc = MockMvcBuilders.standaloneSetup(new AddVoteController(apiController, wisdomController))
+        mockApiController = Mockito.mock(APIController.class);
+        mockWisdomController = Mockito.mock(WisdomController.class);
+        mvc = MockMvcBuilders.standaloneSetup(new AddVoteController(mockApiController, mockWisdomController))
                 .setViewResolvers(viewResolver)
                 .build();
-
     }
 
     @Test
     public void testPostRequestWhereApiSaysBadRequestGets400Status() throws Exception {
-        when(apiController.voteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(IVote.class, HttpStatus.BAD_REQUEST));
+        when(mockApiController.voteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(IVote.class, HttpStatus.BAD_REQUEST));
         MvcResult mvcResult = makeMockMvcPostWithBlankParams()
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
@@ -78,7 +76,7 @@ public class AddVoteControllerTest {
 
     @Test
     public void testPostRequestWhereApiSaysConflictGets409Status() throws Exception {
-        when(apiController.voteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(IVote.class, HttpStatus.CONFLICT));
+        when(mockApiController.voteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(IVote.class, HttpStatus.CONFLICT));
         MvcResult mvcResult = makeMockMvcPostWithBlankParams()
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
@@ -93,7 +91,7 @@ public class AddVoteControllerTest {
 
     @Test
     public void testPostRequestWhereApiSaysCreatedGets201Status() throws Exception {
-        when(apiController.voteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(IVote.class, HttpStatus.CREATED));
+        when(mockApiController.voteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(IVote.class, HttpStatus.CREATED));
         MvcResult mvcResult = makeMockMvcPostWithBlankParams()
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
@@ -111,7 +109,7 @@ public class AddVoteControllerTest {
         ArgumentCaptor<IVote> captor = ArgumentCaptor.forClass(IVote.class);
         Principal principal = Mockito.mock(Principal.class);
         when(principal.getName()).thenReturn("malvo");
-        when(apiController.voteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(IVote.class, HttpStatus.CREATED));
+        when(mockApiController.voteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(IVote.class, HttpStatus.CREATED));
         MvcResult mvcResult = makeMockMvcPostWithParamValuesAndPrincipal("morbo", "always fall up", principal)
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
@@ -119,7 +117,7 @@ public class AddVoteControllerTest {
         try {
             Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("addVoteStatusCode");
             assertEquals(new Integer(201), actualStatusCode);
-            verify(apiController).voteForWisdomEndpoint(captor.capture());
+            verify(mockApiController).voteForWisdomEndpoint(captor.capture());
             assertEquals("malvo", captor.getValue().getAddedByUsername());
         } catch (Exception e) {
             Assert.fail("Model not as expected.");
@@ -129,7 +127,7 @@ public class AddVoteControllerTest {
     @Test
     public void testDoesNotBlowUpIfSomehowThereIsNoLoggedInPrincipalAtTimeOfVoteSubmission() throws Exception {
         try {
-            when(apiController.voteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(IVote.class, HttpStatus.CREATED));
+            when(mockApiController.voteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(IVote.class, HttpStatus.CREATED));
             MvcResult mvcResult = makeMockMvcPostWithBlankParams()
                     .andExpect(status().isOk())
                     .andExpect(content().string(""))
@@ -144,8 +142,8 @@ public class AddVoteControllerTest {
     @Test
     public void testDefaultsToViewWisdom_IfNoDestinationViewIsSet() throws Exception {
         try {
-            when(apiController.voteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(IVote.class, HttpStatus.CREATED));
-            when(wisdomController.viewWisdom(any(), any(), any(), any())).thenReturn("viewwisdom");
+            when(mockApiController.voteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(IVote.class, HttpStatus.CREATED));
+            when(mockWisdomController.viewWisdom(any(), any(), any(), any())).thenReturn("viewwisdom");
             MvcResult mvcResult = makeMockMvcPostWithBlankParams()
                     .andExpect(status().isOk())
                     .andExpect(content().string(""))
@@ -161,8 +159,8 @@ public class AddVoteControllerTest {
     @Test
     public void testShowsLeaderboard_IfDestinationViewIsSetToLeaderboard() throws Exception {
         try {
-            when(apiController.voteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(IVote.class, HttpStatus.CREATED));
-            when(wisdomController.getWisdomLeaderboardWithVotes(any(), any())).thenReturn("wisdomleaderboard");
+            when(mockApiController.voteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(IVote.class, HttpStatus.CREATED));
+            when(mockWisdomController.getWisdomLeaderboardWithVotes(any(), any())).thenReturn("wisdomleaderboard");
             MvcResult mvcResult = makeMockMvcPostWithParamValues("jay", "jorb", "jim", "wisdomleaderboard")
                     .andExpect(status().isOk())
                     .andExpect(content().string(""))
