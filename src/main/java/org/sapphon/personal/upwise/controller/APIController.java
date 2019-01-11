@@ -128,6 +128,7 @@ public class APIController {
                 user.getPassword() != null && !user.getPassword().isEmpty();
     }
 
+
     private IWisdom addWisdom(IWisdom wisdom){
         return this.wisdomService.addOrUpdateWisdom(wisdom);
     }

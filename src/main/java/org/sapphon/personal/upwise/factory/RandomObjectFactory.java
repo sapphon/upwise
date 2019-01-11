@@ -2,8 +2,10 @@ package org.sapphon.personal.upwise.factory;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.sapphon.personal.upwise.model.*;
+import org.sapphon.personal.upwise.model.datatransfer.UserRegistration;
 import org.sapphon.personal.upwise.time.TimeLord;
 
+import javax.management.relation.RelationSupport;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -27,8 +29,12 @@ public class RandomObjectFactory {
         return DomainObjectFactory.createVote(null, randomNonEmptyOfMaxLength(16), TimeLord.getTimestampForMillis(random.nextLong()));
     }
 
-    private static String randomNonEmptyOfMaxLength(int length){
-        return RandomStringUtils.randomAlphanumeric(1, length);
+    private static String randomNonEmptyOfMaxLength(int upperBoundExclusive){
+        return randomOfLengthBetween(1, upperBoundExclusive);
+    }
+
+    private static String randomOfLengthBetween(int lowerBoundInclusive, int upperBoundExclusive){
+        return RandomStringUtils.randomAlphanumeric(lowerBoundInclusive, upperBoundExclusive);
     }
 
     public static IUser makeRandomUser(){
@@ -55,5 +61,10 @@ public class RandomObjectFactory {
             toReturn.add(makeRandomWisdomlessVote());
         }
         return toReturn;
+    }
+
+    public static UserRegistration makeValidButRandomUserRegistration() {
+        String password = randomOfLengthBetween(4, 64);
+        return new UserRegistration().setDesiredUsername(randomOfLengthBetween(4, 16)).setDisplayName(randomNonEmptyOfMaxLength( 64)).setPassword(password).setConfirmPassword(password);
     }
 }
