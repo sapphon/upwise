@@ -1,6 +1,7 @@
 package org.sapphon.personal.upwise.factory;
 
 import org.sapphon.personal.upwise.model.*;
+import org.sapphon.personal.upwise.model.datatransfer.UserRegistration;
 import org.sapphon.personal.upwise.presentation.WisdomWithVotesPresentation;
 import org.sapphon.personal.upwise.repository.jpa.AnalyticsEventJpa;
 import org.sapphon.personal.upwise.repository.jpa.UserJpa;
@@ -77,4 +78,7 @@ public class DomainObjectFactory {
         return new UserDetailsUserWrapper(user);
     }
 
+    public static UserRegistration createUserRegistration() {
+        return new UserRegistration();
+    }
 }

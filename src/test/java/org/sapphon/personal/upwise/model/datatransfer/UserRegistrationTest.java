@@ -36,7 +36,7 @@ public class UserRegistrationTest {
 
     @Test
     public void convertToModelObjectReturnsNullIfUsernameTooShort() {
-        underTest.setDesiredUsername("abc");
+        underTest.setDesiredUsername("");
         assertNull(underTest.convertToModelObject());
     }
 
@@ -48,7 +48,7 @@ public class UserRegistrationTest {
 
     @Test
     public void convertToModelObjectReturnsNullIfPasswordIsTooShort() {
-        underTest.setDesiredUsername("abc");
+        underTest.setDesiredUsername("");
         assertNull(underTest.convertToModelObject());
     }
 

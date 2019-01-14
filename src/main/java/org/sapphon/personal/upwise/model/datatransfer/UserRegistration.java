@@ -15,9 +15,9 @@ public class UserRegistration extends AbstractIncomingDataTransfer<IUser> {
     private boolean validateIncomingRegistration(){
         return this.password != null &&
                 this.password.equals(this.confirmPassword) &&
-                this.password.length() > 4 &&
+                this.password.length() > 0 &&
                 this.desiredUsername != null &&
-                this.desiredUsername.length() > 4;
+                this.desiredUsername.length() > 0;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class UserRegistration extends AbstractIncomingDataTransfer<IUser> {
     }
 
     //region SettersGetters
-    protected String getDesiredUsername() {
+    public String getDesiredUsername() {
         return desiredUsername;
     }
 
@@ -38,7 +38,7 @@ public class UserRegistration extends AbstractIncomingDataTransfer<IUser> {
         return this;
     }
 
-    protected String getDisplayName() {
+    public String getDisplayName() {
         return displayName;
     }
 
@@ -47,7 +47,7 @@ public class UserRegistration extends AbstractIncomingDataTransfer<IUser> {
         return this;
     }
 
-    protected String getPassword() {
+    public String getPassword() {
         return password;
     }
 
@@ -56,7 +56,7 @@ public class UserRegistration extends AbstractIncomingDataTransfer<IUser> {
         return this;
     }
 
-    protected String getConfirmPassword() {
+    public String getConfirmPassword() {
         return confirmPassword;
     }
 

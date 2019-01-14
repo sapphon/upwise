@@ -5,6 +5,7 @@ import org.sapphon.personal.upwise.model.IVote;
 import org.sapphon.personal.upwise.model.User;
 import org.sapphon.personal.upwise.controller.APIController;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
+import org.sapphon.personal.upwise.model.datatransfer.UserRegistration;
 import org.sapphon.personal.upwise.service.UserService;
 import org.sapphon.personal.upwise.service.VoteService;
 import org.sapphon.personal.upwise.service.WisdomService;
@@ -47,16 +48,16 @@ public class UserController {
 
     @GetMapping("/register")
     public String registrationForm(Model model){
-        model.addAttribute("userToRegister", DomainObjectFactory.createUser(null, null, null, null));
+        model.addAttribute("userToRegister", DomainObjectFactory.createUserRegistration());
         return "register";
     }
 
     @PostMapping(value="/register",  produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
-    public String registrationSubmit(Model model, @ModelAttribute User userToRegister){
-        ResponseEntity<IUser> userRegistrationResponseEntity = this.apiController.addUserEndpoint(userToRegister);
+    public String registrationSubmit(Model model, @ModelAttribute UserRegistration userToRegister){
+        ResponseEntity<IUser> userRegistrationResponseEntity = this.apiController.addUserEndpoint(userToRegister.convertToModelObject());
         model.addAttribute("registrationStatusCode", userRegistrationResponseEntity.getStatusCodeValue());
         if(userRegistrationResponseEntity.getStatusCodeValue() == 201){
-            UserDetails details = DomainObjectFactory.createUserDetailsFromUser(userService.getUserWithLogin(userToRegister.getLoginUsername()));
+            UserDetails details = DomainObjectFactory.createUserDetailsFromUser(userService.getUserWithLogin(userToRegister.convertToModelObject().getLoginUsername()));
             SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(details.getUsername(), details.getPassword(), details.getAuthorities()));
             return getUserDashboard(model, details.getUsername());
         }

@@ -124,7 +124,7 @@ public class APIController {
     }
 
     private boolean validateUser(IUser user){
-        return user.getLoginUsername() != null && !user.getLoginUsername().isEmpty() &&
+        return user != null && user.getLoginUsername() != null && !user.getLoginUsername().isEmpty() &&
                 user.getPassword() != null && !user.getPassword().isEmpty();
     }
 

@@ -37,6 +37,9 @@ public class AnalyticsFactory {
     }
 
     public static IAnalyticsEvent createAddUserEvent(HttpStatus status, IUser user) {
+        if(user == null){
+            return createAnalyticsEvent(formatStatusString(status, "[Corrupt Username]"), "[Corrupt Username]", AnalyticsAction.ADDUSER);
+        }
         return createAnalyticsEvent(formatStatusString(status, user), user.getLoginUsername(), AnalyticsAction.ADDUSER);
     }
 

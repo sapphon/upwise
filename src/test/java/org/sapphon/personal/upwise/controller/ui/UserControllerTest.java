@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 import org.sapphon.personal.upwise.controller.APIController;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
 import org.sapphon.personal.upwise.model.*;
+import org.sapphon.personal.upwise.model.datatransfer.UserRegistration;
 import org.sapphon.personal.upwise.service.UserService;
 import org.sapphon.personal.upwise.service.VoteService;
 import org.sapphon.personal.upwise.service.WisdomService;
@@ -19,9 +20,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
@@ -43,6 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext
 public class UserControllerTest {
 
     @Autowired
@@ -171,7 +176,7 @@ public class UserControllerTest {
     public void testRegistrationSuccessSets201StatusCodeOnModel_AndRedirectsToUserPage() throws Exception {
         when(mockApiController.addUserEndpoint(any())).thenReturn(new ResponseEntity(IUser.class, HttpStatus.CREATED));
         when(userService.getUserWithLogin(any())).thenReturn(new User("aaa", "bbb", TimeLord.getNow(), "ccc"));
-            MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/register").accept(MediaType.TEXT_HTML))
+            MvcResult result = mvc.perform(addRequestAttributesForUserRegistration(RandomObjectFactory.makeValidButRandomUserRegistration(), MockMvcRequestBuilders.post("/register").accept(MediaType.TEXT_HTML)))
                     .andExpect(status().isOk())
                     .andExpect(content().string(equalTo("")))
                     .andReturn();
@@ -189,5 +194,13 @@ public class UserControllerTest {
                 .andReturn();
         assertEquals(409, result.getModelAndView().getModel().get("registrationStatusCode"));
         assertEquals("register", result.getModelAndView().getViewName());
+    }
+
+    private MockHttpServletRequestBuilder addRequestAttributesForUserRegistration(UserRegistration reg, MockHttpServletRequestBuilder requestBuilder){
+        return requestBuilder
+                .param("desiredUsername", reg.getDesiredUsername())
+                .param("displayName", reg.getDisplayName())
+                .param("password", reg.getPassword())
+                .param("confirmPassword", reg.getConfirmPassword());
     }
 }
