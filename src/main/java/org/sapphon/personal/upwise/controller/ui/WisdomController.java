@@ -38,11 +38,6 @@ public class WisdomController {
         return "wisdomleaderboard";
     }
 
-    @GetMapping(value = "/wisdomsearch", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
-    public String getWisdomSearchForm(Model model){
-        return "wisdomsearch";
-    }
-
     @GetMapping(value = "/randomwisdom", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
     public String getRandomWisdom(Model model, Principal loggedInUser)
     {
