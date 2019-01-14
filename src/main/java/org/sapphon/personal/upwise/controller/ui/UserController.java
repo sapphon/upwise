@@ -57,11 +57,17 @@ public class UserController {
         ResponseEntity<IUser> userRegistrationResponseEntity = this.apiController.addUserEndpoint(userToRegister.convertToModelObject());
         model.addAttribute("registrationStatusCode", userRegistrationResponseEntity.getStatusCodeValue());
         if(userRegistrationResponseEntity.getStatusCodeValue() == 201){
-            UserDetails details = DomainObjectFactory.createUserDetailsFromUser(userService.getUserWithLogin(userToRegister.convertToModelObject().getLoginUsername()));
-            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(details.getUsername(), details.getPassword(), details.getAuthorities()));
-            return getUserDashboard(model, details.getUsername());
+            logRegisteredUserIn(model, userRegistrationResponseEntity.getBody().getLoginUsername());
+            return getUserDashboard(model, userRegistrationResponseEntity.getBody().getLoginUsername());
         }
         return registrationForm(model);
+    }
+
+    private void logRegisteredUserIn(Model model, String loginUsername) {
+        IUser actualUser = userService.getUserWithLogin(loginUsername);
+        UserDetails details = DomainObjectFactory.createUserDetailsFromUser(actualUser);
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(details.getUsername(), details.getPassword(), details.getAuthorities()));
+        model.addAttribute("loggedInUser", actualUser);
     }
 
     @GetMapping("/login")

@@ -6,10 +6,10 @@ import java.sql.Timestamp;
 @MappedSuperclass
 public abstract class AbstractUser implements IUser {
 
-    protected String loginUsername;
-    protected String displayUsername;
-    protected Timestamp timeAdded;
-    protected String password;
+    public String loginUsername;
+    public String displayUsername;
+    public Timestamp timeAdded;
+    public String password;
 
     public AbstractUser(){}
 
