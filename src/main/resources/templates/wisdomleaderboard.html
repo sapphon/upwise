@@ -19,7 +19,7 @@
                             <div th:text="${wisdom.attribution}">Doug Linder</div>
                         </div>
                         <div class="card-action">
-                            <a th:href="@{'/user/' + ${wisdom.addedByUsername}}" th:text="${wisdom.addedByUsername}">intellijames</a>
+                            <a th:href="@{'/user/' + ${wisdom.addedByUsername}}" th:text="${wisdom.addedByDisplayName}">intellijames</a>
                             <div th:text="${wisdom.timeAdded}">January 1, 1970 01:00:00 GMT</div>
                             <div th:unless="${#lists.isEmpty(wisdom.votes)}"
                                  th:text="${#lists.size(wisdom.votes)} + ' votes'">-1 votes
