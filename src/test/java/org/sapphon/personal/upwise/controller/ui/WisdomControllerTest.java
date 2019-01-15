@@ -10,7 +10,7 @@ import org.mockito.Mockito;
 import org.sapphon.personal.upwise.model.*;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
-import org.sapphon.personal.upwise.presentation.WisdomWithVotesPresentation;
+import org.sapphon.personal.upwise.presentation.WisdomPresentation;
 import org.sapphon.personal.upwise.service.AnalyticsService;
 import org.sapphon.personal.upwise.service.WisdomService;
 import org.sapphon.personal.upwise.time.TimeLord;
@@ -126,21 +126,21 @@ public class WisdomControllerTest {
     private void verifyLeaderboard(MvcResult mvcResult) {
         try {
             assertEquals("wisdomleaderboard", mvcResult.getModelAndView().getViewName());
-            List<WisdomWithVotesPresentation> actualWisdoms = (List<WisdomWithVotesPresentation>) mvcResult.getModelAndView().getModel().values().iterator().next();
+            List<WisdomPresentation> actualWisdoms = (List<WisdomPresentation>) mvcResult.getModelAndView().getModel().values().iterator().next();
             verifyWisdoms(actualWisdoms);
         } catch (Exception e) {
             Assert.fail("Model not as expected.");
         }
     }
 
-    private void verifyWisdoms(List<WisdomWithVotesPresentation> actualWisdoms) {
+    private void verifyWisdoms(List<WisdomPresentation> actualWisdoms) {
         assertEquals(exampleWisdoms.get(0), actualWisdoms.get(0));
         assertEquals(exampleVotes.get(0), actualWisdoms.get(0).getVotes().get(0));
         assertEquals(exampleVotes.get(1), actualWisdoms.get(0).getVotes().get(1));
     }
 
     private void verifyWisdom(MvcResult mvcResult) {
-        WisdomWithVotesPresentation actualWisdom = (WisdomWithVotesPresentation) mvcResult.getModelAndView().getModel().get("wisdom");
+        WisdomPresentation actualWisdom = (WisdomPresentation) mvcResult.getModelAndView().getModel().get("wisdom");
         verifyWisdoms(newArrayList(actualWisdom));
     }
 
@@ -209,7 +209,7 @@ public class WisdomControllerTest {
                 .andExpect(content().string(""))
                 .andReturn();
         try {
-            WisdomWithVotesPresentation actualWisdom = (WisdomWithVotesPresentation) mvcResult.getModelAndView().getModel().get("wisdom");
+            WisdomPresentation actualWisdom = (WisdomPresentation) mvcResult.getModelAndView().getModel().get("wisdom");
             assertEquals("viewwisdom", mvcResult.getModelAndView().getViewName());
             assertNull(actualWisdom);
         } catch (Exception e) {

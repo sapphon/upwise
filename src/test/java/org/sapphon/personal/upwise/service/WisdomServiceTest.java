@@ -3,14 +3,11 @@ package org.sapphon.personal.upwise.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.sapphon.personal.upwise.controller.ui.UserController;
 import org.sapphon.personal.upwise.model.IVote;
 import org.sapphon.personal.upwise.model.IWisdom;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
-import org.sapphon.personal.upwise.presentation.WisdomWithVotesPresentation;
+import org.sapphon.personal.upwise.presentation.WisdomPresentation;
 import org.sapphon.personal.upwise.repository.WisdomRepository;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -114,7 +111,7 @@ public class WisdomServiceTest {
         List<IVote> expectedVotes = RandomObjectFactory.makeRandomListOfWisdomlessVotes();
         when(voteService.getByWisdom(expectedWisdom)).thenReturn(expectedVotes);
 
-        WisdomWithVotesPresentation actualWisdomWithVotes = underTest.getWisdomWithVotes(expectedWisdom);
+        WisdomPresentation actualWisdomWithVotes = underTest.getWisdomWithVotes(expectedWisdom);
 
         assertEquals(expectedVotes, actualWisdomWithVotes.getVotes());
         assertEquals(expectedWisdom, actualWisdomWithVotes);

@@ -2,7 +2,7 @@ package org.sapphon.personal.upwise.service;
 
 import org.sapphon.personal.upwise.model.IWisdom;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
-import org.sapphon.personal.upwise.presentation.WisdomWithVotesPresentation;
+import org.sapphon.personal.upwise.presentation.WisdomPresentation;
 import org.sapphon.personal.upwise.repository.WisdomRepository;
 import org.springframework.stereotype.Service;
 
@@ -44,20 +44,20 @@ public class WisdomService {
         return this.findWisdomByContentAndAttribution(wisdom.getWisdomContent(), wisdom.getAttribution());
     }
 
-    public List<WisdomWithVotesPresentation> getAllWisdomsWithVotes() {
-        return this.getWisdomsWithVotes(this.getAllWisdoms()).stream().sorted(new Comparator<WisdomWithVotesPresentation>() {
+    public List<WisdomPresentation> getAllWisdomsWithVotes() {
+        return this.getWisdomsWithVotes(this.getAllWisdoms()).stream().sorted(new Comparator<WisdomPresentation>() {
             @Override
-            public int compare(WisdomWithVotesPresentation o1, WisdomWithVotesPresentation o2) {
+            public int compare(WisdomPresentation o1, WisdomPresentation o2) {
                 return Integer.compare(o2.getVotes().size(), o1.getVotes().size());
             }
         }).collect(Collectors.toList());
     }
 
-    public List<WisdomWithVotesPresentation> getWisdomsWithVotes(List<IWisdom> wisdoms) {
+    public List<WisdomPresentation> getWisdomsWithVotes(List<IWisdom> wisdoms) {
         return wisdoms.stream().map(this::getWisdomWithVotes).collect(Collectors.toList());
     }
 
-    public WisdomWithVotesPresentation getWisdomWithVotes(IWisdom wisdom){
+    public WisdomPresentation getWisdomWithVotes(IWisdom wisdom){
         return DomainObjectFactory.createWisdomWithVotes(wisdom, voteService.getByWisdom(wisdom));
     }
 
