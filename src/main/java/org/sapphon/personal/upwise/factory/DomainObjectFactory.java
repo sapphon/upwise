@@ -69,8 +69,8 @@ public class DomainObjectFactory {
         return new Vote(wisdom, addedByUsername,timeAdded);
     }
 
-    public static WisdomPresentation createWisdomWithVotes(IWisdom wisdom, List<IVote> votes){
-        return new WisdomPresentation(wisdom, votes);
+    public static WisdomPresentation createWisdomWithVotes(IWisdom wisdom, List<IVote> votes, String submitterDisplayName){
+        return new WisdomPresentation(wisdom, votes, submitterDisplayName);
     }
 
     public static UserDetails createUserDetailsFromUser(IUser user) {

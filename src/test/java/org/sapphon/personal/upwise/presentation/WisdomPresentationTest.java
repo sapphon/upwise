@@ -17,7 +17,18 @@ public class WisdomPresentationTest {
         IWisdom randomWisdom = RandomObjectFactory.makeRandomWisdom();
         List<IVote> listOfVotes = newArrayList( RandomObjectFactory.makeRandomVoteForWisdom(randomWisdom));
 
-        WisdomPresentation underTest = new WisdomPresentation(randomWisdom, listOfVotes);
+        WisdomPresentation underTest = new WisdomPresentation(randomWisdom, listOfVotes, "dontcare");
+
+        assertTrue(underTest.isVotedForBy(listOfVotes.get(0).getAddedByUsername()));
+        assertFalse(underTest.isVotedForBy(RandomObjectFactory.makeRandomWisdomlessVote().getAddedByUsername()));
+    }
+
+    @Test
+    public void doesNotPermuteDisplayName() {
+        IWisdom randomWisdom = RandomObjectFactory.makeRandomWisdom();
+        List<IVote> listOfVotes = newArrayList( RandomObjectFactory.makeRandomVoteForWisdom(randomWisdom));
+
+        WisdomPresentation underTest = new WisdomPresentation(randomWisdom, listOfVotes, "YANANANA");
 
         assertTrue(underTest.isVotedForBy(listOfVotes.get(0).getAddedByUsername()));
         assertFalse(underTest.isVotedForBy(RandomObjectFactory.makeRandomWisdomlessVote().getAddedByUsername()));

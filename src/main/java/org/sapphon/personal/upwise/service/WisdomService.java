@@ -14,13 +14,14 @@ import java.util.stream.Collectors;
 @Service
 public class WisdomService {
 
-    private WisdomRepository wisdomRepo;
+    private final WisdomRepository wisdomRepo;
+    private final VoteService voteService;
+    private final UserService userService;
 
-    private VoteService voteService;
-
-    public WisdomService(WisdomRepository wisdomRepository, VoteService voteService) {
+    public WisdomService(WisdomRepository wisdomRepository, VoteService voteService, UserService userService) {
         this.wisdomRepo = wisdomRepository;
         this.voteService = voteService;
+        this.userService = userService;
     }
 
     public List<IWisdom> getAllWisdoms() {
@@ -58,7 +59,7 @@ public class WisdomService {
     }
 
     public WisdomPresentation getWisdomWithVotes(IWisdom wisdom){
-        return DomainObjectFactory.createWisdomWithVotes(wisdom, voteService.getByWisdom(wisdom));
+        return DomainObjectFactory.createWisdomWithVotes(wisdom, voteService.getByWisdom(wisdom), userService.getUserWithLogin(wisdom.getAddedByUsername()).getDisplayName());
     }
 
     public boolean hasAnyWisdoms() {

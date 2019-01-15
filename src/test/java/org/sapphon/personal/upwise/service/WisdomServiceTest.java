@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.sapphon.personal.upwise.model.IUser;
 import org.sapphon.personal.upwise.model.IVote;
 import org.sapphon.personal.upwise.model.IWisdom;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
@@ -19,6 +20,8 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.sapphon.personal.upwise.TestHelper.assertListEquals;
@@ -28,7 +31,7 @@ import static org.sapphon.personal.upwise.TestHelper.assertListEquals;
 public class WisdomServiceTest {
 
     private WisdomRepository wisdomRepo;
-
+    private UserService userService;
     private VoteService voteService;
 
     private WisdomService underTest;
@@ -37,8 +40,9 @@ public class WisdomServiceTest {
     public void setup() {
         voteService = Mockito.mock(VoteService.class);
         wisdomRepo = Mockito.mock(WisdomRepository.class);
+        userService = Mockito.mock(UserService.class);
 
-        this.underTest = new WisdomService(wisdomRepo, voteService);
+        this.underTest = new WisdomService(wisdomRepo, voteService, userService);
     }
 
     @Test
@@ -69,15 +73,16 @@ public class WisdomServiceTest {
     }
 
     @Test
-    public void testGetAllWisdomsWithVotesCallsVoteServiceOnceForEachWisdom(){
+    public void testGetAllWisdomsWithVotesCallsVoteServiceAndUserServiceOnceForEachWisdom(){
         List<IWisdom> expectedWisdoms = RandomObjectFactory.makeRandomListOfWisdoms();
         when(wisdomRepo.getAll()).thenReturn(expectedWisdoms);
-
+        when(userService.getUserWithLogin(any())).thenReturn(RandomObjectFactory.makeRandomUser());
         underTest.getAllWisdomsWithVotes();
 
         verify(wisdomRepo).getAll();
         for(IWisdom wisdom : expectedWisdoms){
             verify(voteService).getByWisdom(wisdom);
+            verify(userService).getUserWithLogin(wisdom.getAddedByUsername());
         }
     }
 
@@ -109,12 +114,29 @@ public class WisdomServiceTest {
     public void testGetWisdomWithVotes(){
         IWisdom expectedWisdom = RandomObjectFactory.makeRandomWisdom();
         List<IVote> expectedVotes = RandomObjectFactory.makeRandomListOfWisdomlessVotes();
+        when(userService.getUserWithLogin(any())).thenReturn(RandomObjectFactory.makeRandomUser());
         when(voteService.getByWisdom(expectedWisdom)).thenReturn(expectedVotes);
+        WisdomPresentation actualWisdomWithVotes = underTest.getWisdomWithVotes(expectedWisdom);
+        assertEquals(expectedVotes, actualWisdomWithVotes.getVotes());
+        assertEquals(expectedWisdom, actualWisdomWithVotes);
+    }
+
+    @Test
+    public void testQueriesUserServiceForDisplayNamesForWisdoms() {
+        IUser expectedUser = RandomObjectFactory.makeRandomUser();
+        when(userService.getUserWithLogin(expectedUser.getLoginUsername())).thenReturn(expectedUser);
+
+        IWisdom expectedWisdom = RandomObjectFactory.makeRandomWisdom();
+        expectedWisdom.setAddedByUsername(expectedUser.getLoginUsername());
+
+        List<IVote> expectedVotes = RandomObjectFactory.makeRandomListOfWisdomlessVotes();
+        when(voteService.getByWisdom(expectedWisdom)).thenReturn(expectedVotes);
+
 
         WisdomPresentation actualWisdomWithVotes = underTest.getWisdomWithVotes(expectedWisdom);
 
-        assertEquals(expectedVotes, actualWisdomWithVotes.getVotes());
-        assertEquals(expectedWisdom, actualWisdomWithVotes);
 
+        verify(userService, times(1)).getUserWithLogin(expectedUser.getLoginUsername());
+        assertEquals(expectedUser.getDisplayName(), actualWisdomWithVotes.getAddedByDisplayName());
     }
 }
