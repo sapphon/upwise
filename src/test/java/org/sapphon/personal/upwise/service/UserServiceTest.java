@@ -102,5 +102,13 @@ public class UserServiceTest {
         assertSame(underTest.getPasswordEncoder(), underTest.getPasswordEncoder());
     }
 
+    @Test
+    public void testHasUserWithLogin() {
+        final IUser expectedUser = RandomObjectFactory.makeRandomUser();
+        assertFalse(underTest.hasUserWithLogin(expectedUser.getLoginUsername()));
+        when(mockUserRepository.getByLoginUsername(expectedUser.getLoginUsername().toLowerCase())).thenReturn(expectedUser);
+        assertTrue(underTest.hasUserWithLogin(expectedUser.getLoginUsername()));
+    }
+
 
 }

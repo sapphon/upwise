@@ -35,6 +35,10 @@ public class UserService implements UserDetailsService{
         return userRepo.getByLoginUsername(login == null ? null : login.toLowerCase());
     }
 
+    public boolean hasUserWithLogin(String login){
+        return this.getUserWithLogin(login) != null;
+    }
+
     public IUser addOrUpdateUser(IUser toAdd) {
         toAdd.setLoginUsername(toAdd.getLoginUsername().toLowerCase());
         return userRepo.save(toAdd);
