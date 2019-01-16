@@ -17,9 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -138,5 +136,28 @@ public class WisdomServiceTest {
 
         verify(userService, times(1)).getUserWithLogin(expectedUser.getLoginUsername());
         assertEquals(expectedUser.getDisplayName(), actualWisdomWithVotes.getAddedByDisplayName());
+    }
+
+    @Test
+    public void testUsesLoginNameForDisplayNameIfNoExtantUser() {
+        IUser expectedUser = RandomObjectFactory.makeRandomUser();
+        when(userService.getUserWithLogin(expectedUser.getLoginUsername())).thenReturn(null);
+
+        IWisdom expectedWisdom = RandomObjectFactory.makeRandomWisdom();
+        expectedWisdom.setAddedByUsername(expectedUser.getLoginUsername());
+        List<IVote> expectedVotes = RandomObjectFactory.makeRandomListOfWisdomlessVotes();
+        when(voteService.getByWisdom(expectedWisdom)).thenReturn(expectedVotes);
+
+        WisdomPresentation actualWisdomWithVotes = null;
+        try {
+            actualWisdomWithVotes = underTest.getWisdomWithVotes(expectedWisdom);
+        }catch(Exception e){
+            fail("Should not explode because user with name not found.");
+        }
+
+        verify(userService, times(1)).getUserWithLogin(expectedUser.getLoginUsername());
+        assertEquals(expectedUser.getLoginUsername(), actualWisdomWithVotes.getAddedByDisplayName());
+
+
     }
 }

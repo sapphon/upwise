@@ -1,5 +1,6 @@
 package org.sapphon.personal.upwise.service;
 
+import org.sapphon.personal.upwise.model.IUser;
 import org.sapphon.personal.upwise.model.IWisdom;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.presentation.WisdomPresentation;
@@ -59,7 +60,8 @@ public class WisdomService {
     }
 
     public WisdomPresentation getWisdomWithVotes(IWisdom wisdom){
-        return DomainObjectFactory.createWisdomWithVotes(wisdom, voteService.getByWisdom(wisdom), userService.getUserWithLogin(wisdom.getAddedByUsername()).getDisplayName());
+        IUser possibleUser = userService.getUserWithLogin(wisdom.getAddedByUsername());
+        return DomainObjectFactory.createWisdomWithVotes(wisdom, voteService.getByWisdom(wisdom), possibleUser == null ? wisdom.getAddedByUsername() : possibleUser.getDisplayName());
     }
 
     public boolean hasAnyWisdoms() {
