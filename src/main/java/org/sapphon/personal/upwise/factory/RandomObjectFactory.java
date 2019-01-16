@@ -3,6 +3,7 @@ package org.sapphon.personal.upwise.factory;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.sapphon.personal.upwise.model.*;
 import org.sapphon.personal.upwise.model.datatransfer.UserRegistration;
+import org.sapphon.personal.upwise.presentation.WisdomPresentation;
 import org.sapphon.personal.upwise.time.TimeLord;
 
 import javax.management.relation.RelationSupport;
@@ -10,10 +11,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static com.google.common.collect.Lists.newArrayList;
+
 public class RandomObjectFactory {
     public static IWisdom makeRandomWisdom(){
         Random random = new Random();
         return DomainObjectFactory.createWisdom(randomNonEmptyOfMaxLength(256), randomNonEmptyOfMaxLength(50), randomNonEmptyOfMaxLength(50), TimeLord.getTimestampForMillis(random.nextLong()));
+    }
+
+    public static WisdomPresentation makeRandomWisdomPresentation(){
+        return makeWisdomPresentationFor(makeRandomWisdom());
+
+    }
+
+    public static WisdomPresentation makeWisdomPresentationFor(IWisdom wisdom){
+        return DomainObjectFactory.createWisdomWithVotes(wisdom, newArrayList(makeRandomVoteForWisdom(wisdom)), randomOfLengthBetween(4, 64));
     }
 
     public static List<IWisdom> makeRandomListOfWisdoms() {
