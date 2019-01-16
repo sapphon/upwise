@@ -94,6 +94,16 @@ public class TestHelper {
 		return foundAnnotation;
 	}
 
+	public static <T> T assertIsOfTypeAndGet(Object o){
+		T actual = null;
+		try{
+			actual = (T) o;
+		}catch(Exception e){
+			fail("Could not cast and get object.");
+		}
+		return actual;
+	}
+
 	public static void assertTimestampBetweenInclusive(Timestamp toMeasure, Timestamp before, Timestamp after){
 		assertTrue("Timestamp not within acceptable range", toMeasure.compareTo(before) >= 0 && toMeasure.compareTo(after) <= 0);
 	}
