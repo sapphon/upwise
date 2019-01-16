@@ -10,6 +10,7 @@ import org.sapphon.personal.upwise.controller.APIController;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
 import org.sapphon.personal.upwise.model.*;
 import org.sapphon.personal.upwise.model.datatransfer.UserRegistration;
+import org.sapphon.personal.upwise.presentation.WisdomPresentation;
 import org.sapphon.personal.upwise.service.UserService;
 import org.sapphon.personal.upwise.service.VoteService;
 import org.sapphon.personal.upwise.service.WisdomService;
@@ -40,6 +41,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.sapphon.personal.upwise.TestHelper.assertIsOfTypeAndGet;
 import static org.sapphon.personal.upwise.TestHelper.assertListEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -76,8 +78,8 @@ public class UserControllerTest {
         mockApiController = Mockito.mock(APIController.class);
         voteService = Mockito.mock(VoteService.class);
         wisdomService = Mockito.mock(WisdomService.class);
-
         userService = Mockito.mock(UserService.class);
+
         this.underTest = new UserController(wisdomService, voteService, mockApiController, userService);
 
         mvc = MockMvcBuilders.standaloneSetup(underTest)
@@ -109,16 +111,22 @@ public class UserControllerTest {
 
     @Test
     public void testSetsCorrectValuesOnModel() throws Exception {
-        when(wisdomService.getAllWisdomsBySubmitter("testBoi")).thenReturn(this.exampleWisdoms);
+        IUser testBoi = RandomObjectFactory.makeRandomUser().setLoginUsername("testBoi");
+        List<IWisdom> wisdomsVotedForByTestBoi = this.exampleVotes.stream().map(IVote::getWisdom).collect(Collectors.toList());
+        List<IWisdom> wisdomsSubmittedByTestBoi = this.exampleWisdoms;
+
+        when(wisdomService.getAllWisdomsBySubmitter("testBoi")).thenReturn(wisdomsSubmittedByTestBoi);
         when(voteService.getAllByVoter("testBoi")).thenReturn(this.exampleVotes);
+        when(wisdomService.getWisdomsWithVotes(wisdomsSubmittedByTestBoi)).thenReturn(wisdomsSubmittedByTestBoi.stream().map(RandomObjectFactory::makeWisdomPresentationFor).collect(Collectors.toList()));
+        when(wisdomService.getWisdomsWithVotes(wisdomsVotedForByTestBoi)).thenReturn(wisdomsVotedForByTestBoi.stream().map(RandomObjectFactory::makeWisdomPresentationFor).collect(Collectors.toList()));
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/user/testBoi").accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
                 .andReturn();
         try {
             String actualUsername = (String) mvcResult.getModelAndView().getModel().get("userName");
-            List<IWisdom> actualSubmittedWisdoms = (List<IWisdom>) mvcResult.getModelAndView().getModel().get("allWisdomsSubmitted");
-            List<IWisdom> actualVotedWisdoms = (List<IWisdom>) mvcResult.getModelAndView().getModel().get("allWisdomsVotedFor");
+            List<WisdomPresentation> actualSubmittedWisdoms = assertIsOfTypeAndGet(mvcResult.getModelAndView().getModel().get("allWisdomsSubmitted"));
+            List<WisdomPresentation> actualVotedWisdoms = assertIsOfTypeAndGet(mvcResult.getModelAndView().getModel().get("allWisdomsVotedFor"));
             assertEquals("testBoi", actualUsername);
             assertListEquals(this.exampleWisdoms, actualSubmittedWisdoms);
             assertListEquals(this.exampleVotes.stream().map(IVote::getWisdom).collect(Collectors.toList()), actualVotedWisdoms);

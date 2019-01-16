@@ -112,11 +112,13 @@ public class WisdomServiceTest {
     public void testGetWisdomWithVotes(){
         IWisdom expectedWisdom = RandomObjectFactory.makeRandomWisdom();
         List<IVote> expectedVotes = RandomObjectFactory.makeRandomListOfWisdomlessVotes();
-        when(userService.getUserWithLogin(any())).thenReturn(RandomObjectFactory.makeRandomUser());
+        IUser expectedUser = RandomObjectFactory.makeRandomUser();
+        when(userService.getUserWithLogin(any())).thenReturn(expectedUser);
         when(voteService.getByWisdom(expectedWisdom)).thenReturn(expectedVotes);
         WisdomPresentation actualWisdomWithVotes = underTest.getWisdomWithVotes(expectedWisdom);
         assertEquals(expectedVotes, actualWisdomWithVotes.getVotes());
         assertEquals(expectedWisdom, actualWisdomWithVotes);
+        assertEquals(expectedUser.getDisplayName(), actualWisdomWithVotes.getAddedByDisplayName());
     }
 
     @Test
