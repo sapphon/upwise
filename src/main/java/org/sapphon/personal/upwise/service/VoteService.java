@@ -1,9 +1,10 @@
 package org.sapphon.personal.upwise.service;
 
+import org.sapphon.personal.upwise.model.IUser;
 import org.sapphon.personal.upwise.model.IVote;
 import org.sapphon.personal.upwise.model.IWisdom;
+import org.sapphon.personal.upwise.presentation.VotePresentation;
 import org.sapphon.personal.upwise.repository.VoteRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,9 +13,11 @@ import java.util.Optional;
 @Service
 public class VoteService {
     private VoteRepository voteRepository;
+    private final UserService userService;
 
-    public VoteService(VoteRepository voteRepository) {
+    public VoteService(VoteRepository voteRepository, UserService userService) {
         this.voteRepository = voteRepository;
+        this.userService = userService;
     }
 
     public List<IVote> getAllVotes(){
@@ -31,5 +34,12 @@ public class VoteService {
 
     public IVote addOrUpdateVote(IVote vote){
         return this.voteRepository.save(vote);
+    }
+
+    public VotePresentation getVotePresentationForVote(IVote vote) {
+        IUser voter = userService.getUserWithLogin(vote.getAddedByUsername());
+        String displayName = voter != null ? voter.getDisplayName() : vote.getAddedByUsername();
+        VotePresentation votePresentation = new VotePresentation(displayName, vote);
+        return votePresentation;
     }
 }

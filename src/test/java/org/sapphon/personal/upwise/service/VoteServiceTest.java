@@ -3,8 +3,6 @@ package org.sapphon.personal.upwise.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.sapphon.personal.upwise.model.IUser;
 import org.sapphon.personal.upwise.model.IVote;
@@ -15,20 +13,25 @@ import org.sapphon.personal.upwise.repository.VoteRepository;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class VoteServiceTest {
 
     private VoteRepository voteRepository;
+    private UserService userService;
 
     public VoteService underTest;
 
     @Before
     public void setup(){
+        userService = Mockito.mock(UserService.class);
         voteRepository = Mockito.mock(VoteRepository.class);
-        underTest = new VoteService(voteRepository);
+        underTest = new VoteService(voteRepository, userService);
     }
 
     @Test
@@ -64,4 +67,36 @@ public class VoteServiceTest {
         verify(voteRepository).save(expectedResult);
     }
 
+    @Test
+    public void testShouldNotBlowUpIfVoterDoesNotExist_UseUsernameForDisplayNameInThisCase() {
+        IVote vote = RandomObjectFactory.makeRandomWisdomlessVote();
+        VotePresentation actual = null;
+        try {
+            actual = underTest.getVotePresentationForVote(vote);
+        }catch(Exception e){
+            fail("Should not explode if voter is not an actual user");
+        }
+        verify(userService).getUserWithLogin(vote.getAddedByUsername());
+        assertEquals(vote.getAddedByUsername(), actual.getDisplayName());
+    }
+
+    @Test
+    public void testGetVotePresentationCollaboratesWithUserServiceAppropriately() {
+        IVote vote = RandomObjectFactory.makeRandomWisdomlessVote();
+        underTest.getVotePresentationForVote(vote);
+        verify(userService).getUserWithLogin(vote.getAddedByUsername());
+    }
+
+    @Test
+    public void testCanAccuratelyGenerateVotePresentationFromVote() {
+        IVote vote = RandomObjectFactory.makeRandomWisdomlessVote();
+        IUser user = RandomObjectFactory.makeRandomUser();
+        when(userService.getUserWithLogin(user.getLoginUsername())).thenReturn(user);
+        vote.setAddedByUsername(user.getLoginUsername());
+
+        VotePresentation votePresentation = underTest.getVotePresentationForVote(vote);
+
+        assertEquals(user.getLoginUsername(), votePresentation.getAddedByUsername());
+        assertEquals(user.getDisplayName(), votePresentation.getDisplayName());
+    }
 }
