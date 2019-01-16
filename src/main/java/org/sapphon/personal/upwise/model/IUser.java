@@ -17,13 +17,13 @@ public interface IUser {
 
     String getPassword();
 
-    void setPassword(String password);
+    IUser setPassword(String password);
 
-    void setLoginUsername(String addedByUsername);
+    IUser setLoginUsername(String addedByUsername);
 
-    void setDisplayName(String displayName);
+    IUser setDisplayName(String displayName);
 
-    void setTimeAdded(Timestamp timeAdded);
+    IUser setTimeAdded(Timestamp timeAdded);
 
     //endregion
 }

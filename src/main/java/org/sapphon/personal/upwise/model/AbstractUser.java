@@ -60,28 +60,32 @@ public abstract class AbstractUser implements IUser {
         return this.loginUsername;
     }
     @Override
-    public void setLoginUsername(String addedByUsername) {
+    public IUser setLoginUsername(String addedByUsername) {
         this.loginUsername = addedByUsername;
+        return this;
     }
     @Override
     public String getDisplayName(){
         return this.displayUsername;
     }
     @Override
-    public void setDisplayName(String addedByUsername) {
+    public IUser setDisplayName(String addedByUsername) {
         this.displayUsername = addedByUsername;
+        return this;
     }
     @Override
-    public void setTimeAdded(Timestamp timeAdded) {
+    public IUser setTimeAdded(Timestamp timeAdded) {
         this.timeAdded = timeAdded;
+        return this;
     }
     @Override
     public String getPassword() {
         return this.password;
     }
     @Override
-    public void setPassword(String password) {
+    public IUser setPassword(String password) {
         this.password = password;
+        return this;
     }
 
     //endregion
