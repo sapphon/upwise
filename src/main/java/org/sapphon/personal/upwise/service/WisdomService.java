@@ -56,10 +56,10 @@ public class WisdomService {
     }
 
     public List<WisdomPresentation> getWisdomsWithVotes(List<IWisdom> wisdoms) {
-        return wisdoms.stream().map(this::getWisdomWithVotes).collect(Collectors.toList());
+        return wisdoms.stream().map(this::getWisdomPresentation).collect(Collectors.toList());
     }
 
-    public WisdomPresentation getWisdomWithVotes(IWisdom wisdom){
+    public WisdomPresentation getWisdomPresentation(IWisdom wisdom){
         IUser possibleUser = userService.getUserWithLogin(wisdom.getAddedByUsername());
         return DomainObjectFactory.createWisdomWithVotes(wisdom, voteService.getByWisdom(wisdom), possibleUser == null ? wisdom.getAddedByUsername() : possibleUser.getDisplayName());
     }

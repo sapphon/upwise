@@ -6,9 +6,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.sapphon.personal.upwise.model.IUser;
 import org.sapphon.personal.upwise.model.IVote;
 import org.sapphon.personal.upwise.model.IWisdom;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
+import org.sapphon.personal.upwise.presentation.VotePresentation;
 import org.sapphon.personal.upwise.repository.VoteRepository;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -61,4 +63,5 @@ public class VoteServiceTest {
         underTest.addOrUpdateVote(expectedResult);
         verify(voteRepository).save(expectedResult);
     }
+
 }

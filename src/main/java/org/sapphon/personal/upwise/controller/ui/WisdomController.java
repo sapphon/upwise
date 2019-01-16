@@ -53,7 +53,7 @@ public class WisdomController {
     {
         Optional<IWisdom> wisdomFound = wisdomService.findWisdomByContentAndAttribution(wisdomContent, wisdomAttribution);
         if(wisdomFound.isPresent()) {
-            model.addAttribute("wisdom", wisdomService.getWisdomWithVotes(wisdomFound.get()));
+            model.addAttribute("wisdom", wisdomService.getWisdomPresentation(wisdomFound.get()));
             this.analyticsService.saveEvent(AnalyticsFactory.createViewWisdomEvent(loggedInUser == null ? "[anonymous]" : loggedInUser.getName(), wisdomFound.get()));
         }
         return "viewwisdom";

@@ -115,7 +115,7 @@ public class WisdomServiceTest {
         IUser expectedUser = RandomObjectFactory.makeRandomUser();
         when(userService.getUserWithLogin(any())).thenReturn(expectedUser);
         when(voteService.getByWisdom(expectedWisdom)).thenReturn(expectedVotes);
-        WisdomPresentation actualWisdomWithVotes = underTest.getWisdomWithVotes(expectedWisdom);
+        WisdomPresentation actualWisdomWithVotes = underTest.getWisdomPresentation(expectedWisdom);
         assertEquals(expectedVotes, actualWisdomWithVotes.getVotes());
         assertEquals(expectedWisdom, actualWisdomWithVotes);
         assertEquals(expectedUser.getDisplayName(), actualWisdomWithVotes.getAddedByDisplayName());
@@ -133,7 +133,7 @@ public class WisdomServiceTest {
         when(voteService.getByWisdom(expectedWisdom)).thenReturn(expectedVotes);
 
 
-        WisdomPresentation actualWisdomWithVotes = underTest.getWisdomWithVotes(expectedWisdom);
+        WisdomPresentation actualWisdomWithVotes = underTest.getWisdomPresentation(expectedWisdom);
 
 
         verify(userService, times(1)).getUserWithLogin(expectedUser.getLoginUsername());
@@ -152,7 +152,7 @@ public class WisdomServiceTest {
 
         WisdomPresentation actualWisdomWithVotes = null;
         try {
-            actualWisdomWithVotes = underTest.getWisdomWithVotes(expectedWisdom);
+            actualWisdomWithVotes = underTest.getWisdomPresentation(expectedWisdom);
         }catch(Exception e){
             fail("Should not explode because user with name not found.");
         }
