@@ -25,7 +25,7 @@ public class RandomObjectFactory {
     }
 
     public static WisdomPresentation makeWisdomPresentationFor(IWisdom wisdom){
-        return DomainObjectFactory.createWisdomWithVotes(wisdom, newArrayList(makeRandomVoteForWisdom(wisdom)), randomOfLengthBetween(4, 64));
+        return DomainObjectFactory.createWisdomWithVotes(wisdom, newArrayList(), randomOfLengthBetween(4, 64));
     }
 
     public static List<IWisdom> makeRandomListOfWisdoms() {
