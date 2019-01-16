@@ -40,7 +40,9 @@ public class UserController {
 
     @GetMapping(value = "/user/{user}", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
     public String getUserDashboard(Model model, @PathVariable String user){
-        model.addAttribute("userName", user);
+        model.addAttribute("userLoginName", user);
+        IUser userWithLogin = userService.getUserWithLogin(user);
+        model.addAttribute("userDisplayName", userWithLogin == null ? user : userWithLogin.getDisplayName());
         model.addAttribute("allWisdomsSubmitted", wisdomService.getWisdomsWithVotes(wisdomService.getAllWisdomsBySubmitter(user)));
         model.addAttribute("allWisdomsVotedFor", wisdomService.getWisdomsWithVotes(voteService.getAllByVoter(user).stream().map(IVote::getWisdom).collect(Collectors.toList())));
         return "userdashboard";

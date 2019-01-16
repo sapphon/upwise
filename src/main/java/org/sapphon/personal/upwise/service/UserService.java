@@ -44,6 +44,7 @@ public class UserService implements UserDetailsService{
         return userRepo.save(toAdd);
     }
 
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         final IUser userWithLogin = this.getUserWithLogin(username);

@@ -106,8 +106,8 @@ public class UserControllerTest {
                 .andExpect(content().string(equalTo("")));
         verify(wisdomService, times(1)).getAllWisdomsBySubmitter("testBoi");
         verify(voteService, times(1)).getAllByVoter("testBoi");
+        verify(userService, times(1)).getUserWithLogin("testBoi");
     }
-
 
     @Test
     public void testSetsCorrectValuesOnModel() throws Exception {
@@ -115,6 +115,7 @@ public class UserControllerTest {
         List<IWisdom> wisdomsVotedForByTestBoi = this.exampleVotes.stream().map(IVote::getWisdom).collect(Collectors.toList());
         List<IWisdom> wisdomsSubmittedByTestBoi = this.exampleWisdoms;
 
+        when(userService.getUserWithLogin("testBoi")).thenReturn(testBoi);
         when(wisdomService.getAllWisdomsBySubmitter("testBoi")).thenReturn(wisdomsSubmittedByTestBoi);
         when(voteService.getAllByVoter("testBoi")).thenReturn(this.exampleVotes);
         when(wisdomService.getWisdomsWithVotes(wisdomsSubmittedByTestBoi)).thenReturn(wisdomsSubmittedByTestBoi.stream().map(RandomObjectFactory::makeWisdomPresentationFor).collect(Collectors.toList()));
@@ -124,12 +125,14 @@ public class UserControllerTest {
                 .andExpect(content().string(""))
                 .andReturn();
         try {
-            String actualUsername = (String) mvcResult.getModelAndView().getModel().get("userName");
+            String actualUsername = (String) mvcResult.getModelAndView().getModel().get("userLoginName");
+            String actualDisplayName = (String) mvcResult.getModelAndView().getModel().get("userDisplayName");
             List<WisdomPresentation> actualSubmittedWisdoms = assertIsOfTypeAndGet(mvcResult.getModelAndView().getModel().get("allWisdomsSubmitted"));
             List<WisdomPresentation> actualVotedWisdoms = assertIsOfTypeAndGet(mvcResult.getModelAndView().getModel().get("allWisdomsVotedFor"));
-            assertEquals("testBoi", actualUsername);
+            assertEquals(testBoi.getLoginUsername(), actualUsername);
+            assertEquals(testBoi.getDisplayName(), actualDisplayName);
             assertListEquals(this.exampleWisdoms, actualSubmittedWisdoms);
-            assertListEquals(this.exampleVotes.stream().map(IVote::getWisdom).collect(Collectors.toList()), actualVotedWisdoms);
+            assertListEquals(wisdomsVotedForByTestBoi, actualVotedWisdoms);
         } catch (Exception e) {
             Assert.fail("Model not as expected.");
         }

@@ -7,7 +7,7 @@
 
 <main>
     <div class="container">
-        <h2 th:text="'User History for: ' + ${userName}">User History for Bob Robertson</h2>
+        <h2 th:text="'User History for: ' + ${userDisplayName}">User History for Bob Robertson</h2>
         <h2 th:text="#{title.userDashboard.submitted}">Wisdoms Submitted</h2>
         <div class="wisdomsSubmittedList" th:unless="${#lists.isEmpty(allWisdomsSubmitted)}">
             <table>
@@ -31,8 +31,8 @@
             </table>
         </div>
         <div class="wisdomsSubmittedList" th:if="${#lists.isEmpty(allWisdomsSubmitted)}">
-            <p th:if="${#authentication.name} == ${userName}">You haven't submitted any wisdom yet. Do so <a href="/addwisdom">here</a>.</p>
-            <p th:unless="${#authentication.name} == ${userName}">This user hasn't submitted any wisdom yet.</p>
+            <p th:if="${#authentication.name} == ${userLoginName}">You haven't submitted any wisdom yet. Do so <a href="/addwisdom">here</a>.</p>
+            <p th:unless="${#authentication.name} == ${userLoginName}">This user hasn't submitted any wisdom yet.</p>
         </div>
         <h2 th:text="#{title.userDashboard.votedFor}">Wisdoms Voted For</h2>
         <div class="wisdomsVotedForList" th:unless="${#lists.isEmpty(allWisdomsVotedFor)}">
@@ -51,7 +51,7 @@
                         crossing a
                         one-way street.</a></td>
                     <td th:text="${wisdom.attribution}">Doug Linder</td>
-                    <td><a th:text="${wisdom.addedByUsername}" th:href="@{'/user/' + ${wisdom.addedByUsername}}">intellijames</a></td>
+                    <td><a th:text="${wisdom.addedByDisplayName}" th:href="@{'/user/' + ${wisdom.addedByUsername}}">intellijames</a></td>
                     <td th:text="${wisdom.timeAdded}">January 1, 1970 01:00:00 GMT</td>
                 </tr>
                 </tbody>
@@ -59,8 +59,8 @@
         </div>
 
         <div class="wisdomsVotedForList" th:if="${#lists.isEmpty(allWisdomsVotedFor)}">
-            <p th:if="${#authentication.name} == ${userName}">You haven't voted for any wisdoms yet. Find one you might like <a href="/wisdomleaderboard">here</a>.</p>
-            <p th:unless="${#authentication.name} == ${userName}">This user hasn't voted for any wisdoms yet.</p>
+            <p th:if="${#authentication.name} == ${userLoginName}">You haven't voted for any wisdoms yet. Find one you might like <a href="/wisdomleaderboard">here</a>.</p>
+            <p th:unless="${#authentication.name} == ${userLoginName}">This user hasn't voted for any wisdoms yet.</p>
         </div>
     </div>
 
