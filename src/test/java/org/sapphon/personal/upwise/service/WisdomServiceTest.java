@@ -4,17 +4,21 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.model.IUser;
 import org.sapphon.personal.upwise.model.IVote;
 import org.sapphon.personal.upwise.model.IWisdom;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
+import org.sapphon.personal.upwise.presentation.VotePresentation;
 import org.sapphon.personal.upwise.presentation.WisdomPresentation;
 import org.sapphon.personal.upwise.repository.WisdomRepository;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.Assert.*;
@@ -111,10 +115,13 @@ public class WisdomServiceTest {
     @Test
     public void testGetWisdomWithVotes(){
         IWisdom expectedWisdom = RandomObjectFactory.makeRandomWisdom();
-        List<IVote> expectedVotes = RandomObjectFactory.makeRandomListOfWisdomlessVotes();
+        List<VotePresentation> expectedVotes = RandomObjectFactory.makeRandomListOfWisdomlessVotePresentations();
+        List<IVote> expectedVotesToo = new ArrayList<>(expectedVotes);
         IUser expectedUser = RandomObjectFactory.makeRandomUser();
         when(userService.getUserWithLogin(any())).thenReturn(expectedUser);
-        when(voteService.getByWisdom(expectedWisdom)).thenReturn(expectedVotes);
+        when(voteService.getByWisdom(expectedWisdom)).thenReturn(expectedVotesToo);
+        when(voteService.getVotePresentationForVotes(expectedVotesToo)).thenReturn(expectedVotes);
+
         WisdomPresentation actualWisdomWithVotes = underTest.getWisdomPresentationForWisdom(expectedWisdom);
         assertEquals(expectedVotes, actualWisdomWithVotes.getVotes());
         assertEquals(expectedWisdom, actualWisdomWithVotes);

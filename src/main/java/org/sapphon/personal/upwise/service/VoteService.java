@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class VoteService {
@@ -34,6 +35,10 @@ public class VoteService {
 
     public IVote addOrUpdateVote(IVote vote){
         return this.voteRepository.save(vote);
+    }
+
+    public List<VotePresentation> getVotePresentationForVotes(List<IVote> votes){
+        return votes.stream().map(this::getVotePresentationForVote).collect(Collectors.toList());
     }
 
     public VotePresentation getVotePresentationForVote(IVote vote) {

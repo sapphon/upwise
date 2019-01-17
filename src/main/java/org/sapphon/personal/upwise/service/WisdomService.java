@@ -65,7 +65,7 @@ public class WisdomService {
 
     public WisdomPresentation getWisdomPresentationForWisdom(IWisdom wisdom){
         IUser possibleUser = userService.getUserWithLogin(wisdom.getAddedByUsername());
-        return DomainObjectFactory.createWisdomWithVotes(wisdom, voteService.getByWisdom(wisdom), possibleUser == null ? wisdom.getAddedByUsername() : possibleUser.getDisplayName());
+        return DomainObjectFactory.createWisdomPresentation(wisdom, voteService.getVotePresentationForVotes(voteService.getByWisdom(wisdom)), possibleUser == null ? wisdom.getAddedByUsername() : possibleUser.getDisplayName());
     }
 
     public boolean hasAnyWisdoms() {

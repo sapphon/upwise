@@ -3,13 +3,14 @@ package org.sapphon.personal.upwise.factory;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.sapphon.personal.upwise.model.*;
 import org.sapphon.personal.upwise.model.datatransfer.UserRegistration;
+import org.sapphon.personal.upwise.presentation.VotePresentation;
 import org.sapphon.personal.upwise.presentation.WisdomPresentation;
 import org.sapphon.personal.upwise.time.TimeLord;
 
-import javax.management.relation.RelationSupport;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -25,7 +26,7 @@ public class RandomObjectFactory {
     }
 
     public static WisdomPresentation makeWisdomPresentationFor(IWisdom wisdom){
-        return DomainObjectFactory.createWisdomWithVotes(wisdom, newArrayList(), randomOfLengthBetween(4, 64));
+        return DomainObjectFactory.createWisdomPresentation(wisdom, newArrayList(), randomOfLengthBetween(4, 64));
     }
 
     public static List<IWisdom> makeRandomListOfWisdoms() {
@@ -73,6 +74,10 @@ public class RandomObjectFactory {
             toReturn.add(makeRandomWisdomlessVote());
         }
         return toReturn;
+    }
+
+    public static List<VotePresentation> makeRandomListOfWisdomlessVotePresentations(){
+        return makeRandomListOfWisdomlessVotes().stream().map( v -> DomainObjectFactory.createVotePresentation(v, randomNonEmptyOfMaxLength(64))).collect(Collectors.toList());
     }
 
     public static UserRegistration makeValidButRandomUserRegistration() {

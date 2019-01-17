@@ -1,5 +1,6 @@
 package org.sapphon.personal.upwise.controller.ui;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.auth.BasicUserPrincipal;
 import org.junit.Assert;
 import org.junit.Before;
@@ -7,9 +8,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.sapphon.personal.upwise.TestHelper;
 import org.sapphon.personal.upwise.model.*;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
+import org.sapphon.personal.upwise.presentation.VotePresentation;
 import org.sapphon.personal.upwise.presentation.WisdomPresentation;
 import org.sapphon.personal.upwise.service.AnalyticsService;
 import org.sapphon.personal.upwise.service.WisdomService;
@@ -52,6 +55,7 @@ public class WisdomControllerTest {
 
     private List<IWisdom> exampleWisdoms;
     private List<IVote> exampleVotes;
+    private ArrayList<VotePresentation> exampleVotesZeroAndOnePresented;
 
     @Before
     public void setup() {
@@ -77,6 +81,8 @@ public class WisdomControllerTest {
         exampleVotes.add(RandomObjectFactory.makeRandomVoteForWisdom(exampleWisdoms.get(0)));
         exampleVotes.add(RandomObjectFactory.makeRandomVoteForWisdom(exampleWisdoms.get(0)));
         exampleVotes.add(RandomObjectFactory.makeRandomVoteForWisdom(exampleWisdoms.get(1)));
+
+        this.exampleVotesZeroAndOnePresented = newArrayList(DomainObjectFactory.createVotePresentation(exampleVotes.get(0), RandomStringUtils.randomAlphanumeric(4, 64)), DomainObjectFactory.createVotePresentation(exampleVotes.get(1), RandomStringUtils.randomAlphanumeric(4, 64)));
 
     }
 
@@ -114,7 +120,7 @@ public class WisdomControllerTest {
 
     @Test
     public void baseUrlServesYouTheWisdomLeaderboard() throws Exception {
-        when(mockWisdomService.getAllWisdomPresentationsSortedByNumberOfVotes()).thenReturn(newArrayList(DomainObjectFactory.createWisdomWithVotes(exampleWisdoms.get(0), newArrayList(exampleVotes.get(0), exampleVotes.get(1)), "")));
+        when(mockWisdomService.getAllWisdomPresentationsSortedByNumberOfVotes()).thenReturn(newArrayList(DomainObjectFactory.createWisdomPresentation(exampleWisdoms.get(0), exampleVotesZeroAndOnePresented, "")));
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/").accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
@@ -134,8 +140,11 @@ public class WisdomControllerTest {
 
     private void verifyWisdoms(List<WisdomPresentation> actualWisdoms) {
         assertEquals(exampleWisdoms.get(0), actualWisdoms.get(0));
+
         assertEquals(exampleVotes.get(0), actualWisdoms.get(0).getVotes().get(0));
+        assertEquals(exampleVotesZeroAndOnePresented.get(0).getDisplayName(), actualWisdoms.get(0).getVotes().get(0).getDisplayName());
         assertEquals(exampleVotes.get(1), actualWisdoms.get(0).getVotes().get(1));
+        assertEquals(exampleVotesZeroAndOnePresented.get(1).getDisplayName(), actualWisdoms.get(0).getVotes().get(1).getDisplayName());
     }
 
     private void verifyWisdom(MvcResult mvcResult) {
@@ -145,7 +154,7 @@ public class WisdomControllerTest {
 
     @Test
     public void getWisdomLeaderboard_WithWisdomAndVotes_ProducesCorrectOutputOnModel() throws Exception {
-        when(mockWisdomService.getAllWisdomPresentationsSortedByNumberOfVotes()).thenReturn(newArrayList(DomainObjectFactory.createWisdomWithVotes(exampleWisdoms.get(0), newArrayList(exampleVotes.get(0), exampleVotes.get(1)), "")));
+        when(mockWisdomService.getAllWisdomPresentationsSortedByNumberOfVotes()).thenReturn(newArrayList(DomainObjectFactory.createWisdomPresentation(exampleWisdoms.get(0), exampleVotesZeroAndOnePresented, "")));
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/wisdomleaderboard").accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
@@ -155,7 +164,7 @@ public class WisdomControllerTest {
 
     @Test
     public void viewWisdomWithVotesPopulatesModelAndView() throws Exception {
-        when(mockWisdomService.getWisdomPresentationForWisdom(exampleWisdoms.get(0))).thenReturn(DomainObjectFactory.createWisdomWithVotes(exampleWisdoms.get(0), newArrayList(exampleVotes.get(0), exampleVotes.get(1)), ""));
+        when(mockWisdomService.getWisdomPresentationForWisdom(exampleWisdoms.get(0))).thenReturn(DomainObjectFactory.createWisdomPresentation(exampleWisdoms.get(0), exampleVotesZeroAndOnePresented, ""));
         when(mockWisdomService.findWisdomByContentAndAttribution(exampleWisdoms.get(0).getWisdomContent(), exampleWisdoms.get(0).getAttribution())).thenReturn(Optional.of(exampleWisdoms.get(0)));
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(String.format("/viewwisdom?wisdomContent=%s&wisdomAttribution=%s", exampleWisdoms.get(0).getWisdomContent(), exampleWisdoms.get(0).getAttribution())).accept(MediaType.TEXT_HTML))
@@ -171,7 +180,7 @@ public class WisdomControllerTest {
     public void testViewWisdomSavesCorrectAnalyticsEvent_WhetherUserIsLoggedInOrNot() throws Exception {
         ArgumentCaptor<IAnalyticsEvent> captor = ArgumentCaptor.forClass(IAnalyticsEvent.class);
 
-        when(mockWisdomService.getWisdomPresentationForWisdom(exampleWisdoms.get(0))).thenReturn(DomainObjectFactory.createWisdomWithVotes(exampleWisdoms.get(0), newArrayList(exampleVotes.get(0), exampleVotes.get(1)), ""));
+        when(mockWisdomService.getWisdomPresentationForWisdom(exampleWisdoms.get(0))).thenReturn(DomainObjectFactory.createWisdomPresentation(exampleWisdoms.get(0), exampleVotesZeroAndOnePresented, ""));
         when(mockWisdomService.findWisdomByContentAndAttribution(exampleWisdoms.get(0).getWisdomContent(), exampleWisdoms.get(0).getAttribution())).thenReturn(Optional.of(exampleWisdoms.get(0)));
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(String.format("/viewwisdom?wisdomContent=%s&wisdomAttribution=%s", exampleWisdoms.get(0).getWisdomContent(), exampleWisdoms.get(0).getAttribution())).accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
@@ -189,7 +198,7 @@ public class WisdomControllerTest {
     public void testViewWisdomSavesUsernameOnAnalytics_IfUserIsLoggedIn() throws Exception {
         ArgumentCaptor<IAnalyticsEvent> captor = ArgumentCaptor.forClass(IAnalyticsEvent.class);
 
-        when(mockWisdomService.getWisdomPresentationForWisdom(exampleWisdoms.get(0))).thenReturn(DomainObjectFactory.createWisdomWithVotes(exampleWisdoms.get(0), newArrayList(exampleVotes.get(0), exampleVotes.get(1)), ""));
+        when(mockWisdomService.getWisdomPresentationForWisdom(exampleWisdoms.get(0))).thenReturn(DomainObjectFactory.createWisdomPresentation(exampleWisdoms.get(0), exampleVotesZeroAndOnePresented, ""));
         when(mockWisdomService.findWisdomByContentAndAttribution(exampleWisdoms.get(0).getWisdomContent(), exampleWisdoms.get(0).getAttribution())).thenReturn(Optional.of(exampleWisdoms.get(0)));
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(String.format("/viewwisdom?wisdomContent=%s&wisdomAttribution=%s", exampleWisdoms.get(0).getWisdomContent(), exampleWisdoms.get(0).getAttribution())).accept(MediaType.TEXT_HTML).principal(new BasicUserPrincipal("aKindaLongUserLoginNameWithCaps")))
                 .andExpect(status().isOk())

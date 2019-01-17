@@ -2,6 +2,7 @@ package org.sapphon.personal.upwise.factory;
 
 import org.sapphon.personal.upwise.model.*;
 import org.sapphon.personal.upwise.model.datatransfer.UserRegistration;
+import org.sapphon.personal.upwise.presentation.VotePresentation;
 import org.sapphon.personal.upwise.presentation.WisdomPresentation;
 import org.sapphon.personal.upwise.repository.jpa.UserJpa;
 import org.sapphon.personal.upwise.repository.jpa.VoteJpa;
@@ -69,8 +70,8 @@ public class DomainObjectFactory {
         return new Vote(wisdom, addedByUsername,timeAdded);
     }
 
-    public static WisdomPresentation createWisdomWithVotes(IWisdom wisdom, List<IVote> votes, String submitterDisplayName){
-        return new WisdomPresentation(wisdom, votes, submitterDisplayName);
+    public static WisdomPresentation createWisdomPresentation(IWisdom wisdom, List<VotePresentation> votePresentations, String submitterDisplayName){
+        return new WisdomPresentation(wisdom, votePresentations, submitterDisplayName);
     }
 
     public static UserDetails createUserDetailsFromUser(IUser user) {
@@ -79,5 +80,9 @@ public class DomainObjectFactory {
 
     public static UserRegistration createUserRegistration() {
         return new UserRegistration();
+    }
+
+    public static VotePresentation createVotePresentation(IVote vote, String displayName) {
+        return new VotePresentation(displayName, vote);
     }
 }
