@@ -34,7 +34,7 @@ public class WisdomController {
     @GetMapping(value = "/wisdomleaderboard", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
     public String getWisdomLeaderboardWithVotes(Model model, Principal principal){
         analyticsService.saveEvent(AnalyticsFactory.createViewLeaderboardEvent(principal == null ? "[anonymous]" : principal.getName()));
-        model.addAttribute("allWisdoms", wisdomService.getAllWisdomsWithVotes());
+        model.addAttribute("allWisdoms", wisdomService.getAllWisdomPresentationsSortedByNumberOfVotes());
         return "wisdomleaderboard";
     }
 
@@ -53,7 +53,7 @@ public class WisdomController {
     {
         Optional<IWisdom> wisdomFound = wisdomService.findWisdomByContentAndAttribution(wisdomContent, wisdomAttribution);
         if(wisdomFound.isPresent()) {
-            model.addAttribute("wisdom", wisdomService.getWisdomPresentation(wisdomFound.get()));
+            model.addAttribute("wisdom", wisdomService.getWisdomPresentationForWisdom(wisdomFound.get()));
             this.analyticsService.saveEvent(AnalyticsFactory.createViewWisdomEvent(loggedInUser == null ? "[anonymous]" : loggedInUser.getName(), wisdomFound.get()));
         }
         return "viewwisdom";

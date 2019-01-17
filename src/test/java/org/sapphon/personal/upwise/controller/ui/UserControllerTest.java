@@ -25,7 +25,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -118,8 +117,8 @@ public class UserControllerTest {
         when(userService.getUserWithLogin("testBoi")).thenReturn(testBoi);
         when(wisdomService.getAllWisdomsBySubmitter("testBoi")).thenReturn(wisdomsSubmittedByTestBoi);
         when(voteService.getAllByVoter("testBoi")).thenReturn(this.exampleVotes);
-        when(wisdomService.getWisdomsWithVotes(wisdomsSubmittedByTestBoi)).thenReturn(wisdomsSubmittedByTestBoi.stream().map(RandomObjectFactory::makeWisdomPresentationFor).collect(Collectors.toList()));
-        when(wisdomService.getWisdomsWithVotes(wisdomsVotedForByTestBoi)).thenReturn(wisdomsVotedForByTestBoi.stream().map(RandomObjectFactory::makeWisdomPresentationFor).collect(Collectors.toList()));
+        when(wisdomService.getWisdomPresentationsForWisdoms(wisdomsSubmittedByTestBoi)).thenReturn(wisdomsSubmittedByTestBoi.stream().map(RandomObjectFactory::makeWisdomPresentationFor).collect(Collectors.toList()));
+        when(wisdomService.getWisdomPresentationsForWisdoms(wisdomsVotedForByTestBoi)).thenReturn(wisdomsVotedForByTestBoi.stream().map(RandomObjectFactory::makeWisdomPresentationFor).collect(Collectors.toList()));
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/user/testBoi").accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))

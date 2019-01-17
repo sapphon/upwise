@@ -46,8 +46,12 @@ public class WisdomService {
         return this.findWisdomByContentAndAttribution(wisdom.getWisdomContent(), wisdom.getAttribution());
     }
 
-    public List<WisdomPresentation> getAllWisdomsWithVotes() {
-        return this.getWisdomsWithVotes(this.getAllWisdoms()).stream().sorted(new Comparator<WisdomPresentation>() {
+    public List<WisdomPresentation> getAllWisdomPresentations(){
+        return this.getWisdomPresentationsForWisdoms(this.getAllWisdoms());
+    }
+
+    public List<WisdomPresentation> getAllWisdomPresentationsSortedByNumberOfVotes() {
+        return this.getAllWisdomPresentations().stream().sorted(new Comparator<WisdomPresentation>() {
             @Override
             public int compare(WisdomPresentation o1, WisdomPresentation o2) {
                 return Integer.compare(o2.getVotes().size(), o1.getVotes().size());
@@ -55,11 +59,11 @@ public class WisdomService {
         }).collect(Collectors.toList());
     }
 
-    public List<WisdomPresentation> getWisdomsWithVotes(List<IWisdom> wisdoms) {
-        return wisdoms.stream().map(this::getWisdomPresentation).collect(Collectors.toList());
+    public List<WisdomPresentation> getWisdomPresentationsForWisdoms(List<IWisdom> wisdoms) {
+        return wisdoms.stream().map(this::getWisdomPresentationForWisdom).collect(Collectors.toList());
     }
 
-    public WisdomPresentation getWisdomPresentation(IWisdom wisdom){
+    public WisdomPresentation getWisdomPresentationForWisdom(IWisdom wisdom){
         IUser possibleUser = userService.getUserWithLogin(wisdom.getAddedByUsername());
         return DomainObjectFactory.createWisdomWithVotes(wisdom, voteService.getByWisdom(wisdom), possibleUser == null ? wisdom.getAddedByUsername() : possibleUser.getDisplayName());
     }

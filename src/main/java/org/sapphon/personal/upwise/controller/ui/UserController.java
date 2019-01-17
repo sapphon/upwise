@@ -2,7 +2,6 @@ package org.sapphon.personal.upwise.controller.ui;
 
 import org.sapphon.personal.upwise.model.IUser;
 import org.sapphon.personal.upwise.model.IVote;
-import org.sapphon.personal.upwise.model.User;
 import org.sapphon.personal.upwise.controller.APIController;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.model.datatransfer.UserRegistration;
@@ -43,8 +42,8 @@ public class UserController {
         model.addAttribute("userLoginName", user);
         IUser userWithLogin = userService.getUserWithLogin(user);
         model.addAttribute("userDisplayName", userWithLogin == null ? user : userWithLogin.getDisplayName());
-        model.addAttribute("allWisdomsSubmitted", wisdomService.getWisdomsWithVotes(wisdomService.getAllWisdomsBySubmitter(user)));
-        model.addAttribute("allWisdomsVotedFor", wisdomService.getWisdomsWithVotes(voteService.getAllByVoter(user).stream().map(IVote::getWisdom).collect(Collectors.toList())));
+        model.addAttribute("allWisdomsSubmitted", wisdomService.getWisdomPresentationsForWisdoms(wisdomService.getAllWisdomsBySubmitter(user)));
+        model.addAttribute("allWisdomsVotedFor", wisdomService.getWisdomPresentationsForWisdoms(voteService.getAllByVoter(user).stream().map(IVote::getWisdom).collect(Collectors.toList())));
         return "userdashboard";
     }
 

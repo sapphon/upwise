@@ -75,7 +75,7 @@ public class WisdomServiceTest {
         List<IWisdom> expectedWisdoms = RandomObjectFactory.makeRandomListOfWisdoms();
         when(wisdomRepo.getAll()).thenReturn(expectedWisdoms);
         when(userService.getUserWithLogin(any())).thenReturn(RandomObjectFactory.makeRandomUser());
-        underTest.getAllWisdomsWithVotes();
+        underTest.getAllWisdomPresentationsSortedByNumberOfVotes();
 
         verify(wisdomRepo).getAll();
         for(IWisdom wisdom : expectedWisdoms){
@@ -115,7 +115,7 @@ public class WisdomServiceTest {
         IUser expectedUser = RandomObjectFactory.makeRandomUser();
         when(userService.getUserWithLogin(any())).thenReturn(expectedUser);
         when(voteService.getByWisdom(expectedWisdom)).thenReturn(expectedVotes);
-        WisdomPresentation actualWisdomWithVotes = underTest.getWisdomPresentation(expectedWisdom);
+        WisdomPresentation actualWisdomWithVotes = underTest.getWisdomPresentationForWisdom(expectedWisdom);
         assertEquals(expectedVotes, actualWisdomWithVotes.getVotes());
         assertEquals(expectedWisdom, actualWisdomWithVotes);
         assertEquals(expectedUser.getDisplayName(), actualWisdomWithVotes.getAddedByDisplayName());
@@ -133,7 +133,7 @@ public class WisdomServiceTest {
         when(voteService.getByWisdom(expectedWisdom)).thenReturn(expectedVotes);
 
 
-        WisdomPresentation actualWisdomWithVotes = underTest.getWisdomPresentation(expectedWisdom);
+        WisdomPresentation actualWisdomWithVotes = underTest.getWisdomPresentationForWisdom(expectedWisdom);
 
 
         verify(userService, times(1)).getUserWithLogin(expectedUser.getLoginUsername());
@@ -152,7 +152,7 @@ public class WisdomServiceTest {
 
         WisdomPresentation actualWisdomWithVotes = null;
         try {
-            actualWisdomWithVotes = underTest.getWisdomPresentation(expectedWisdom);
+            actualWisdomWithVotes = underTest.getWisdomPresentationForWisdom(expectedWisdom);
         }catch(Exception e){
             fail("Should not explode because user with name not found.");
         }
