@@ -30,12 +30,22 @@ public class AddVoteController {
         }
 
         Vote voteToAdd = new Vote(new Wisdom(wisdomContent, wisdomAttribution, null, null), voterUsername, null);
+
         ResponseEntity<IVote> voteResponseEntity = this.apiController.voteForWisdomEndpoint(voteToAdd);
-         model.addAttribute("addVoteStatusCode", voteResponseEntity.getStatusCodeValue());
+        model.addAttribute("addVoteStatusCode", voteResponseEntity.getStatusCodeValue());
+
         if(destinationViewName == null || destinationViewName.isEmpty() || destinationViewName.equalsIgnoreCase("viewwisdom")){
             return wisdomController.viewWisdom(model, loggedInUser, wisdomContent, wisdomAttribution);
         }
         else return wisdomController.getWisdomLeaderboardWithVotes(model, loggedInUser);
     }
 
+    @PostMapping("/removevote")
+    public String removeVote(Model model, Principal loggedInUser, @RequestParam(required=false) String voterUsername, @RequestParam String wisdomContent, @RequestParam String wisdomAttribution, @RequestParam(required=false) String destinationViewName) {
+
+        ResponseEntity apiResponse = apiController.unvoteForWisdomEndpoint(null);
+        int notAlwaysAccurate = 400;
+        model.addAttribute("removeVoteStatusCode", apiResponse.getStatusCodeValue());
+        return "removevote";
+    }
 }

@@ -175,4 +175,8 @@ public class APIController {
     private IUser addUser(IUser user) {
         return this.userService.addOrUpdateUser(user);
     }
+
+    public ResponseEntity unvoteForWisdomEndpoint(Object any) {
+        return null;
+    }
 }

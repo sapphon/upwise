@@ -6,8 +6,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
-import org.sapphon.personal.upwise.model.IVote;
 import org.sapphon.personal.upwise.controller.APIController;
+import org.sapphon.personal.upwise.model.IVote;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -173,6 +173,50 @@ public class AddVoteControllerTest {
         }
     }
 
+    @Test
+    public void testRemovevote_SaysBadRequest_IfUserNotLoggedIn() throws Exception {
+        try {
+            Principal mockPrincipal = Mockito.mock(Principal.class);
+            when(mockPrincipal.getName()).thenReturn(null);
+            when(mockApiController.unvoteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(HttpStatus.BAD_REQUEST));
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/removevote").accept(MediaType.TEXT_HTML).principal(mockPrincipal).param("wisdomContent", "somecontentmaybe").param("wisdomAttribution", "somebody")).andReturn();
+            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("removeVoteStatusCode");
+            assertEquals(new Integer(400), actualStatusCode);
+        } catch (Exception e) {
+            Assert.fail("Server should not err because principal was null");
+        }
+    }
+
+    @Test
+    public void testRemoveVoteHasConflictStatusCodeIfAPISaysConflict() throws Exception {
+        when(mockApiController.unvoteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(HttpStatus.CONFLICT));
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/removevote").accept(MediaType.TEXT_HTML).principal(Mockito.mock(Principal.class)).param("wisdomContent", "somecontentmaybe").param("wisdomAttribution", "somebody")).andReturn();
+
+        Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("removeVoteStatusCode");
+        assertEquals(new Integer(409), actualStatusCode);
+
+    }
+
+
+    @Test
+    public void testRemoveVoteSaysOKIfAPISaysOK() throws Exception {
+        when(mockApiController.unvoteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(HttpStatus.OK));
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/removevote").accept(MediaType.TEXT_HTML).principal(Mockito.mock(Principal.class)).param("wisdomContent", "somecontentmaybe").param("wisdomAttribution", "somebody")).andReturn();
+
+        Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("removeVoteStatusCode");
+        assertEquals(new Integer(200), actualStatusCode);
+
+    }
+
+    @Test
+    public void testRemoveVoteServesCorrectViewName() throws Exception {
+        when(mockApiController.unvoteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(HttpStatus.OK));
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/removevote").accept(MediaType.TEXT_HTML).principal(Mockito.mock(Principal.class)).param("wisdomContent", "somecontentmaybe").param("wisdomAttribution", "somebody")).andReturn();
+
+        String actualView = mvcResult.getModelAndView().getViewName();
+        assertEquals("removevote", actualView);
+
+    }
 
     private ResultActions makeMockMvcPostWithParamValues(String username, String content, String wiseMan, String redirectUrl) throws Exception {
         return mvc.perform(MockMvcRequestBuilders.post("/" + urlUnderTest).accept(MediaType.TEXT_HTML)
