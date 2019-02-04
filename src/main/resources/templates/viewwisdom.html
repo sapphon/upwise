@@ -6,6 +6,7 @@
 <div th:replace="fragments/navbar :: navbar"></div>
 <main>
     <div class="vert-container" th:unless="${wisdom} == null">
+        <span><a th:href="@{'/user/' + ${wisdom.addedByUsername}}" th:text="${wisdom.addedByDisplayName}">intellijames</a> submitted,</span>
         <div class="container">
             <div class="row">
                 <div class="col s12">
