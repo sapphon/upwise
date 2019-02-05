@@ -140,7 +140,7 @@ public class AddVoteControllerTest {
     }
 
     @Test
-    public void testDefaultsToViewWisdom_IfNoDestinationViewIsSet() throws Exception {
+    public void testVoteSubmitDefaultsToViewWisdom_IfNoDestinationViewIsSet() throws Exception {
         try {
             when(mockApiController.voteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(IVote.class, HttpStatus.CREATED));
             when(mockWisdomController.viewWisdom(any(), any(), any(), any())).thenReturn("viewwisdom");
@@ -157,7 +157,7 @@ public class AddVoteControllerTest {
     }
 
     @Test
-    public void testShowsLeaderboard_IfDestinationViewIsSetToLeaderboard() throws Exception {
+    public void testVoteSubmitShowsLeaderboard_IfDestinationViewIsSetToLeaderboard() throws Exception {
         try {
             when(mockApiController.voteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(IVote.class, HttpStatus.CREATED));
             when(mockWisdomController.getWisdomLeaderboardWithVotes(any(), any())).thenReturn("wisdomleaderboard");
@@ -231,6 +231,34 @@ public class AddVoteControllerTest {
         assertEquals("somecontentmaybe", actual.getWisdom().getWisdomContent());
         assertEquals("somebody", actual.getWisdom().getAttribution());
 
+    }
+
+    @Test
+    public void testRemoveVoteDefaultsToViewWisdom_IfNoDestinationViewIsSet() throws Exception {
+        try {
+            when(mockApiController.unvoteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(HttpStatus.OK));
+            when(mockWisdomController.viewWisdom(any(), any(), any(), any())).thenReturn("viewwisdom");
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/removevote").accept(MediaType.TEXT_HTML).principal(Mockito.mock(Principal.class)).param("wisdomContent", "somecontentmaybe").param("wisdomAttribution", "somebody")).andReturn();
+            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("removeVoteStatusCode");
+            assertEquals(new Integer(200), actualStatusCode);
+            assertEquals("viewwisdom", mvcResult.getModelAndView().getViewName());
+        } catch (Exception e) {
+            Assert.fail("Should tolerate lack of destination view.");
+        }
+    }
+
+    @Test
+    public void testRemoveVoteShowsLeaderboard_IfDestinationViewIsSetToLeaderboard() throws Exception {
+        try {
+            when(mockApiController.unvoteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(HttpStatus.OK));
+            when(mockWisdomController.getWisdomLeaderboardWithVotes(any(), any())).thenReturn("wisdomleaderboard");
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/removevote").accept(MediaType.TEXT_HTML).principal(Mockito.mock(Principal.class)).param("wisdomContent", "somecontentmaybe").param("wisdomAttribution", "somebody").param("destinationViewName", "wisdomleaderboard")).andReturn();
+            Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("removeVoteStatusCode");
+            assertEquals(new Integer(200), actualStatusCode);
+            assertEquals("wisdomleaderboard", mvcResult.getModelAndView().getViewName());
+        } catch (Exception e) {
+            Assert.fail("Destination view not set as expected.");
+        }
     }
 
     private ResultActions makeMockMvcPostWithParamValues(String username, String content, String wiseMan, String redirectUrl) throws Exception {

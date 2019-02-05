@@ -44,7 +44,12 @@ public class AddVoteController {
     public String removeVote(Model model, Principal loggedInUser, @RequestParam(required=false) String voterUsername, @RequestParam String wisdomContent, @RequestParam String wisdomAttribution, @RequestParam(required=false) String destinationViewName) {
         voterUsername = loggedInUser.getName();
         ResponseEntity apiResponse = apiController.unvoteForWisdomEndpoint(new Vote(new Wisdom(wisdomContent, wisdomAttribution, null, null), voterUsername, null));
+
         model.addAttribute("removeVoteStatusCode", apiResponse.getStatusCodeValue());
-        return "removevote";
+
+        if(destinationViewName == null || destinationViewName.isEmpty() || destinationViewName.equalsIgnoreCase("viewwisdom")){
+            return wisdomController.viewWisdom(model, loggedInUser, wisdomContent, wisdomAttribution);
+        }
+        else return wisdomController.getWisdomLeaderboardWithVotes(model, loggedInUser);
     }
 }
