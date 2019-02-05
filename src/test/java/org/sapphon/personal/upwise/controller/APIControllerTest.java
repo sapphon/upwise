@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.sapphon.personal.upwise.factory.AnalyticsFactory;
 import org.sapphon.personal.upwise.model.*;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
@@ -29,8 +30,11 @@ import org.springframework.test.web.servlet.ResultHandler;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.Optional;
+
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -411,6 +415,39 @@ public class APIControllerTest {
 
         assertFalse("Should not have any null values after request processing", mvcResult.getResponse().getContentAsString().contains("null"));
     }
+
+    @Test
+    public void unvoteEndpointSaysBadRequestIfVoteIsNull() throws Exception {
+        mvc.perform(buildJsonPostRequest(null, "/vote/remove")).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void unvoteEndpointSaysBadRequestIfVoteHasNullWisdom() throws Exception{
+        IVote vote = RandomObjectFactory.makeRandomWisdomlessVote();
+        mvc.perform(buildJsonPostRequest(vote, "/vote/remove")).andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    public void unvoteEndpointSaysConflictIfVoteIsValidButDoesNotExist() throws Exception{
+        IWisdom randomWisdom = RandomObjectFactory.makeRandomWisdom();
+        IVote randomVote = RandomObjectFactory.makeRandomVoteForWisdom(randomWisdom);
+        assertEquals(Optional.empty(), voteService.getByWisdomAndVoterUsername(randomWisdom, randomVote.getAddedByUsername()));
+        mvc.perform(buildJsonPostRequest(randomVote, "/vote/remove")).andExpect(status().isConflict());
+    }
+
+    @Test
+    public void unvoteEndpointSaysOkIfVoteWasValidAndExisted_AlsoItRemovesYourVote() throws Exception {
+        IWisdom randomWisdom = RandomObjectFactory.makeRandomWisdom();
+        IVote randomVote = RandomObjectFactory.makeRandomVoteForWisdom(randomWisdom);
+        wisdomService.addOrUpdateWisdom(randomWisdom);
+        voteService.addOrUpdateVote(randomVote);
+
+        assertEquals(randomVote, voteService.getByWisdomAndVoterUsername(randomWisdom, randomVote.getAddedByUsername()).get());
+        mvc.perform(buildJsonPostRequest(randomVote, "/vote/remove")).andExpect(status().isOk());
+        assertEquals(Optional.empty(), voteService.getByWisdomAndVoterUsername(randomWisdom, randomVote.getAddedByUsername()));
+    }
+
 
     private MockHttpServletRequestBuilder buildJsonPostRequest(Object postBodyContent, String uri) throws JsonProcessingException {
         return MockMvcRequestBuilders.post(uri).contentType(MediaType.APPLICATION_JSON).content(inputMapper.writeValueAsString(postBodyContent));

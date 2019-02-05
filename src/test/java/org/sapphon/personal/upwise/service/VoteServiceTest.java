@@ -99,4 +99,11 @@ public class VoteServiceTest {
         assertEquals(user.getLoginUsername(), votePresentation.getAddedByUsername());
         assertEquals(user.getDisplayName(), votePresentation.getDisplayName());
     }
+
+    @Test
+    public void testDeleteVoteIsAPassthroughToTheRepository() {
+        IVote mockVote = Mockito.mock(IVote.class);
+        underTest.removeVote(mockVote);
+        verify(voteRepository).delete(mockVote);
+    }
 }

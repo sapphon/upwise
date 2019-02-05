@@ -89,6 +89,23 @@ public class APIController {
         return toReturn;
     }
 
+    @RequestMapping(value="/vote/remove", method=RequestMethod.POST)
+    public ResponseEntity unvoteForWisdomEndpoint(@RequestBody IVote vote) {
+        ResponseEntity toReturn;
+
+        if(!validateWisdom(vote.getWisdom()) || !validateUsername(vote.getAddedByUsername())){
+            toReturn = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        else if(!this.wisdomService.findWisdom(vote.getWisdom()).isPresent() || !voteService.getByWisdomAndVoterUsername(this.wisdomService.findWisdom(vote.getWisdom()).get(), vote.getAddedByUsername()).isPresent()){
+            toReturn = ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+        else{
+            this.voteService.removeVote(voteService.getByWisdomAndVoterUsername(this.wisdomService.findWisdom(vote.getWisdom()).get(), vote.getAddedByUsername()).get());
+            toReturn = ResponseEntity.status(HttpStatus.OK).build();
+        }
+        return toReturn;
+    }
+
     private boolean validateUsername(String voterUsername) {
         return voterUsername != null && !voterUsername.equals("");
     }
@@ -176,7 +193,4 @@ public class APIController {
         return this.userService.addOrUpdateUser(user);
     }
 
-    public ResponseEntity unvoteForWisdomEndpoint(Object any) {
-        return null;
-    }
 }

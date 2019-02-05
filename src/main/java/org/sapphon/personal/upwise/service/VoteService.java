@@ -47,4 +47,8 @@ public class VoteService {
         VotePresentation votePresentation = new VotePresentation(displayName, vote);
         return votePresentation;
     }
+
+    public void removeVote(IVote voteToRemove) {
+        this.voteRepository.delete(voteToRemove);
+    }
 }
