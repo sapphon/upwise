@@ -3,6 +3,7 @@ package org.sapphon.personal.upwise.repository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.sapphon.personal.upwise.factory.RandomObjectFactory;
 import org.sapphon.personal.upwise.model.IVote;
 import org.sapphon.personal.upwise.model.IWisdom;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
@@ -122,5 +123,22 @@ public class VoteRepositoryTest {
 
 		assertTrue(actual.isPresent());
 		assertEquals(testVotes[2], actual.get());
+	}
+
+	@Test
+	@DirtiesContext
+	public void canRemoveOneVote() {
+		voteRepo.save(Arrays.asList(testVotes));
+		voteRepo.delete(testVotes[0]);
+		assertEquals(2, voteRepo.getAll().size());
+		assertFalse(voteRepo.getAll().contains(testVotes[0]));
+	}
+
+	@Test
+	@DirtiesContext
+	public void willNotRemoveAnythingIfProvidedVoteDoesNotMatch() {
+		voteRepo.save(Arrays.asList(testVotes));
+		voteRepo.delete(RandomObjectFactory.makeRandomVoteForWisdom(testWisdoms[0]));
+		assertEquals(3, voteRepo.getAll().size());
 	}
 }

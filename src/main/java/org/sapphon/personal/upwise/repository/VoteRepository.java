@@ -66,6 +66,12 @@ public class VoteRepository {
         jpaVoteRepo.deleteAll();
 	}
 
+	public void delete(IVote vote){
+        if(this.findVoteJpa(vote) != null){
+            jpaVoteRepo.delete(this.findVoteJpa(vote));
+        }
+    }
+
 	public Optional<IVote> findByWisdomAndVoterUsername(IWisdom wisdom, String userName){
         Optional<IWisdom> wisdomFound = this.wisdomRepository.findWisdom(wisdom.getWisdomContent(), wisdom.getAttribution());
         if(!wisdomFound.isPresent()){
@@ -77,5 +83,9 @@ public class VoteRepository {
 
     public Optional<IVote> findVote(IVote template){
         return this.findByWisdomAndVoterUsername(template.getWisdom(), template.getAddedByUsername());
+    }
+
+    private VoteJpa findVoteJpa(IVote template){
+        return (VoteJpa) this.findVote(template).orElse(null);
     }
 }
