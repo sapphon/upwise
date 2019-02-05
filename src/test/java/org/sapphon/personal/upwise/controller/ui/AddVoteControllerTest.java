@@ -218,6 +218,21 @@ public class AddVoteControllerTest {
 
     }
 
+    @Test
+    public void testRemoveVotePassesCorrectValuesToApiController() throws Exception {
+        ArgumentCaptor<IVote> captor = ArgumentCaptor.forClass(IVote.class);
+        Principal mockPrincipal = Mockito.mock(Principal.class);
+        when(mockPrincipal.getName()).thenReturn("Billy Spreads");
+        when(mockApiController.unvoteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(HttpStatus.OK));
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/removevote").accept(MediaType.TEXT_HTML).principal(mockPrincipal).param("wisdomContent", "somecontentmaybe").param("wisdomAttribution", "somebody")).andReturn();
+        verify(mockApiController).unvoteForWisdomEndpoint(captor.capture());
+        IVote actual = captor.getValue();
+        assertEquals("Billy Spreads", actual.getAddedByUsername());
+        assertEquals("somecontentmaybe", actual.getWisdom().getWisdomContent());
+        assertEquals("somebody", actual.getWisdom().getAttribution());
+
+    }
+
     private ResultActions makeMockMvcPostWithParamValues(String username, String content, String wiseMan, String redirectUrl) throws Exception {
         return mvc.perform(MockMvcRequestBuilders.post("/" + urlUnderTest).accept(MediaType.TEXT_HTML)
                 .param("voterUsername", username)

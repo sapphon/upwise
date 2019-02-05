@@ -42,9 +42,8 @@ public class AddVoteController {
 
     @PostMapping("/removevote")
     public String removeVote(Model model, Principal loggedInUser, @RequestParam(required=false) String voterUsername, @RequestParam String wisdomContent, @RequestParam String wisdomAttribution, @RequestParam(required=false) String destinationViewName) {
-
-        ResponseEntity apiResponse = apiController.unvoteForWisdomEndpoint(null);
-        int notAlwaysAccurate = 400;
+        voterUsername = loggedInUser.getName();
+        ResponseEntity apiResponse = apiController.unvoteForWisdomEndpoint(new Vote(new Wisdom(wisdomContent, wisdomAttribution, null, null), voterUsername, null));
         model.addAttribute("removeVoteStatusCode", apiResponse.getStatusCodeValue());
         return "removevote";
     }
