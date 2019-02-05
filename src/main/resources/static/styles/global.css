@@ -74,12 +74,16 @@ button, .vote-up-button{
     color: var(--color-1);
 }
 
-.wisdomSecondaryInfo, .brand-logo {
+.wisdomSecondaryInfo, .brand-logo, .submitter-link {
     margin-left: 20px;
 }
 
+.submitter-link{
+    color: var(--color-1);
+}
+
 .vert-container {
-    margin-top: 10%;
+    margin-top: 5%;
 }
 
 .voterbadges {
