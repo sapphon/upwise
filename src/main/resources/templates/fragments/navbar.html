@@ -13,6 +13,7 @@
                 <ul class="right hide-on-med-and-down">
                     <li><a href="/addwisdom">Submit</a></li>
                     <li><a href="/wisdomleaderboard">Leaderboard</a></li>
+                    <li><a href="/recentwisdom">Recent</a></li>
                     <li><a href="/randomwisdom">Random</a></li>
                     <li><a th:if="${loggedInUser}" th:text="'All About ' + ${loggedInUser.displayUsername}" th:href="@{'/user/'+${loggedInUser.loginUsername}}"> </a></li>
                     <li><a sec:authorize="isAuthenticated()" href="/logout">Log Out</a></li>
