@@ -197,7 +197,7 @@ public class WisdomControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
                 .andReturn();
-        assertEquals("wisdomleaderboard", mvcResult.getModelAndView().getViewName());
+        assertEquals("recentwisdom", mvcResult.getModelAndView().getViewName());
         verifyRecentWisdoms((List<WisdomPresentation>)mvcResult.getModelAndView().getModel().get("allWisdoms"));
     }
 
