@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
-import org.sapphon.personal.upwise.TestHelper;
 import org.sapphon.personal.upwise.model.*;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
@@ -72,9 +71,9 @@ public class WisdomControllerTest {
                 .build();
 
         this.exampleWisdoms = new ArrayList<>();
-        exampleWisdoms.add(new Wisdom("A good programmer is someone who looks both ways before crossing a one-way street.", "Doug Linder", "jcrouc15", TimeLord.getNow()));
-        exampleWisdoms.add(new Wisdom("[Javascript] doesn't exactly allow you to fall into a pit of success.", "Nick Reuter", "cshaugh1", TimeLord.getNow()));
-        exampleWisdoms.add(new Wisdom("It's done, it just doesn't work.", "Chris Boyer", "tsatam", TimeLord.getNow()));
+        exampleWisdoms.add(new Wisdom("A good programmer is someone who looks both ways before crossing a one-way street.", "Doug Linder", "jcrouc15", TimeLord.getNowWithOffset(-5)));
+        exampleWisdoms.add(new Wisdom("[Javascript] doesn't exactly allow you to fall into a pit of success.", "Nick Reuter", "cshaugh1", TimeLord.getNowWithOffset(-2)));
+        exampleWisdoms.add(new Wisdom("It's done, it just doesn't work.", "Chris Boyer", "tsatam", TimeLord.getNowWithOffset(-1)));
         exampleWisdoms.add(new Wisdom("May we be judged by the quality of our commits, not by the content of our Google searches.", "Connor Shaughnessy", "awalte35", TimeLord.getNow()));
 
         this.exampleVotes = new ArrayList<>();
@@ -132,13 +131,13 @@ public class WisdomControllerTest {
         try {
             assertEquals("wisdomleaderboard", mvcResult.getModelAndView().getViewName());
             List<WisdomPresentation> actualWisdoms = (List<WisdomPresentation>) mvcResult.getModelAndView().getModel().values().iterator().next();
-            verifyWisdoms(actualWisdoms);
+            verifyLeaderboardWisdoms(actualWisdoms);
         } catch (Exception e) {
             Assert.fail("Model not as expected.");
         }
     }
 
-    private void verifyWisdoms(List<WisdomPresentation> actualWisdoms) {
+    private void verifyLeaderboardWisdoms(List<WisdomPresentation> actualWisdoms) {
         assertEquals(exampleWisdoms.get(0), actualWisdoms.get(0));
 
         assertEquals(exampleVotes.get(0), actualWisdoms.get(0).getVotes().get(0));
@@ -147,9 +146,18 @@ public class WisdomControllerTest {
         assertEquals(exampleVotesZeroAndOnePresented.get(1).getDisplayName(), actualWisdoms.get(0).getVotes().get(1).getDisplayName());
     }
 
+
+    private void verifyRecentWisdoms(List<WisdomPresentation> actualWisdoms) {
+        assertEquals(exampleWisdoms.get(3), (IWisdom)actualWisdoms.get(0));
+        assertEquals(exampleWisdoms.get(2), (IWisdom)actualWisdoms.get(1));
+        assertEquals(exampleWisdoms.get(1), (IWisdom)actualWisdoms.get(2));
+        assertEquals(exampleWisdoms.get(0), (IWisdom)actualWisdoms.get(3));
+
+    }
+
     private void verifyWisdom(MvcResult mvcResult) {
         WisdomPresentation actualWisdom = (WisdomPresentation) mvcResult.getModelAndView().getModel().get("wisdom");
-        verifyWisdoms(newArrayList(actualWisdom));
+        verifyLeaderboardWisdoms(newArrayList(actualWisdom));
     }
 
     @Test
@@ -175,6 +183,24 @@ public class WisdomControllerTest {
         verifyWisdom(mvcResult);
         assertEquals("viewwisdom", mvcResult.getModelAndView().getViewName());
     }
+
+    @Test
+    public void testWisdomsWithVotesByRecentPopulatesModelAndView() throws Exception{
+        when(mockWisdomService.getAllWisdomPresentationsSortedByTimeAdded()).thenReturn(newArrayList(
+                DomainObjectFactory.createWisdomPresentation(exampleWisdoms.get(3), new ArrayList<>(), ""),
+        DomainObjectFactory.createWisdomPresentation(exampleWisdoms.get(2), new ArrayList<>(), ""),
+        DomainObjectFactory.createWisdomPresentation(exampleWisdoms.get(1), new ArrayList<>(), ""),
+        DomainObjectFactory.createWisdomPresentation(exampleWisdoms.get(0), new ArrayList<>(), "")));
+
+
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/recentwisdom").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""))
+                .andReturn();
+        assertEquals("wisdomleaderboard", mvcResult.getModelAndView().getViewName());
+        verifyRecentWisdoms((List<WisdomPresentation>)mvcResult.getModelAndView().getModel().get("allWisdoms"));
+    }
+
 
     @Test
     public void testViewWisdomSavesCorrectAnalyticsEvent_WhetherUserIsLoggedInOrNot() throws Exception {

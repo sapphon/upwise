@@ -48,6 +48,13 @@ public class WisdomController {
         return "viewwisdom";
     }
 
+    @GetMapping(value = "/recentwisdom",  produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
+    public String getRecentWisdom(Model model, Principal loggedInUser){
+        analyticsService.saveEvent(AnalyticsFactory.createViewLeaderboardEvent(loggedInUser == null ? "[anonymous]" : loggedInUser.getName()));
+        model.addAttribute("allWisdoms", wisdomService.getAllWisdomPresentationsSortedByTimeAdded());
+        return "wisdomleaderboard";
+    }
+
     @GetMapping(value = "/viewwisdom", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
     public String viewWisdom(Model model, Principal loggedInUser, @RequestParam("wisdomContent") String wisdomContent, @RequestParam("wisdomAttribution") String wisdomAttribution)
     {

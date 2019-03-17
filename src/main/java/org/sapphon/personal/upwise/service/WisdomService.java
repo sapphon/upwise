@@ -59,6 +59,15 @@ public class WisdomService {
         }).collect(Collectors.toList());
     }
 
+    public List<WisdomPresentation> getAllWisdomPresentationsSortedByTimeAdded() {
+        return this.getAllWisdomPresentations().stream().sorted(new Comparator<WisdomPresentation>() {
+            @Override
+            public int compare(WisdomPresentation o1, WisdomPresentation o2) {
+                return o2.getTimeAdded().compareTo(o1.getTimeAdded());
+            }
+        }).collect(Collectors.toList());
+    }
+
     public List<WisdomPresentation> getWisdomPresentationsForWisdoms(List<IWisdom> wisdoms) {
         return wisdoms.stream().map(this::getWisdomPresentationForWisdom).collect(Collectors.toList());
     }

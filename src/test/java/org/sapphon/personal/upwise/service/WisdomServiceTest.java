@@ -9,12 +9,15 @@ import org.sapphon.personal.upwise.model.IUser;
 import org.sapphon.personal.upwise.model.IVote;
 import org.sapphon.personal.upwise.model.IWisdom;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
+import org.sapphon.personal.upwise.model.Wisdom;
 import org.sapphon.personal.upwise.presentation.VotePresentation;
 import org.sapphon.personal.upwise.presentation.WisdomPresentation;
 import org.sapphon.personal.upwise.repository.WisdomRepository;
+import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -145,6 +148,28 @@ public class WisdomServiceTest {
 
         verify(userService, times(1)).getUserWithLogin(expectedUser.getLoginUsername());
         assertEquals(expectedUser.getDisplayName(), actualWisdomWithVotes.getAddedByDisplayName());
+    }
+
+    @Test
+    public void testGetRecentWisdoms() {
+        List<IWisdom> wisdomsOutOfAgeOrder = new ArrayList<>();
+        IWisdom oldWisdom = RandomObjectFactory.makeRandomWisdom();
+        oldWisdom.setTimeAdded(new Timestamp(0));
+        IWisdom newerWisdom = RandomObjectFactory.makeRandomWisdom();
+        newerWisdom.setTimeAdded(new Timestamp(1000));
+        IWisdom newestWisdom = RandomObjectFactory.makeRandomWisdom();
+        newestWisdom.setTimeAdded(TimeLord.getNow());
+
+        wisdomsOutOfAgeOrder.add(newerWisdom);
+        wisdomsOutOfAgeOrder.add(oldWisdom);
+        wisdomsOutOfAgeOrder.add(newestWisdom);
+        when(wisdomRepo.getAll()).thenReturn(wisdomsOutOfAgeOrder);
+
+        List<WisdomPresentation> actual = underTest.getAllWisdomPresentationsSortedByTimeAdded();
+        assertEquals(actual.get(0).getTimeAdded(),newestWisdom.getTimeAdded());
+        assertEquals(actual.get(1).getTimeAdded(),newerWisdom.getTimeAdded());
+        assertEquals(actual.get(2).getTimeAdded(),oldWisdom.getTimeAdded());
+
     }
 
     @Test
