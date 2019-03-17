@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Wisdom Card List Fragment</title>
+</head>
+<body>
+<div th:fragment="wisdomcardlist">
+<div class="wisdomlist" th:unless="${#lists.isEmpty(allWisdoms)}">
+    <div class="row" th:each="wisdom : ${allWisdoms}">
+        <div class="col s12">
+            <div class="card">
+                <div class="card-content">
+                    <a class="card-title" th:href="@{'/viewwisdom?wisdomContent=' + ${wisdom.wisdomContent} + '&wisdomAttribution=' + ${wisdom.attribution}}" th:text="${wisdom.wisdomContent}">A good programmer is someone who looks both ways
+                        before crossing a
+                        one-way street.
+                    </a>
+                    <div th:text="${wisdom.attribution}">Doug Linder</div>
+                </div>
+                <div class="card-action">
+                    <a th:href="@{'/user/' + ${wisdom.addedByUsername}}" th:text="${wisdom.addedByDisplayName}">intellijames</a>
+                    <div th:text="${wisdom.timeAdded}">January 1, 1970 01:00:00 GMT</div>
+                    <div th:unless="${#lists.isEmpty(wisdom.votes)}"
+                         th:text="${#lists.size(wisdom.votes)} + ' votes'">-1 votes
+                    </div>
+                    <div th:if="${#lists.isEmpty(wisdom.votes)}">0 votes</div>
+                    <div class="vote-form-div">
+                        <div th:replace="fragments/voteform :: voteform(wisdom=${wisdom}, callback='wisdomleaderboard')"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wisdomlist" th:if="${#lists.isEmpty(allWisdoms)}">No wisdoms to rank by vote!</div>
+</div>
+</body>
+</html>
+
