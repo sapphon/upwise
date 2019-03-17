@@ -50,4 +50,8 @@ public class AnalyticsFactory {
     public static IAnalyticsEvent createViewWisdomEvent(String viewingUsername, IWisdom wisdom) {
         return createAnalyticsEvent(wisdom == null ? "[None Found]" : wisdom.toString(), viewingUsername, AnalyticsAction.VIEWWISDOM);
     }
+
+    public static IAnalyticsEvent createViewRecentEvent(String viewingUsername) {
+        return createAnalyticsEvent("[No details]", viewingUsername, AnalyticsAction.VIEWRECENT);
+    }
 }

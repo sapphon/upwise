@@ -107,6 +107,34 @@ public class WisdomControllerTest {
         assertEquals(null, captor.getValue().getEventTime());
     }
 
+
+    @Test
+    public void testGetRecentSavesCorrectAnalyticsEvent_WhenUserIsNotLoggedIn() throws Exception {
+        ArgumentCaptor<IAnalyticsEvent> captor = ArgumentCaptor.forClass(IAnalyticsEvent.class);
+        mvc.perform(MockMvcRequestBuilders.get("/recentwisdom").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo("")));
+        verify(mockAnalyticsService, times(1)).saveEvent(captor.capture());
+        assertEquals(AnalyticsAction.VIEWRECENT, captor.getValue().getEventType());
+        assertEquals("[No details]", captor.getValue().getEventDescription());
+        assertEquals("[anonymous]", captor.getValue().getEventInitiator());
+        assertEquals(null, captor.getValue().getEventTime());
+    }
+
+    @Test
+    public void testGetRecentSavesLoggedInUsernameOnAnalyticsEvent() throws Exception {
+        ArgumentCaptor<IAnalyticsEvent> captor = ArgumentCaptor.forClass(IAnalyticsEvent.class);
+        mvc.perform(MockMvcRequestBuilders.get("/recentwisdom").accept(MediaType.TEXT_HTML).principal(new BasicUserPrincipal("theDude")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo("")));
+        verify(mockAnalyticsService, times(1)).saveEvent(captor.capture());
+        assertEquals(AnalyticsAction.VIEWRECENT, captor.getValue().getEventType());
+        assertEquals("[No details]", captor.getValue().getEventDescription());
+        assertEquals("theDude", captor.getValue().getEventInitiator());
+        assertEquals(null, captor.getValue().getEventTime());
+    }
+
+
     @Test
     public void testGetLeaderboardSavesUsernameOnAnalyticsEventIfUserLoggedIn() throws Exception {
         ArgumentCaptor<IAnalyticsEvent> captor = ArgumentCaptor.forClass(IAnalyticsEvent.class);
