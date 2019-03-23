@@ -9,7 +9,7 @@
 <div class="wisdomlist" th:unless="${#lists.isEmpty(allWisdoms)}">
     <div class="row" th:each="wisdom : ${allWisdoms}">
         <div class="col s12">
-            <div class="card">
+            <div class="card hoverable">
                 <div class="card-content">
                     <a class="card-title" th:href="@{'/viewwisdom?wisdomContent=' + ${wisdom.wisdomContent} + '&wisdomAttribution=' + ${wisdom.attribution}}" th:text="${wisdom.wisdomContent}">A good programmer is someone who looks both ways
                         before crossing a
