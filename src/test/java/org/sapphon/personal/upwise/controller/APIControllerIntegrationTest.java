@@ -43,7 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(properties = "spring.profiles.active=test")
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class APIControllerTest {
+public class APIControllerIntegrationTest {
 
     @Autowired
     private MockMvc mvc;
