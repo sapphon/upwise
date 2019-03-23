@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.sapphon.personal.upwise.controller.APIController;
 import org.sapphon.personal.upwise.model.*;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
@@ -49,6 +50,7 @@ public class WisdomControllerTest {
 
     private WisdomService mockWisdomService;
     private AnalyticsService mockAnalyticsService;
+    private APIController mockApiController;
 
     private WisdomController underTest;
 
@@ -62,9 +64,10 @@ public class WisdomControllerTest {
         viewResolver.setPrefix("templates/");
         viewResolver.setSuffix(".html");
 
+        mockApiController = Mockito.mock(APIController.class);
         mockAnalyticsService = Mockito.mock(AnalyticsService.class);
         mockWisdomService = Mockito.mock(WisdomService.class);
-        this.underTest = new WisdomController(mockWisdomService, mockAnalyticsService);
+        this.underTest = new WisdomController(mockWisdomService, mockAnalyticsService, mockApiController);
 
         mvc = MockMvcBuilders.standaloneSetup(underTest)
                 .setViewResolvers(viewResolver)
@@ -267,9 +270,8 @@ public class WisdomControllerTest {
 
     @Test
     public void setsANullWisdomOnTheModelForTheRandomWisdomPageAndServesViewWisdom_IfNoWisdomsExist() throws Exception{
-        when(mockWisdomService.hasAnyWisdoms()).thenReturn(false);
+        when(mockApiController.getRandomWisdomEndpoint(any())).thenReturn(null);
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/randomwisdom").accept(MediaType.TEXT_HTML))
-                .andExpect(status().isOk())
                 .andExpect(content().string(""))
                 .andReturn();
         try {
@@ -281,5 +283,17 @@ public class WisdomControllerTest {
         }
     }
 
+    @Test
+    public void testNoParametersIsNoProblem_ShouldAllBeOptionalSo200_OK() throws Exception{
+        mvc.perform(MockMvcRequestBuilders.get("/randomwisdom").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk());
+    }
 
+
+    @Test
+    public void testPassesRandomWisdomArgumentsToApiControllerProperly() throws Exception{
+        mvc.perform(MockMvcRequestBuilders.get("/randomwisdom").param("upvotedByUsername", "PeggyHeel").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk());
+        verify(mockApiController).getRandomWisdomEndpoint("PeggyHeel");
+    }
 }

@@ -1,5 +1,6 @@
 package org.sapphon.personal.upwise.controller.ui;
 
+import org.sapphon.personal.upwise.controller.APIController;
 import org.sapphon.personal.upwise.factory.AnalyticsFactory;
 import org.sapphon.personal.upwise.model.IWisdom;
 import org.sapphon.personal.upwise.service.AnalyticsService;
@@ -20,10 +21,12 @@ public class WisdomController {
 
     private final WisdomService wisdomService;
     private final AnalyticsService analyticsService;
+    private APIController apiController;
 
-    public WisdomController(WisdomService wisdomService, AnalyticsService analyticsService){
+    public WisdomController(WisdomService wisdomService, AnalyticsService analyticsService, APIController apiController){
         this.wisdomService = wisdomService;
         this.analyticsService = analyticsService;
+        this.apiController = apiController;
     }
 
     @GetMapping(value= "/", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
@@ -39,13 +42,10 @@ public class WisdomController {
     }
 
     @GetMapping(value = "/randomwisdom", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
-    public String getRandomWisdom(Model model, Principal loggedInUser)
+    public String getRandomWisdom(Model model, Principal loggedInUser, @RequestParam(required=false) String upvotedByUsername)
     {
-        if(wisdomService.hasAnyWisdoms()) {
-            IWisdom chosen = chooseRandomWisdom(wisdomService.getAllWisdoms());
-            return this.viewWisdom(model, loggedInUser, chosen.getWisdomContent(), chosen.getAttribution());
-        }
-        return "viewwisdom";
+            IWisdom chosen = apiController.getRandomWisdomEndpoint(upvotedByUsername);
+            return chosen == null ? "viewwisdom" : this.viewWisdom(model, loggedInUser, chosen.getWisdomContent(), chosen.getAttribution());
     }
 
     @GetMapping(value = "/recentwisdom",  produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
