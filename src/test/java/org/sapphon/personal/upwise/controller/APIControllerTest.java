@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -138,6 +139,32 @@ public class APIControllerTest {
                                 outputMapper.writeValueAsString(testAnalytics[1]) +
                                 "]"))
                 .andReturn();
+    }
+
+    @Test
+    public void getRandomByUpvoter_IntegrationTest() throws Exception {
+        IWisdom[] testWisdoms = new IWisdom[2];
+        testWisdoms[0] = wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandomWisdom());
+        testWisdoms[1] = wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandomWisdom());
+        IVote aVoteForWisdomZero = RandomObjectFactory.makeRandomVoteForWisdom(testWisdoms[0]);
+        voteService.addOrUpdateVote(aVoteForWisdomZero);
+
+        String json0 = outputMapper.writeValueAsString(testWisdoms[0]);
+        String json1 = outputMapper.writeValueAsString(testWisdoms[1]);
+
+        for(int i = 0; i < 10; i++) {
+            mvc.perform(MockMvcRequestBuilders.get("/wisdom/random").param("upvotedByUsername", aVoteForWisdomZero.getAddedByUsername()).accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                    .andDo(new ResultHandler() {
+                        @Override
+                        public void handle(MvcResult result) throws Exception {
+                            String contentAsString = result.getResponse().getContentAsString();
+                            assertTrue(contentAsString.contains(testWisdoms[0].getWisdomContent()));
+                        }
+                    })
+                    .andReturn();
+        }
     }
 
     @Test
