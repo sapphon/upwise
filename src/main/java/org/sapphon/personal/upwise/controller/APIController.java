@@ -53,9 +53,13 @@ public class APIController {
     }
 
     @RequestMapping(value="/wisdom/random")
-    public IWisdom getRandomWisdomEndpoint(){
-        int numberOfWisdoms = getAllWisdoms().size();
-        return numberOfWisdoms > 0 ?  this.getAllWisdoms().get(new Random().nextInt(numberOfWisdoms)) : null;
+    public IWisdom getRandomWisdomEndpoint(@RequestParam(required=false) String upvotedByUsername){
+        return randomWisdomOrNull(getAllWisdoms());
+    }
+
+    private IWisdom randomWisdomOrNull(List<IWisdom> toChooseFrom) {
+        int numberOfWisdoms = toChooseFrom.size();
+        return numberOfWisdoms > 0 ?  toChooseFrom.get(new Random().nextInt(numberOfWisdoms)) : null;
     }
 
     private List<IWisdom> getAllWisdoms(){
