@@ -33,7 +33,7 @@ public class UserDetailsUserWrapperTest {
 
     @Test
     public void getAuthoritiesAdminsMePersonallyUntilIGetARealDatabase() throws Exception {
-        UserDetailsUserWrapper uTest = new UserDetailsUserWrapper(new User("sapphon", "Connor S.", TimeLord.getNow(), "b"));
+        UserDetailsUserWrapper uTest = new UserDetailsUserWrapper(new User("sapphon", "Connor S.", TimeLord.getNow(), "b", "doesntmatter"));
         assertEquals(2, uTest.getAuthorities().size());
         Iterator<? extends GrantedAuthority> authorityIterator = uTest.getAuthorities().iterator();
         assertEquals(new SimpleGrantedAuthority("USER"), authorityIterator.next());

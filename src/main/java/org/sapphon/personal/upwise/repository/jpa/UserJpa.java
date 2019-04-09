@@ -19,7 +19,7 @@ public class UserJpa extends AbstractUser {
         super();
     }
 
-    public UserJpa(String loginUsername, String displayUsername, Timestamp timeAdded, String password) {
-        super(loginUsername, displayUsername, timeAdded, password);
+    public UserJpa(String loginUsername, String displayUsername, Timestamp timeAdded, String password, String email) {
+        super(loginUsername, displayUsername, timeAdded, password, email);
     }
 }

@@ -8,8 +8,8 @@ public class User extends AbstractUser {
         super();
     }
 
-    public User(String loginUsername, String displayUsername, Timestamp timeAdded, String password) {
-        super(loginUsername, displayUsername, timeAdded, password);
+    public User(String loginUsername, String displayUsername, Timestamp timeAdded, String password, String email) {
+        super(loginUsername, displayUsername, timeAdded, password, email);
     }
 
 }

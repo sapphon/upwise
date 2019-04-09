@@ -60,6 +60,7 @@ public class UserRegistrationTest {
         assertEquals(underTest.getPassword(), actual.getPassword());
         assertEquals(underTest.getConfirmPassword(), actual.getPassword());
         assertEquals(underTest.getDisplayName(), actual.getDisplayName());
+        assertEquals(underTest.getEmail(), actual.getEmail());
 
     }
 }

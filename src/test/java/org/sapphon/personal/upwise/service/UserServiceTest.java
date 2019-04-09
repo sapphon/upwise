@@ -50,7 +50,7 @@ public class UserServiceTest {
 
     @Test
     public void queriesRepoForUsersByLoginNameAndIgnoresCase() {
-        IUser expected = DomainObjectFactory.createUser("lmccoy67", "Leonard McCoy", TimeLord.getNow(), "pword");
+        IUser expected = DomainObjectFactory.createUser("lmccoy67", "Leonard McCoy", TimeLord.getNow(), "pword", "");
         when(mockUserRepository.getByLoginUsername("lmccoy67")).thenReturn(expected);
         IUser actual = underTest.getUserWithLogin("LmcCOY67");
         verify(mockUserRepository).getByLoginUsername("lmccoy67");
@@ -59,7 +59,7 @@ public class UserServiceTest {
 
     @Test
     public void addsToRepoWhenRealUserIsAddedAndLowersCaseOfLoginIfNecessary(){
-        IUser expected = DomainObjectFactory.createUser("LmCCoy67", "Leonard McCoy", TimeLord.getNow(), "drowp");
+        IUser expected = DomainObjectFactory.createUser("LmCCoy67", "Leonard McCoy", TimeLord.getNow(), "drowp", "");
         underTest.addOrUpdateUser(expected);
         verify(mockUserRepository).save(expected);
     }

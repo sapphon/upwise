@@ -10,6 +10,9 @@ public class UserRegistration extends AbstractIncomingDataTransfer<IUser> {
     private String password;
     private String confirmPassword;
 
+
+    private String email;
+
     public UserRegistration(){}
 
     private boolean validateIncomingRegistration(){
@@ -23,7 +26,7 @@ public class UserRegistration extends AbstractIncomingDataTransfer<IUser> {
     @Override
     public IUser convertToModelObject() {
         if(validateIncomingRegistration()) {
-            return DomainObjectFactory.createUserWithCreatedTimeNow(desiredUsername, displayName, password);
+            return DomainObjectFactory.createUserWithCreatedTimeNow(desiredUsername, displayName, password, email);
         }
         return null;
     }
@@ -62,6 +65,15 @@ public class UserRegistration extends AbstractIncomingDataTransfer<IUser> {
 
     public UserRegistration setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+        return this;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public UserRegistration setEmail(String email) {
+        this.email = email;
         return this;
     }
     //endregion

@@ -42,19 +42,19 @@ public class DomainObjectFactory {
     }
 
     public static IUser createUser(IUser user){
-        return createUser(user.getLoginUsername(), user.getDisplayName(), user.getTimeAdded(), user.getPassword());
+        return createUser(user.getLoginUsername(), user.getDisplayName(), user.getTimeAdded(), user.getPassword(), user.getEmail());
     }
 
-    public static IUser createUserWithCreatedTimeNow(String loginUsername, String displayUsername, String password){
-        return createUser(loginUsername, displayUsername, TimeLord.getNow(), password);
+    public static IUser createUserWithCreatedTimeNow(String loginUsername, String displayUsername, String password, String email){
+        return createUser(loginUsername, displayUsername, TimeLord.getNow(), password, email);
     }
 
-    public static IUser createUser(String loginUsername, String displayUsername, Timestamp timeAdded, String password) {
-        return new User(loginUsername, displayUsername, timeAdded, password);
+    public static IUser createUser(String loginUsername, String displayUsername, Timestamp timeAdded, String password, String email) {
+        return new User(loginUsername, displayUsername, timeAdded, password, email);
     }
 
     public static UserJpa createUserJpa(IUser user){
-        return new UserJpa(user.getLoginUsername(), user.getDisplayName(), user.getTimeAdded(), user.getPassword());
+        return new UserJpa(user.getLoginUsername(), user.getDisplayName(), user.getTimeAdded(), user.getPassword(), user.getEmail());
     }
 
     public static IVote createVote(IVote vote) {

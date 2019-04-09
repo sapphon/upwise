@@ -25,5 +25,7 @@ public interface IUser {
 
     IUser setTimeAdded(Timestamp timeAdded);
 
+    String getEmail();
+
     //endregion
 }

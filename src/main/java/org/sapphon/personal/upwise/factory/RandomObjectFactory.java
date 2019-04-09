@@ -52,7 +52,7 @@ public class RandomObjectFactory {
 
     public static IUser makeRandomUser(){
         Random random = new Random();
-        return DomainObjectFactory.createUser(randomNonEmptyOfMaxLength(32), randomNonEmptyOfMaxLength(128), TimeLord.getTimestampForMillis(random.nextLong()), randomNonEmptyOfMaxLength(16));
+        return DomainObjectFactory.createUser(randomNonEmptyOfMaxLength(32), randomNonEmptyOfMaxLength(128), TimeLord.getTimestampForMillis(random.nextLong()), randomNonEmptyOfMaxLength(16), randomNonEmptyOfMaxLength(32));
     }
 
     public static IAnalyticsEvent makeRandomEvent(){
@@ -82,6 +82,6 @@ public class RandomObjectFactory {
 
     public static UserRegistration makeValidButRandomUserRegistration() {
         String password = randomOfLengthBetween(4, 64);
-        return new UserRegistration().setDesiredUsername(randomOfLengthBetween(4, 16)).setDisplayName(randomNonEmptyOfMaxLength( 64)).setPassword(password).setConfirmPassword(password);
+        return new UserRegistration().setDesiredUsername(randomOfLengthBetween(4, 16)).setDisplayName(randomNonEmptyOfMaxLength( 64)).setPassword(password).setConfirmPassword(password).setEmail(randomOfLengthBetween(4, 16));
     }
 }

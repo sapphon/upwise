@@ -11,13 +11,16 @@ public abstract class AbstractUser implements IUser {
     public Timestamp timeAdded;
     public String password;
 
+    public String email;
+
     public AbstractUser(){}
 
-    public AbstractUser(String loginUsername, String displayUsername, Timestamp timeAdded, String password) {
+    public AbstractUser(String loginUsername, String displayUsername, Timestamp timeAdded, String password, String email) {
         this.loginUsername = loginUsername;
         this.displayUsername = displayUsername;
         this.timeAdded = timeAdded;
         this.password = password;
+        this.email = email;
     }
 
     @Override
@@ -86,6 +89,23 @@ public abstract class AbstractUser implements IUser {
     public IUser setPassword(String password) {
         this.password = password;
         return this;
+    }
+
+    public String getDisplayUsername() {
+        return displayUsername;
+    }
+
+    public void setDisplayUsername(String displayUsername) {
+        this.displayUsername = displayUsername;
+    }
+
+    @Override
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     //endregion

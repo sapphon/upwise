@@ -33,10 +33,10 @@ public class UserRepositoryTest {
     @Before
     public void setUp() throws Exception {
         testUsers = new IUser[4];
-        testUsers[0] = DomainObjectFactory.createUser("tstone10", "Terrence Austin Stoneridge III", TimeLord.getNow(), "murica");
-        testUsers[1] = DomainObjectFactory.createUser("askywalk", "Darth Vader", TimeLord.getNowWithOffset(500000), "dark_$id3");
-        testUsers[2] = DomainObjectFactory.createUser("grivia", "The Witcher", TimeLord.getNowWithOffset(-1), "v3ng3rb3rg");
-        testUsers[3] = DomainObjectFactory.createUserWithCreatedTimeNow("jrobiso7", "Jackie Robinson", "butitdo");
+        testUsers[0] = DomainObjectFactory.createUser("tstone10", "Terrence Austin Stoneridge III", TimeLord.getNow(), "murica", "tstone10@ford.com");
+        testUsers[1] = DomainObjectFactory.createUser("askywalk", "Darth Vader", TimeLord.getNowWithOffset(500000), "dark_$id3", "anakin@starwars.com");
+        testUsers[2] = DomainObjectFactory.createUser("grivia", "The Witcher", TimeLord.getNowWithOffset(-1), "v3ng3rb3rg", "geralt@rivia.gov");
+        testUsers[3] = DomainObjectFactory.createUserWithCreatedTimeNow("jrobiso7", "Jackie Robinson", "butitdo", "jackie@mlb.com");
         userRepository.clear();
     }
 
@@ -49,6 +49,7 @@ public class UserRepositoryTest {
         userRepository.save(userWeWantToFind);
 
         assertEquals(userWeWantToFind, userRepository.getById(2L));
+        assertEquals(userWeWantToFind.getEmail(), userRepository.getById(2L).getEmail());
     }
 
 
