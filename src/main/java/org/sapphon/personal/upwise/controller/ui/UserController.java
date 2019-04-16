@@ -81,4 +81,10 @@ public class UserController {
         }
         return "login";
     }
+
+    @GetMapping("/forgotpassword")
+    public String resetPasswordForm(Model model){
+        model.addAttribute("upwiseEmail", new String());
+        return "forgotpassword";
+    }
 }

@@ -153,6 +153,13 @@ public class UserControllerTest {
 
 
     @Test
+    public void testCanGetResetPasswordPage() throws Exception {
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/forgotpassword").accept(MediaType.TEXT_HTML)).andExpect(status().isOk()).andReturn();
+        assertEquals("forgotpassword", mvcResult.getModelAndView().getViewName());
+        assertEquals("", mvcResult.getModelAndView().getModel().get("upwiseEmail"));
+    }
+
+    @Test
     public void testLoginErrorSets400StatusCodeOnModel() throws Exception {
         MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/login").param("error", "").accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
