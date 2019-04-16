@@ -177,6 +177,15 @@ public class UserControllerTest {
         assertEquals(200, result.getModelAndView().getModel().get("logoutStatusCode"));
     }
 
+    @Test
+    public void testSubmittingTheResetPasswordFormShowsYouTheResetPasswordLandingPage() throws Exception {
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/forgotpassword").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andReturn();
+        assertEquals("forgotpasswordresult", mvcResult.getModelAndView().getViewName());
+
+    }
+
 
     @Test
     public void testRegistrationErrorSets400StatusCodeOnModel_AndSendsYouToTryAgain() throws Exception {

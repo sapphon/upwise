@@ -1,9 +1,9 @@
 package org.sapphon.personal.upwise.controller.ui;
 
-import org.sapphon.personal.upwise.model.IUser;
-import org.sapphon.personal.upwise.model.IVote;
 import org.sapphon.personal.upwise.controller.APIController;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
+import org.sapphon.personal.upwise.model.IUser;
+import org.sapphon.personal.upwise.model.IVote;
 import org.sapphon.personal.upwise.model.datatransfer.UserRegistration;
 import org.sapphon.personal.upwise.service.UserService;
 import org.sapphon.personal.upwise.service.VoteService;
@@ -29,7 +29,7 @@ public class UserController {
     private final UserService userService;
 
     @Autowired
-    public UserController(WisdomService wisdomService, VoteService voteService, APIController apiController, UserService userService){
+    public UserController(WisdomService wisdomService, VoteService voteService, APIController apiController, UserService userService) {
         this.wisdomService = wisdomService;
         this.voteService = voteService;
         this.apiController = apiController;
@@ -38,7 +38,7 @@ public class UserController {
 
 
     @GetMapping(value = "/user/{user}", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
-    public String getUserDashboard(Model model, @PathVariable String user){
+    public String getUserDashboard(Model model, @PathVariable String user) {
         model.addAttribute("userLoginName", user);
         IUser userWithLogin = userService.getUserWithLogin(user);
         model.addAttribute("userDisplayName", userWithLogin == null ? user : userWithLogin.getDisplayName());
@@ -48,16 +48,16 @@ public class UserController {
     }
 
     @GetMapping("/register")
-    public String registrationForm(Model model){
+    public String registrationForm(Model model) {
         model.addAttribute("userToRegister", DomainObjectFactory.createUserRegistration());
         return "register";
     }
 
-    @PostMapping(value="/register",  produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
-    public String registrationSubmit(Model model, @ModelAttribute UserRegistration userToRegister){
+    @PostMapping(value = "/register", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
+    public String registrationSubmit(Model model, @ModelAttribute UserRegistration userToRegister) {
         ResponseEntity<IUser> userRegistrationResponseEntity = this.apiController.addUserEndpoint(userToRegister.convertToModelObject());
         model.addAttribute("registrationStatusCode", userRegistrationResponseEntity.getStatusCodeValue());
-        if(userRegistrationResponseEntity.getStatusCodeValue() == 201){
+        if (userRegistrationResponseEntity.getStatusCodeValue() == 201) {
             logRegisteredUserIn(model, userRegistrationResponseEntity.getBody().getLoginUsername());
             return getUserDashboard(model, userRegistrationResponseEntity.getBody().getLoginUsername());
         }
@@ -72,19 +72,23 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String getLoginPage(Model model, @RequestParam(required=false) String error, @RequestParam(required=false) String loggedout){
-        if(error != null){
+    public String getLoginPage(Model model, @RequestParam(required = false) String error, @RequestParam(required = false) String loggedout) {
+        if (error != null) {
             model.addAttribute("loginStatusCode", 400);
-        }
-        else if(loggedout != null){
+        } else if (loggedout != null) {
             model.addAttribute("logoutStatusCode", 200);
         }
         return "login";
     }
 
     @GetMapping("/forgotpassword")
-    public String resetPasswordForm(Model model){
+    public String resetPasswordForm(Model model) {
         model.addAttribute("upwiseEmail", new String());
         return "forgotpassword";
+    }
+
+    @PostMapping(value = "/forgotpassword", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
+    public String resetPasswordSubmit(Model model, @ModelAttribute String upwiseEmail) {
+        return "forgotpasswordresult";
     }
 }
