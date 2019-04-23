@@ -1,7 +1,10 @@
 package org.sapphon.personal.upwise.service;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.sapphon.personal.upwise.model.IUser;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
+import org.sapphon.personal.upwise.repository.Token;
+import org.sapphon.personal.upwise.repository.jpa.TokenRepository;
 import org.sapphon.personal.upwise.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,12 +19,14 @@ import java.util.List;
 public class UserService implements UserDetailsService{
 
     private UserRepository userRepo;
+    private TokenRepository tokenRepo;
     private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository)
+    public UserService(UserRepository userRepository, TokenRepository tokenRepository)
     {
         this.userRepo = userRepository;
+        this.tokenRepo = tokenRepository;
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
@@ -59,5 +64,13 @@ public class UserService implements UserDetailsService{
 
     public BCryptPasswordEncoder getPasswordEncoder(){
         return this.passwordEncoder;
+    }
+
+    public void enablePasswordResetForUser(String email) {
+        tokenRepo.save(new Token(RandomStringUtils.random(16)));
+    }
+
+    public boolean hasUserWithEmail(String email) {
+        return this.userRepo.getByEmail(email) != null;
     }
 }

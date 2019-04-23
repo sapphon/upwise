@@ -69,4 +69,7 @@ public class UserRepository {
         return jpaUserRepo.count();
     }
 
+    public IUser getByEmail(String email) {
+        return jpaUserRepo.findByEmail(email);
+    }
 }

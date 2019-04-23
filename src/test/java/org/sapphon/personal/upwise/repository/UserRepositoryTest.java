@@ -120,6 +120,13 @@ public class UserRepositoryTest {
         assertEquals(2, userRepository.getCount());
     }
 
+    @Test
+    public void testCanGetByEmail() {
+        assertNull(userRepository.getByEmail("tstone10@ford.com"));
+        userRepository.save(testUsers[0]);
+        assertEquals(testUsers[0], userRepository.getByEmail("tstone10@ford.com"));
+    }
+
     private IUser getOrFail(String loginName, String displayName) {
         Optional<IUser> wisdomFound = userRepository.findUser(loginName, displayName);
         boolean good = wisdomFound.isPresent();

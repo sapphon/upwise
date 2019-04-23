@@ -83,12 +83,15 @@ public class UserController {
 
     @GetMapping("/forgotpassword")
     public String resetPasswordForm(Model model) {
-        model.addAttribute("upwiseEmail", new String());
+        model.addAttribute("passwordResetRequest", new PasswordResetRequest());
         return "forgotpassword";
     }
 
     @PostMapping(value = "/forgotpassword", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
-    public String resetPasswordSubmit(Model model, @ModelAttribute String upwiseEmail) {
-        return "forgotpasswordresult";
+    public String resetPasswordSubmit(Model model, @ModelAttribute PasswordResetRequest passwordResetRequest) {
+        if(userService.hasUserWithEmail(passwordResetRequest.getEmail())) {
+            userService.enablePasswordResetForUser(passwordResetRequest.getEmail());
+        }
+            return "forgotpasswordresult";
     }
 }

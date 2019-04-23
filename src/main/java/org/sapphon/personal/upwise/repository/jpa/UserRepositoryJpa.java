@@ -12,4 +12,5 @@ public interface UserRepositoryJpa extends CrudRepository<UserJpa, Long> {
     List<UserJpa> findAllByDisplayUsernameOrderByTimeAddedDesc(String displayUsername);
     UserJpa findTopByLoginUsernameOrderByTimeAddedDesc(String loginUsername);
     Optional<UserJpa> findTopByLoginUsernameAndDisplayUsernameOrderByTimeAddedDesc(String loginUsername, String displayUsername);
+    UserJpa findByEmail(String email);
 }

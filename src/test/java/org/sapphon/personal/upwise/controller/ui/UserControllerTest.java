@@ -156,7 +156,8 @@ public class UserControllerTest {
     public void testCanGetResetPasswordPage() throws Exception {
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/forgotpassword").accept(MediaType.TEXT_HTML)).andExpect(status().isOk()).andReturn();
         assertEquals("forgotpassword", mvcResult.getModelAndView().getViewName());
-        assertEquals("", mvcResult.getModelAndView().getModel().get("upwiseEmail"));
+        PasswordResetRequest passwordResetRequest = (PasswordResetRequest) mvcResult.getModelAndView().getModel().get("passwordResetRequest");
+        assertEquals(new PasswordResetRequest().getEmail(), passwordResetRequest.getEmail());
     }
 
     @Test
@@ -229,5 +230,25 @@ public class UserControllerTest {
                 .param("displayName", reg.getDisplayName())
                 .param("password", reg.getPassword())
                 .param("confirmPassword", reg.getConfirmPassword());
+    }
+
+    @Test
+    public void testWhenPasswordResetFormSubmitted_DoesNotSendEmailIfAccountNotFound() throws Exception {
+        when(userService.hasUserWithEmail(any())).thenReturn(false);
+        underTest.resetPasswordSubmit(null, createPasswordResetRequestObject("expected@email"));
+        verify(userService, times(0)).enablePasswordResetForUser(any());
+    }
+
+    private PasswordResetRequest createPasswordResetRequestObject(String email) {
+        PasswordResetRequest passwordResetRequest = new PasswordResetRequest();
+        passwordResetRequest.setEmail(email);
+        return passwordResetRequest;
+    }
+
+    @Test
+    public void testWhenPasswordResetFormSubmitted_EmailServiceIsInvokedWithThatEmail() throws Exception {
+        when(userService.hasUserWithEmail(any())).thenReturn(true);
+        underTest.resetPasswordSubmit(null, createPasswordResetRequestObject("expected@email"));
+        verify(userService, times(1)).enablePasswordResetForUser("expected@email");
     }
 }
