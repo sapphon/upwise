@@ -1,25 +1,39 @@
 package org.sapphon.personal.upwise.repository;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import org.sapphon.personal.upwise.model.IUser;
+import org.sapphon.personal.upwise.repository.jpa.UserJpa;
+
+import javax.persistence.*;
 
 @Entity
 public class Token {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @OneToOne(targetEntity = UserJpa.class)
+    private IUser user;
+    private String token;
 
-    String token;
 
-    public Token(){
-
+    public Token() {
     }
-    public Token(String token){
+
+    public Token(String token, IUser user) {
         this.token = token;
+        this.user = user;
     }
+
+    //region SettersGetters
+
+    public IUser getUser() {
+        return user;
+    }
+
+    public String getToken() {
+        return token;
+    }
+    //endregion
 
 }

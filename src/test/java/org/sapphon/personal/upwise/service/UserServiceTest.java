@@ -2,10 +2,12 @@ package org.sapphon.personal.upwise.service;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.sapphon.personal.upwise.model.IUser;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
+import org.sapphon.personal.upwise.repository.Token;
 import org.sapphon.personal.upwise.repository.jpa.TokenRepository;
 import org.sapphon.personal.upwise.repository.UserRepository;
 import org.sapphon.personal.upwise.time.TimeLord;
@@ -123,8 +125,14 @@ public class UserServiceTest {
 
     @Test
     public void testWhenResetPasswordIsEnabledForAUser_ANewPasswordResetTokenIsSavedToTheTokenRepository() {
-        underTest.enablePasswordResetForUser("jungkoo");
-        verify(tokenRepository).save(any());
+        IUser mock = Mockito.mock(IUser.class);
+        ArgumentCaptor<Token> captorForSavedToken = ArgumentCaptor.forClass(Token.class);
+        when(mockUserRepository.getByEmail("jungkoo@kang.com")).thenReturn(mock);
+
+        underTest.enablePasswordResetForUser("jungkoo@kang.com");
+
+        verify(tokenRepository).save(captorForSavedToken.capture());
+        assertSame(mock, captorForSavedToken.getValue().getUser());
     }
 
 
