@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.sapphon.personal.upwise.TestHelper;
 import org.sapphon.personal.upwise.model.IUser;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
@@ -15,6 +16,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -129,10 +132,13 @@ public class UserServiceTest {
         ArgumentCaptor<Token> captorForSavedToken = ArgumentCaptor.forClass(Token.class);
         when(mockUserRepository.getByEmail("jungkoo@kang.com")).thenReturn(mock);
 
+        Timestamp beforeWeExpect = TimeLord.getNow();
         underTest.enablePasswordResetForUser("jungkoo@kang.com");
+        Timestamp afterWeExpect = TimeLord.getNow();
 
         verify(tokenRepository).save(captorForSavedToken.capture());
         assertSame(mock, captorForSavedToken.getValue().getUser());
+        TestHelper.assertTimestampBetweenInclusive(captorForSavedToken.getValue().getTimeCreated(), beforeWeExpect, afterWeExpect);
     }
 
 

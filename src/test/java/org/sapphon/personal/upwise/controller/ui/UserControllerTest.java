@@ -248,11 +248,12 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testWhenPasswordResetFormSubmitted_EmailServiceIsInvokedWithThatEmail() throws Exception {
+    public void testWhenPasswordResetFormSubmitted_EnablePasswordResetIsInvokedOnUserServiceWithThatEmail() throws Exception {
         when(userService.hasUserWithEmail("expected@email")).thenReturn(true);
         mvc.perform(MockMvcRequestBuilders.post("/forgotpassword").accept(MediaType.TEXT_HTML)
                 .flashAttr("passwordResetRequest", createPasswordResetRequestObject("expected@email"))
         ).andExpect(status().isOk());
         verify(userService, times(1)).enablePasswordResetForUser("expected@email");
     }
+
 }

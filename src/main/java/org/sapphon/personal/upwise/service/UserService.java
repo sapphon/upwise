@@ -67,7 +67,7 @@ public class UserService implements UserDetailsService{
     }
 
     public void enablePasswordResetForUser(String email) {
-        tokenRepo.save(new Token(RandomStringUtils.random(16), this.userRepo.getByEmail(email)));
+        tokenRepo.save(new Token(RandomStringUtils.randomAlphanumeric(16), this.userRepo.getByEmail(email)));
     }
 
     public boolean hasUserWithEmail(String email) {
