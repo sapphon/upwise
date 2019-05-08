@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 import org.sapphon.personal.upwise.controller.APIController;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
 import org.sapphon.personal.upwise.model.*;
+import org.sapphon.personal.upwise.model.datatransfer.PasswordResetRequest;
 import org.sapphon.personal.upwise.model.datatransfer.UserRegistration;
 import org.sapphon.personal.upwise.presentation.WisdomPresentation;
 import org.sapphon.personal.upwise.service.UserService;

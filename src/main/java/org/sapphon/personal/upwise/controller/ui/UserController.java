@@ -4,6 +4,7 @@ import org.sapphon.personal.upwise.controller.APIController;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.model.IUser;
 import org.sapphon.personal.upwise.model.IVote;
+import org.sapphon.personal.upwise.model.datatransfer.PasswordResetRequest;
 import org.sapphon.personal.upwise.model.datatransfer.UserRegistration;
 import org.sapphon.personal.upwise.service.UserService;
 import org.sapphon.personal.upwise.service.VoteService;
@@ -94,4 +95,6 @@ public class UserController {
         }
             return "forgotpasswordresult";
     }
+
+
 }
