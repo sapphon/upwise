@@ -1,4 +1,4 @@
-package org.sapphon.personal.upwise.controller.ui;
+package org.sapphon.personal.upwise.model.datatransfer;
 
 public class PasswordResetRequest {
     public String getEmail() {
