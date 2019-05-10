@@ -21,9 +21,6 @@ public class Token {
 
     private Timestamp timeCreated;
 
-    public Token() {
-    }
-
     public Token(String token, IUser user) {
         this.token = token;
         this.user = user;

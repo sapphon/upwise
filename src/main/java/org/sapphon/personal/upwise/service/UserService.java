@@ -6,6 +6,7 @@ import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.repository.Token;
 import org.sapphon.personal.upwise.repository.jpa.TokenRepository;
 import org.sapphon.personal.upwise.repository.UserRepository;
+import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -68,6 +69,19 @@ public class UserService implements UserDetailsService{
 
     public void enablePasswordResetForUser(String email) {
         tokenRepo.save(new Token(RandomStringUtils.randomAlphanumeric(16), this.userRepo.getByEmail(email)));
+    }
+
+    public boolean isValidToken(String token){
+        Token tokenFound = this.tokenRepo.getByToken(token);
+        return tokenFound != null && TimeLord.getNow().getTime() - tokenFound.getTimeCreated().getTime() < 3600000;
+    }
+
+    public boolean resetPasswordForUser(String loginUsername, String token, String desiredNewPassword){
+        boolean requestIsValid = isValidToken(token) && this.getUserWithLogin(loginUsername) != null && tokenRepo.getByToken(token).getUser() == this.getUserWithLogin(loginUsername);
+        if(requestIsValid){
+            userRepo.save(this.getUserWithLogin(loginUsername).setPassword(desiredNewPassword));
+        }
+        return requestIsValid;
     }
 
     public boolean hasUserWithEmail(String email) {
