@@ -77,9 +77,9 @@ public class UserService implements UserDetailsService{
     }
 
     public boolean resetPasswordForUser(String loginUsername, String token, String desiredNewPassword){
-        boolean requestIsValid = isValidToken(token) && this.getUserWithLogin(loginUsername) != null && tokenRepo.getByToken(token).getUser() == this.getUserWithLogin(loginUsername);
+        boolean requestIsValid = isValidToken(token) && this.getUserWithLogin(loginUsername) != null && tokenRepo.getByToken(token).getUser().getLoginUsername().equals(loginUsername);
         if(requestIsValid){
-            userRepo.save(this.getUserWithLogin(loginUsername).setPassword(desiredNewPassword));
+            userRepo.save(this.getUserWithLogin(loginUsername).setPassword(this.passwordEncoder.encode(desiredNewPassword)));
         }
         return requestIsValid;
     }

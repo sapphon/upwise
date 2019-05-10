@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 import org.sapphon.personal.upwise.controller.APIController;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
 import org.sapphon.personal.upwise.model.*;
+import org.sapphon.personal.upwise.model.datatransfer.NewPasswordRequest;
 import org.sapphon.personal.upwise.model.datatransfer.PasswordResetRequest;
 import org.sapphon.personal.upwise.model.datatransfer.UserRegistration;
 import org.sapphon.personal.upwise.presentation.WisdomPresentation;
@@ -43,8 +44,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.sapphon.personal.upwise.TestHelper.assertIsOfTypeAndGet;
 import static org.sapphon.personal.upwise.TestHelper.assertListEquals;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -248,6 +248,14 @@ public class UserControllerTest {
         return passwordResetRequest;
     }
 
+    private NewPasswordRequest createNewPasswordRequest(String username, String newPassword){
+        NewPasswordRequest newPasswordRequest = new NewPasswordRequest();
+        newPasswordRequest.setLoginUsername(username);
+        newPasswordRequest.setDesiredNewPassword(newPassword);
+        newPasswordRequest.setConfirmNewPassword(newPassword);
+        return newPasswordRequest;
+    }
+
     @Test
     public void testWhenPasswordResetFormSubmitted_EnablePasswordResetIsInvokedOnUserServiceWithThatEmail() throws Exception {
         when(userService.hasUserWithEmail("expected@email")).thenReturn(true);
@@ -257,4 +265,32 @@ public class UserControllerTest {
         verify(userService, times(1)).enablePasswordResetForUser("expected@email");
     }
 
+    @Test
+    public void testCanNotGetChooseNewPasswordPageWithoutToken() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/choosenewpassword").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(view().name("forgotpassword"));
+        mvc.perform(MockMvcRequestBuilders.get("/choosenewpasswordABC123").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(view().name("forgotpassword"));
+    }
+
+    @Test
+    public void testCanGetNewPasswordPageWithRightToken() throws Exception {
+        when(userService.isValidToken("KenMasters")).thenReturn(true);
+        mvc.perform(MockMvcRequestBuilders.get("/choosenewpasswordKenMasters").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(view().name("choosenewpassword"))
+                .andExpect(model().attributeExists("newPasswordRequest"))
+                .andExpect(model().attribute("passwordResetToken", "KenMasters"));
+    }
+
+    @Test
+    public void testWhenChooseNewPasswordFormSubmitted_ServiceIsInvokedToChangePasswordIfTokenMatchesCriteria() throws Exception {
+        when(userService.isValidToken("t0k")).thenReturn(true);
+        mvc.perform(MockMvcRequestBuilders.post("/choosenewpasswordt0k").accept(MediaType.TEXT_HTML)
+                .flashAttr("newPasswordRequest", createNewPasswordRequest("billy", "5p|2e4Dz")))
+                .andExpect(status().isOk());
+        verify(userService, times(1)).resetPasswordForUser("billy", "t0k", "5p|2e4Dz");
+    }
 }
