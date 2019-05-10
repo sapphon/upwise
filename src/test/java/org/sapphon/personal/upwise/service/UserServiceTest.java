@@ -194,7 +194,7 @@ public class UserServiceTest {
         ArgumentCaptor<IUser> argumentCaptorForUser = ArgumentCaptor.forClass(IUser.class);
         verify(mockUserRepository).save(argumentCaptorForUser.capture());
         assertEquals("bobbyhill", argumentCaptorForUser.getValue().getLoginUsername());
-        assertEquals("jinglejangle", argumentCaptorForUser.getValue().getPassword());
+        assertTrue(underTest.getPasswordEncoder().matches("jinglejangle", argumentCaptorForUser.getValue().getPassword()));
     }
 
     @Test

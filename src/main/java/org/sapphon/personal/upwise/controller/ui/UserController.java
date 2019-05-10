@@ -4,12 +4,14 @@ import org.sapphon.personal.upwise.controller.APIController;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.model.IUser;
 import org.sapphon.personal.upwise.model.IVote;
+import org.sapphon.personal.upwise.model.datatransfer.NewPasswordRequest;
 import org.sapphon.personal.upwise.model.datatransfer.PasswordResetRequest;
 import org.sapphon.personal.upwise.model.datatransfer.UserRegistration;
 import org.sapphon.personal.upwise.service.UserService;
 import org.sapphon.personal.upwise.service.VoteService;
 import org.sapphon.personal.upwise.service.WisdomService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.stream.Collectors;
 
@@ -90,11 +93,28 @@ public class UserController {
 
     @PostMapping(value = "/forgotpassword", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
     public String resetPasswordSubmit(Model model, @ModelAttribute PasswordResetRequest passwordResetRequest) {
-        if(userService.hasUserWithEmail(passwordResetRequest.getEmail())) {
+        if (userService.hasUserWithEmail(passwordResetRequest.getEmail())) {
             userService.enablePasswordResetForUser(passwordResetRequest.getEmail());
         }
-            return "forgotpasswordresult";
+        return "forgotpasswordresult";
     }
 
+    @GetMapping(value = "/choosenewpassword{token}")
+    public String chooseNewPasswordForm(Model model, @PathVariable String token) {
+        if (!userService.isValidToken(token)) {
+            return this.resetPasswordForm(model);
+        }
+        else{
+            model.addAttribute("newPasswordRequest", new NewPasswordRequest());
+            model.addAttribute("passwordResetToken", token);
+            return "choosenewpassword";
+        }
+    }
 
+    @PostMapping(value = "/choosenewpassword{token}", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
+    public String chooseNewPasswordSubmit(Model model, @PathVariable String token, @ModelAttribute NewPasswordRequest newPasswordRequest) {
+        boolean successful = userService.resetPasswordForUser(newPasswordRequest.getLoginUsername(), token, newPasswordRequest.getDesiredNewPassword());
+        model.addAttribute("chooseNewPasswordStatusCode", successful ? 200 : 400);
+        return "wisdomleaderboard";
+    }
 }

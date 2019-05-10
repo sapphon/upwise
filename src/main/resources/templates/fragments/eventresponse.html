@@ -27,6 +27,10 @@
         <script th:case="400">M.toast({html: "[[#{text.eventResponse.voteAdd.invalid}]]", classes: "toast"})</script>
         <script th:case="409">M.toast({html: "[[#{text.eventResponse.voteAdd.conflict}]]", classes: "toast"})</script>
     </div>
+    <div th:if="${chooseNewPasswordStatusCode}" th:switch="${chooseNewPasswordStatusCode}">
+        <script th:case="200">M.toast({html: "[[#{text.eventResponse.passwordChange.success}]]", classes: "toast"})</script>
+        <script th:case="400">M.toast({html: "[[#{text.eventResponse.passwordChange.invalid}]]", classes: "toast"})</script>
+    </div>
 </div>
 </body>
 </html>
