@@ -8,6 +8,7 @@ import org.sapphon.personal.upwise.TestHelper;
 import org.sapphon.personal.upwise.model.IUser;
 import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
+import org.sapphon.personal.upwise.model.User;
 import org.sapphon.personal.upwise.repository.Token;
 import org.sapphon.personal.upwise.repository.jpa.TokenRepository;
 import org.sapphon.personal.upwise.repository.UserRepository;
@@ -141,5 +142,81 @@ public class UserServiceTest {
         TestHelper.assertTimestampBetweenInclusive(captorForSavedToken.getValue().getTimeCreated(), beforeWeExpect, afterWeExpect);
     }
 
+    @Test
+    public void testIsValidTokenPositiveCase(){
+        String token = "Ayy-Lma0hhh";
+        Token mockToken = Mockito.mock(Token.class);
+        when(mockToken.getTimeCreated()).thenReturn(TimeLord.getNow());
+        when(tokenRepository.getByToken(token)).thenReturn(mockToken);
 
+        boolean actual = underTest.isValidToken(token);
+
+        assertTrue(actual);
+        verify(tokenRepository).getByToken(token);
+    }
+
+    @Test
+    public void testIsValidTokenNoSuchTokenCase(){
+        String token = "Dayy-Ohhh";
+        when(tokenRepository.getByToken(token)).thenReturn(null);
+
+        boolean actual = underTest.isValidToken(token);
+
+        assertFalse(actual);
+        verify(tokenRepository).getByToken(token);
+
+    }
+
+
+    @Test
+    public void testIsValidTokenTokenTooOldCase(){
+        String token = "Tally Me Banana";
+        Token mockToken = Mockito.mock(Token.class);
+        when(mockToken.getTimeCreated()).thenReturn(TimeLord.getNowWithOffset(-3600001));
+        when(tokenRepository.getByToken(token)).thenReturn(mockToken);
+
+        boolean actual = underTest.isValidToken(token);
+
+        assertFalse(actual);
+        verify(tokenRepository).getByToken(token);
+    }
+
+    @Test
+    public void testResetPasswordForUserHappyPath(){
+        User bobbyHill = new User();
+        bobbyHill.loginUsername = "bobbyhill";
+        bobbyHill.password = "OldPassword";
+        when(mockUserRepository.getByLoginUsername("bobbyhill")).thenReturn(bobbyHill);
+        when(tokenRepository.getByToken("t0k3N!")).thenReturn(new Token("t0k3N!", bobbyHill));
+
+        underTest.resetPasswordForUser("bobbyhill", "t0k3N!", "jinglejangle");
+
+        ArgumentCaptor<IUser> argumentCaptorForUser = ArgumentCaptor.forClass(IUser.class);
+        verify(mockUserRepository).save(argumentCaptorForUser.capture());
+        assertEquals("bobbyhill", argumentCaptorForUser.getValue().getLoginUsername());
+        assertEquals("jinglejangle", argumentCaptorForUser.getValue().getPassword());
+    }
+
+    @Test
+    public void testResetPasswordDoesNotSaveIfTokenIsInvalid(){
+        User bobbyHill = new User();
+        bobbyHill.loginUsername = "bobbyhill";
+        bobbyHill.password = "OldPassword";
+        when(mockUserRepository.getByLoginUsername("bobbyhill")).thenReturn(bobbyHill);
+        when(tokenRepository.getByToken("t0k3N!")).thenReturn(null);
+
+        underTest.resetPasswordForUser("bobbyhill", "t0k3N!", "jinglejangle");
+
+        verify(mockUserRepository, times(0)).save(any(IUser.class));
+    }
+
+    @Test
+    public void testResetPasswordDoesNotSaveIfUserIsNotFound(){
+        when(mockUserRepository.getByLoginUsername("bobbyhill")).thenReturn(null);
+        when(tokenRepository.getByToken("t0k3N!")).thenReturn(new Token("doesntmatter", null));
+
+        underTest.resetPasswordForUser("bobbyhill", "t0k3N!", "jinglejangle");
+
+        verify(mockUserRepository, times(0)).save(any(IUser.class));
+    }
 }
