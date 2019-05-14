@@ -191,7 +191,17 @@ public class WisdomServiceTest {
 
         verify(userService, times(1)).getUserWithLogin(expectedUser.getLoginUsername());
         assertEquals(expectedUser.getLoginUsername(), actualWisdomWithVotes.getAddedByDisplayName());
+    }
 
+    @Test
+    public void testGivesBackAllWisdomsWhenYouAskForWisdomsByAttribution(){
+        List<IWisdom> expectedResults = RandomObjectFactory.makeRandomListOfWisdoms();
 
+        when(wisdomRepo.getAll()).thenReturn(expectedResults);
+        List<IWisdom> actual = underTest.getAllWisdomsByAttribution("doesntmatter");
+
+        verify(wisdomRepo).getAll();
+
+        assertListEquals(expectedResults, actual);
     }
 }

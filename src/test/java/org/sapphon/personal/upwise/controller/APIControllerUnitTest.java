@@ -3,6 +3,7 @@ package org.sapphon.personal.upwise.controller;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.sapphon.personal.upwise.TestHelper;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
 import org.sapphon.personal.upwise.model.IWisdom;
 import org.sapphon.personal.upwise.service.AnalyticsService;
@@ -40,4 +41,13 @@ public class APIControllerUnitTest {
             verify(mockVoteService).getByWisdomAndVoterUsername(wisdom, "Dilly");
         }
     }
+
+    @Test
+    public void testReturnsExpectedWisdomsWhenQueriedByAttribution() {
+        List<IWisdom> wisdoms = RandomObjectFactory.makeRandomListOfWisdoms();
+        when(mockWisdomService.getAllWisdomsByAttribution("Dally")).thenReturn(wisdoms);
+        List<IWisdom> actual = underTest.getAllWisdomsByAttributionEndpoint("Dally");
+        TestHelper.assertListEquals(wisdoms, actual);
+    }
+
 }

@@ -198,4 +198,7 @@ public class APIController {
         return this.userService.addOrUpdateUser(user);
     }
 
+    public List<IWisdom> getAllWisdomsByAttributionEndpoint(String attributionSearch) {
+        return wisdomService.getAllWisdomsByAttribution(attributionSearch);
+    }
 }

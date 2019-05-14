@@ -97,6 +97,7 @@ public class WisdomControllerTest {
         verify(mockAnalyticsService, times(1)).saveEvent(any());
     }
 
+
     @Test
     public void testGetLeaderboardSavesCorrectAnalyticsEvent_WhetherUserIsLoggedInOrNot() throws Exception {
         ArgumentCaptor<IAnalyticsEvent> captor = ArgumentCaptor.forClass(IAnalyticsEvent.class);

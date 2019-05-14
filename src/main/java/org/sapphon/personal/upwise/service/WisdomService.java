@@ -80,4 +80,8 @@ public class WisdomService {
     public boolean hasAnyWisdoms() {
         return this.wisdomRepo.getCount() > 0;
     }
+
+    public List<IWisdom> getAllWisdomsByAttribution(String attributionSearch) {
+        return this.getAllWisdoms();
+    }
 }
