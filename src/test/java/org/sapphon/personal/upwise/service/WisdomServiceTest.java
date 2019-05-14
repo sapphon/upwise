@@ -4,12 +4,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.model.IUser;
 import org.sapphon.personal.upwise.model.IVote;
 import org.sapphon.personal.upwise.model.IWisdom;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
-import org.sapphon.personal.upwise.model.Wisdom;
 import org.sapphon.personal.upwise.presentation.VotePresentation;
 import org.sapphon.personal.upwise.presentation.WisdomPresentation;
 import org.sapphon.personal.upwise.repository.WisdomRepository;
@@ -21,7 +19,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.Assert.*;
@@ -35,7 +32,7 @@ import static org.sapphon.personal.upwise.TestHelper.assertListEquals;
 @RunWith(SpringRunner.class)
 public class WisdomServiceTest {
 
-    private WisdomRepository wisdomRepo;
+    private WisdomRepository mockWisdomRepo;
     private UserService userService;
     private VoteService voteService;
 
@@ -44,20 +41,20 @@ public class WisdomServiceTest {
     @Before
     public void setup() {
         voteService = Mockito.mock(VoteService.class);
-        wisdomRepo = Mockito.mock(WisdomRepository.class);
+        mockWisdomRepo = Mockito.mock(WisdomRepository.class);
         userService = Mockito.mock(UserService.class);
 
-        this.underTest = new WisdomService(wisdomRepo, voteService, userService);
+        this.underTest = new WisdomService(mockWisdomRepo, voteService, userService);
     }
 
     @Test
     public void usesTheWisdomRepositoryToFindAllWisdomsAndReturnsThemWhenAllWisdomsIsCalled() {
         List<IWisdom> expectedResults = RandomObjectFactory.makeRandomListOfWisdoms();
 
-        when(wisdomRepo.getAll()).thenReturn(expectedResults);
+        when(mockWisdomRepo.getAll()).thenReturn(expectedResults);
         List<IWisdom> actual = underTest.getAllWisdoms();
 
-        verify(wisdomRepo).getAll();
+        verify(mockWisdomRepo).getAll();
 
         assertListEquals(expectedResults, actual);
     }
@@ -68,23 +65,23 @@ public class WisdomServiceTest {
 
         underTest.addOrUpdateWisdom(expectedResult);
 
-        verify(wisdomRepo).save(expectedResult);
+        verify(mockWisdomRepo).save(expectedResult);
     }
 
     @Test
     public void getWisdomsBySubmitterCollaboratesWithWisdomRepo(){
         underTest.getAllWisdomsBySubmitter("bobert");
-        verify(wisdomRepo).getBySubmitter("bobert");
+        verify(mockWisdomRepo).getBySubmitter("bobert");
     }
 
     @Test
     public void testGetAllWisdomsWithVotesCallsVoteServiceAndUserServiceOnceForEachWisdom(){
         List<IWisdom> expectedWisdoms = RandomObjectFactory.makeRandomListOfWisdoms();
-        when(wisdomRepo.getAll()).thenReturn(expectedWisdoms);
+        when(mockWisdomRepo.getAll()).thenReturn(expectedWisdoms);
         when(userService.getUserWithLogin(any())).thenReturn(RandomObjectFactory.makeRandomUser());
         underTest.getAllWisdomPresentationsSortedByNumberOfVotes();
 
-        verify(wisdomRepo).getAll();
+        verify(mockWisdomRepo).getAll();
         for(IWisdom wisdom : expectedWisdoms){
             verify(voteService).getByWisdom(wisdom);
             verify(userService).getUserWithLogin(wisdom.getAddedByUsername());
@@ -94,25 +91,25 @@ public class WisdomServiceTest {
     @Test
     public void testFindWisdomTakesAnIWisdomArgumentAndSearchesByUniqueKey(){
         IWisdom theChosenOne = RandomObjectFactory.makeRandomWisdom();
-        when(wisdomRepo.findWisdom(theChosenOne.getWisdomContent(), theChosenOne.getAttribution())).thenReturn(Optional.of(theChosenOne));
+        when(mockWisdomRepo.findWisdom(theChosenOne.getWisdomContent(), theChosenOne.getAttribution())).thenReturn(Optional.of(theChosenOne));
 
         assertEquals(theChosenOne, underTest.findWisdom(theChosenOne).get());
 
-        verify(wisdomRepo).findWisdom(theChosenOne.getWisdomContent(), theChosenOne.getAttribution());
+        verify(mockWisdomRepo).findWisdom(theChosenOne.getWisdomContent(), theChosenOne.getAttribution());
     }
 
     @Test
     public void testSaysHasWisdomsIfRepositoryIsNotEmpty() {
-        when(wisdomRepo.getCount()).thenReturn(5L);
+        when(mockWisdomRepo.getCount()).thenReturn(5L);
         assertTrue(underTest.hasAnyWisdoms());
-        verify(wisdomRepo).getCount();
+        verify(mockWisdomRepo).getCount();
     }
 
     @Test
     public void testSaysHasNoWisdomsIfRepositoryIsEmpty(){
-        when(wisdomRepo.getCount()).thenReturn(0L);
+        when(mockWisdomRepo.getCount()).thenReturn(0L);
         assertFalse(underTest.hasAnyWisdoms());
-        verify(wisdomRepo).getCount();
+        verify(mockWisdomRepo).getCount();
     }
 
     @Test
@@ -163,7 +160,7 @@ public class WisdomServiceTest {
         wisdomsOutOfAgeOrder.add(newerWisdom);
         wisdomsOutOfAgeOrder.add(oldWisdom);
         wisdomsOutOfAgeOrder.add(newestWisdom);
-        when(wisdomRepo.getAll()).thenReturn(wisdomsOutOfAgeOrder);
+        when(mockWisdomRepo.getAll()).thenReturn(wisdomsOutOfAgeOrder);
 
         List<WisdomPresentation> actual = underTest.getAllWisdomPresentationsSortedByTimeAdded();
         assertEquals(actual.get(0).getTimeAdded(),newestWisdom.getTimeAdded());
@@ -194,14 +191,32 @@ public class WisdomServiceTest {
     }
 
     @Test
-    public void testGivesBackAllWisdomsWhenYouAskForWisdomsByAttribution(){
-        List<IWisdom> expectedResults = RandomObjectFactory.makeRandomListOfWisdoms();
+    public void testGivesBackOnlyCorrectWisdomsWhenAskedForWisdomsByAttribution(){
+        String attributionWeCareAbout = "Wolf";
+        List<IWisdom> allWisdoms = new ArrayList<IWisdom>();
 
-        when(wisdomRepo.getAll()).thenReturn(expectedResults);
-        List<IWisdom> actual = underTest.getAllWisdomsByAttribution("doesntmatter");
+        IWisdom wisdomByWolf = RandomObjectFactory.makeRandomWisdom();
+        wisdomByWolf.setAttribution(attributionWeCareAbout);
+        allWisdoms.add(wisdomByWolf);
 
-        verify(wisdomRepo).getAll();
+        IWisdom wisdomAlsoByWolf = RandomObjectFactory.makeRandomWisdom();
+        wisdomAlsoByWolf.setAttribution(attributionWeCareAbout);
+        allWisdoms.add(wisdomAlsoByWolf);
 
-        assertListEquals(expectedResults, actual);
+        IWisdom wisdomBySomeone = RandomObjectFactory.makeRandomWisdom();
+        wisdomBySomeone.setAttribution("stuff");
+        allWisdoms.add(wisdomBySomeone);
+
+
+        when(mockWisdomRepo.getAll()).thenReturn(allWisdoms);
+        List<IWisdom> actual = underTest.getAllWisdomsByAttribution("Wolf");
+
+        verify(mockWisdomRepo).getAll();
+
+        List<IWisdom> expectedWisdoms = newArrayList(wisdomByWolf, wisdomAlsoByWolf);
+        assertEquals(expectedWisdoms.size(), actual.size());
+        for (IWisdom wisd : expectedWisdoms) {
+            assertTrue(actual.contains(wisd));
+        }
     }
 }

@@ -7,6 +7,7 @@ import org.sapphon.personal.upwise.presentation.WisdomPresentation;
 import org.sapphon.personal.upwise.repository.WisdomRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -82,6 +83,13 @@ public class WisdomService {
     }
 
     public List<IWisdom> getAllWisdomsByAttribution(String attributionSearch) {
-        return this.getAllWisdoms();
+        List<IWisdom> toReturn = new ArrayList<>();
+
+        for (IWisdom wisdom : getAllWisdoms()) {
+            if (wisdom.getAttribution().startsWith(attributionSearch)) {
+                toReturn.add(wisdom);
+            }
+        }
+        return toReturn;
     }
 }
