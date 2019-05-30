@@ -86,7 +86,7 @@ public class WisdomService {
         List<IWisdom> toReturn = new ArrayList<>();
 
         for (IWisdom wisdom : getAllWisdoms()) {
-            if (wisdom.getAttribution().startsWith(attributionSearch)) {
+            if (wisdom.getAttribution().contains(attributionSearch)) {
                 toReturn.add(wisdom);
             }
         }

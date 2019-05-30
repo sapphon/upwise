@@ -8,6 +8,7 @@ import org.sapphon.personal.upwise.model.IUser;
 import org.sapphon.personal.upwise.model.IVote;
 import org.sapphon.personal.upwise.model.IWisdom;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
+import org.sapphon.personal.upwise.model.Wisdom;
 import org.sapphon.personal.upwise.presentation.VotePresentation;
 import org.sapphon.personal.upwise.presentation.WisdomPresentation;
 import org.sapphon.personal.upwise.repository.WisdomRepository;
@@ -19,6 +20,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.Assert.*;
@@ -192,20 +194,7 @@ public class WisdomServiceTest {
 
     @Test
     public void testGivesBackOnlyCorrectWisdomsWhenAskedForWisdomsByAttribution(){
-        String attributionWeCareAbout = "Wolf";
-        List<IWisdom> allWisdoms = new ArrayList<IWisdom>();
-
-        IWisdom wisdomByWolf = RandomObjectFactory.makeRandomWisdom();
-        wisdomByWolf.setAttribution(attributionWeCareAbout);
-        allWisdoms.add(wisdomByWolf);
-
-        IWisdom wisdomAlsoByWolf = RandomObjectFactory.makeRandomWisdom();
-        wisdomAlsoByWolf.setAttribution(attributionWeCareAbout);
-        allWisdoms.add(wisdomAlsoByWolf);
-
-        IWisdom wisdomBySomeone = RandomObjectFactory.makeRandomWisdom();
-        wisdomBySomeone.setAttribution("stuff");
-        allWisdoms.add(wisdomBySomeone);
+        List<IWisdom> allWisdoms = createWisdomsForAttributions("Wolf", "Wolf", "stuff");
 
 
         when(mockWisdomRepo.getAll()).thenReturn(allWisdoms);
@@ -213,10 +202,31 @@ public class WisdomServiceTest {
 
         verify(mockWisdomRepo).getAll();
 
-        List<IWisdom> expectedWisdoms = newArrayList(wisdomByWolf, wisdomAlsoByWolf);
+        List<IWisdom> expectedWisdoms = allWisdoms.subList(0, allWisdoms.size() -1);
         assertEquals(expectedWisdoms.size(), actual.size());
         for (IWisdom wisd : expectedWisdoms) {
             assertTrue(actual.contains(wisd));
         }
+    }
+
+    @Test
+    public void testGivesBackOnlyCorrectWisdomsWhenAskedForWisdomsByPartialAttribution(){
+        List<IWisdom> allWisdoms = createWisdomsForAttributions("Wolf", "aWolf", "Wolfs", "olfW");
+
+
+        when(mockWisdomRepo.getAll()).thenReturn(allWisdoms);
+        List<IWisdom> actual = underTest.getAllWisdomsByAttribution("Wolf");
+
+        List<IWisdom> expectedWisdoms = allWisdoms.subList(0, allWisdoms.size() - 1);
+
+        assertEquals(expectedWisdoms.size(), actual.size());
+        for (IWisdom wisd : expectedWisdoms) {
+            assertTrue(actual.contains(wisd));
+        }
+    }
+
+    private List<IWisdom> createWisdomsForAttributions(String... attributions) {
+        List<String> attributionsAsList = newArrayList(attributions);
+        return attributionsAsList.stream().map(x -> new Wisdom("", x, "", null)).collect(Collectors.toList());
     }
 }
