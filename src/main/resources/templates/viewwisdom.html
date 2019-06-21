@@ -36,6 +36,12 @@
                     <div th:replace="fragments/voteform :: voteform(wisdom=${wisdom}, callback='viewwisdom')"></div>
                 </div>
             </div>
+            <div class="row">
+                <div class="leaderboard-link col s12">
+                    <a th:href="@{'/wisdomleaderboard#' + ${wisdom.wisdomContent}}" class="view_day btn-floating btn-large waves-effect waves-light"><i class="material-icons view-on-leaderboard-button">view_day</i></a>
+                    <label class="vote-up-button">View On Leaderboard</label>
+                </div>
+            </div>
         </div>
     </div>
     <div th:if="${wisdom} == null"><h2>Cannot show a wisdom - none available!</h2></div>
