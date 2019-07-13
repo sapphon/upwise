@@ -4,6 +4,7 @@ html{
     --color-1: #54647A;
     --color-2: #4978BB;
     --color-placeholder: #BABABA;
+    --header-offset: -64;
 
 
 }
@@ -47,6 +48,11 @@ h1, h2, p, td{
 
 h3, h4, h5, h6{
     color: var(--color-2);
+}
+
+.wisdomCardAnchor{
+    position: relative;
+    top: var(--header-offset)px;
 }
 
 button, .vote-up-button{
