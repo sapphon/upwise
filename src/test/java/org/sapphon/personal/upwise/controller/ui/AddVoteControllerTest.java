@@ -157,17 +157,17 @@ public class AddVoteControllerTest {
     }
 
     @Test
-    public void testVoteSubmitShowsLeaderboard_IfDestinationViewIsSetToLeaderboard() throws Exception {
+    public void testVoteSubmitRedirectsToWisdomOnLeaderboard_IfDestinationViewIsSetToLeaderboard() throws Exception {
         try {
             when(mockApiController.voteForWisdomEndpoint(any())).thenReturn(new ResponseEntity(IVote.class, HttpStatus.CREATED));
             when(mockWisdomController.getWisdomLeaderboardWithVotes(any(), any())).thenReturn("wisdomleaderboard");
             MvcResult mvcResult = makeMockMvcPostWithParamValues("jay", "jorb", "jim", "wisdomleaderboard")
-                    .andExpect(status().isOk())
+                    .andExpect(status().isFound())
                     .andExpect(content().string(""))
                     .andReturn();
             Integer actualStatusCode = (Integer) mvcResult.getModelAndView().getModel().get("addVoteStatusCode");
             assertEquals(new Integer(201), actualStatusCode);
-            assertEquals("wisdomleaderboard", mvcResult.getModelAndView().getViewName());
+            assertEquals("redirect:/wisdomleaderboard#jorb", mvcResult.getModelAndView().getViewName());
         } catch (Exception e) {
             Assert.fail("Destination view not set as expected.");
         }

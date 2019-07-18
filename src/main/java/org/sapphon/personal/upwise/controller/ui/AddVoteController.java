@@ -37,7 +37,7 @@ public class AddVoteController {
         if(destinationViewName == null || destinationViewName.isEmpty() || destinationViewName.equalsIgnoreCase("viewwisdom")){
             return wisdomController.viewWisdom(model, loggedInUser, wisdomContent, wisdomAttribution);
         }
-        else return wisdomController.getWisdomLeaderboardWithVotes(model, loggedInUser);
+        else return "redirect:/wisdomleaderboard#"+wisdomContent;
     }
 
     @PostMapping("/removevote")
