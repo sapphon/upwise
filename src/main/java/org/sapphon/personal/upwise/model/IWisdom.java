@@ -1,10 +1,12 @@
 package org.sapphon.personal.upwise.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.sapphon.personal.upwise.repository.jpa.WisdomJpa;
 
 import java.sql.Timestamp;
 
-@JsonDeserialize(as = Wisdom.class)
+@JsonDeserialize(as = WisdomJpa.class)
 public interface IWisdom {
 
     //region SettersGetters

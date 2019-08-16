@@ -3,8 +3,8 @@ package org.sapphon.personal.upwise.controller.ui;
 
 import org.sapphon.personal.upwise.model.IVote;
 import org.sapphon.personal.upwise.model.Vote;
-import org.sapphon.personal.upwise.model.Wisdom;
 import org.sapphon.personal.upwise.controller.APIController;
+import org.sapphon.personal.upwise.repository.jpa.WisdomJpa;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,7 +29,7 @@ public class AddVoteController {
             voterUsername = loggedInUser.getName();
         }
 
-        Vote voteToAdd = new Vote(new Wisdom(wisdomContent, wisdomAttribution, null, null), voterUsername, null);
+        Vote voteToAdd = new Vote(new WisdomJpa(wisdomContent, wisdomAttribution, null, null), voterUsername, null);
 
         ResponseEntity<IVote> voteResponseEntity = this.apiController.voteForWisdomEndpoint(voteToAdd);
         model.addAttribute("addVoteStatusCode", voteResponseEntity.getStatusCodeValue());
@@ -43,7 +43,7 @@ public class AddVoteController {
     @PostMapping("/removevote")
     public String removeVote(Model model, Principal loggedInUser, @RequestParam(required=false) String voterUsername, @RequestParam String wisdomContent, @RequestParam String wisdomAttribution, @RequestParam(required=false) String destinationViewName) {
         voterUsername = loggedInUser.getName();
-        ResponseEntity apiResponse = apiController.unvoteForWisdomEndpoint(new Vote(new Wisdom(wisdomContent, wisdomAttribution, null, null), voterUsername, null));
+        ResponseEntity apiResponse = apiController.unvoteForWisdomEndpoint(new Vote(new WisdomJpa(wisdomContent, wisdomAttribution, null, null), voterUsername, null));
 
         model.addAttribute("removeVoteStatusCode", apiResponse.getStatusCodeValue());
 

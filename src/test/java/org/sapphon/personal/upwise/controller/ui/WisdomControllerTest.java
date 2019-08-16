@@ -14,6 +14,7 @@ import org.sapphon.personal.upwise.factory.DomainObjectFactory;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
 import org.sapphon.personal.upwise.presentation.VotePresentation;
 import org.sapphon.personal.upwise.presentation.WisdomPresentation;
+import org.sapphon.personal.upwise.repository.jpa.WisdomJpa;
 import org.sapphon.personal.upwise.service.AnalyticsService;
 import org.sapphon.personal.upwise.service.WisdomService;
 import org.sapphon.personal.upwise.time.TimeLord;
@@ -74,10 +75,10 @@ public class WisdomControllerTest {
                 .build();
 
         this.exampleWisdoms = new ArrayList<>();
-        exampleWisdoms.add(new Wisdom("A good programmer is someone who looks both ways before crossing a one-way street.", "Doug Linder", "jcrouc15", TimeLord.getNowWithOffset(-5)));
-        exampleWisdoms.add(new Wisdom("[Javascript] doesn't exactly allow you to fall into a pit of success.", "Nick Reuter", "cshaugh1", TimeLord.getNowWithOffset(-2)));
-        exampleWisdoms.add(new Wisdom("It's done, it just doesn't work.", "Chris Boyer", "tsatam", TimeLord.getNowWithOffset(-1)));
-        exampleWisdoms.add(new Wisdom("May we be judged by the quality of our commits, not by the content of our Google searches.", "Connor Shaughnessy", "awalte35", TimeLord.getNow()));
+        exampleWisdoms.add(new WisdomJpa("A good programmer is someone who looks both ways before crossing a one-way street.", "Doug Linder", "jcrouc15", TimeLord.getNowWithOffset(-5)));
+        exampleWisdoms.add(new WisdomJpa("[Javascript] doesn't exactly allow you to fall into a pit of success.", "Nick Reuter", "cshaugh1", TimeLord.getNowWithOffset(-2)));
+        exampleWisdoms.add(new WisdomJpa("It's done, it just doesn't work.", "Chris Boyer", "tsatam", TimeLord.getNowWithOffset(-1)));
+        exampleWisdoms.add(new WisdomJpa("May we be judged by the quality of our commits, not by the content of our Google searches.", "Connor Shaughnessy", "awalte35", TimeLord.getNow()));
 
         this.exampleVotes = new ArrayList<>();
         exampleVotes.add(RandomObjectFactory.makeRandomVoteForWisdom(exampleWisdoms.get(0)));

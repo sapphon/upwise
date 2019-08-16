@@ -2,16 +2,16 @@ package org.sapphon.personal.upwise.controller.ui;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.sapphon.personal.upwise.model.IVote;
 import org.sapphon.personal.upwise.model.IWisdom;
-import org.sapphon.personal.upwise.model.Wisdom;
 import org.sapphon.personal.upwise.controller.APIController;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
-import org.sapphon.personal.upwise.service.UserService;
+import org.sapphon.personal.upwise.repository.jpa.WisdomJpa;
 import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -68,10 +68,10 @@ public class AddWisdomControllerTest {
                 .build();
 
         this.exampleWisdoms = new ArrayList<>();
-        exampleWisdoms.add(new Wisdom("A good programmer is someone who looks both ways before crossing a one-way street.", "Doug Linder", "jcrouc15", TimeLord.getNow()));
-        exampleWisdoms.add(new Wisdom("[Javascript] doesn't exactly allow you to fall into a pit of success.", "Nick Reuter", "cshaugh1", TimeLord.getNow()));
-        exampleWisdoms.add(new Wisdom("It's done, it just doesn't work.", "Chris Boyer", "tsatam", TimeLord.getNow()));
-        exampleWisdoms.add(new Wisdom("May we be judged by the quality of our commits, not by the content of our Google searches.", "Connor Shaughnessy", "awalte35", TimeLord.getNow()));
+        exampleWisdoms.add(new WisdomJpa("A good programmer is someone who looks both ways before crossing a one-way street.", "Doug Linder", "jcrouc15", TimeLord.getNow()));
+        exampleWisdoms.add(new WisdomJpa("[Javascript] doesn't exactly allow you to fall into a pit of success.", "Nick Reuter", "cshaugh1", TimeLord.getNow()));
+        exampleWisdoms.add(new WisdomJpa("It's done, it just doesn't work.", "Chris Boyer", "tsatam", TimeLord.getNow()));
+        exampleWisdoms.add(new WisdomJpa("May we be judged by the quality of our commits, not by the content of our Google searches.", "Connor Shaughnessy", "awalte35", TimeLord.getNow()));
 
         this.exampleVotes = new ArrayList<>();
         exampleVotes.add(RandomObjectFactory.makeRandomVoteForWisdom(exampleWisdoms.get(0)));
@@ -96,7 +96,7 @@ public class AddWisdomControllerTest {
                 .andReturn();
         try {
             IWisdom actualWisdom = (IWisdom) mvcResult.getModelAndView().getModel().get("wisdomToAdd");
-            assertEquals(new Wisdom(), actualWisdom);
+            assertEquals(new WisdomJpa(null,null,null,null), actualWisdom);
         } catch (Exception e) {
             Assert.fail("Model not as expected.");
         }
@@ -104,7 +104,7 @@ public class AddWisdomControllerTest {
 
     @Test
     public void testPostRequestWhereApiSaysBadRequestGets400Status() throws Exception {
-        when(mockApiController.addWisdomEndpoint(any())).thenReturn(new ResponseEntity(IWisdom.class, HttpStatus.BAD_REQUEST));
+        when(mockApiController.addWisdomEndpoint(any())).thenReturn(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/addwisdom").accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
@@ -119,7 +119,7 @@ public class AddWisdomControllerTest {
 
     @Test
     public void testPostRequestWhereApiSaysConflictGets409Status() throws Exception {
-        when(mockApiController.addWisdomEndpoint(any())).thenReturn(new ResponseEntity(IWisdom.class, HttpStatus.CONFLICT));
+        when(mockApiController.addWisdomEndpoint(any())).thenReturn(new ResponseEntity<>(HttpStatus.CONFLICT));
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/addwisdom").accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
@@ -135,7 +135,7 @@ public class AddWisdomControllerTest {
 
     @Test
     public void testPostRequestWhereApiSaysCreatedGets201Status() throws Exception {
-        when(mockApiController.addWisdomEndpoint(any())).thenReturn(new ResponseEntity(IWisdom.class, HttpStatus.CREATED));
+        when(mockApiController.addWisdomEndpoint(any())).thenReturn(new ResponseEntity<>(HttpStatus.CREATED));
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/addwisdom").accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
@@ -153,7 +153,7 @@ public class AddWisdomControllerTest {
         ArgumentCaptor<IWisdom> captor = ArgumentCaptor.forClass(IWisdom.class);
         Principal principal = Mockito.mock(Principal.class);
         when(principal.getName()).thenReturn("miriam");
-        when(mockApiController.addWisdomEndpoint(any())).thenReturn(new ResponseEntity(IWisdom.class, HttpStatus.CREATED));
+        when(mockApiController.addWisdomEndpoint(any())).thenReturn(new ResponseEntity<>(HttpStatus.CREATED));
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/addwisdom").accept(MediaType.TEXT_HTML).principal(principal))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
@@ -171,7 +171,7 @@ public class AddWisdomControllerTest {
     @Test
     public void testDoesNotBlowUpIfSomehowThereIsNoLoggedInPrincipalAtTimeOfWisdomSubmission() throws Exception {
         try {
-            when(mockApiController.addWisdomEndpoint(any())).thenReturn(new ResponseEntity(IWisdom.class, HttpStatus.CREATED));
+            when(mockApiController.addWisdomEndpoint(any())).thenReturn(new ResponseEntity<>(HttpStatus.CREATED));
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/addwisdom").accept(MediaType.TEXT_HTML))
                     .andExpect(status().isOk())
                     .andExpect(content().string(""))

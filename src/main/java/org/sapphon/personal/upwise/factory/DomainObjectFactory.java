@@ -18,7 +18,7 @@ import static com.google.common.collect.Lists.newArrayList;
 public class DomainObjectFactory {
 
     public static IWisdom createWisdom(String content, String utterer, String submitter, Timestamp time){
-        return new Wisdom(content, utterer, submitter, time);
+        return new WisdomJpa(content, utterer, submitter, time);
     }
 
     public static WisdomJpa createWisdomJpa(String content, String utterer, String submitter, Timestamp time){

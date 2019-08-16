@@ -12,7 +12,9 @@ public class WisdomJpa extends AbstractWisdom {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
-    protected WisdomJpa(){}
+    public WisdomJpa(){
+        super();
+    }
 
     public WisdomJpa(String wisdomContent, String attribution, String addedByUsername, Timestamp timeAdded) {
         super(wisdomContent, attribution, addedByUsername, timeAdded);

@@ -8,10 +8,10 @@ import org.sapphon.personal.upwise.model.IUser;
 import org.sapphon.personal.upwise.model.IVote;
 import org.sapphon.personal.upwise.model.IWisdom;
 import org.sapphon.personal.upwise.factory.RandomObjectFactory;
-import org.sapphon.personal.upwise.model.Wisdom;
 import org.sapphon.personal.upwise.presentation.VotePresentation;
 import org.sapphon.personal.upwise.presentation.WisdomPresentation;
 import org.sapphon.personal.upwise.repository.WisdomRepository;
+import org.sapphon.personal.upwise.repository.jpa.WisdomJpa;
 import org.sapphon.personal.upwise.time.TimeLord;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -227,6 +227,6 @@ public class WisdomServiceTest {
 
     private List<IWisdom> createWisdomsForAttributions(String... attributions) {
         List<String> attributionsAsList = newArrayList(attributions);
-        return attributionsAsList.stream().map(x -> new Wisdom("", x, "", null)).collect(Collectors.toList());
+        return attributionsAsList.stream().map(x -> new WisdomJpa("", x, "", null)).collect(Collectors.toList());
     }
 }

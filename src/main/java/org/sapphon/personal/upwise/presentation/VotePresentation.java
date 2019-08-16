@@ -2,7 +2,6 @@ package org.sapphon.personal.upwise.presentation;
 
 import org.sapphon.personal.upwise.model.IVote;
 import org.sapphon.personal.upwise.model.Vote;
-import org.sapphon.personal.upwise.model.Wisdom;
 
 public class VotePresentation extends Vote {
 

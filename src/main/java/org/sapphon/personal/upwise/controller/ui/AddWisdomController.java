@@ -2,8 +2,8 @@ package org.sapphon.personal.upwise.controller.ui;
 
 
 import org.sapphon.personal.upwise.model.IWisdom;
-import org.sapphon.personal.upwise.model.Wisdom;
 import org.sapphon.personal.upwise.controller.APIController;
+import org.sapphon.personal.upwise.repository.jpa.WisdomJpa;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,12 +24,12 @@ public class AddWisdomController {
 
     @GetMapping("/addwisdom")
     public String wisdomForm(Model model) {
-        model.addAttribute("wisdomToAdd", new Wisdom());
+        model.addAttribute("wisdomToAdd", new WisdomJpa(null, null, null, null));
         return "addwisdom";
     }
 
     @PostMapping("/addwisdom")
-    public String wisdomSubmit(Model model, Principal loggedInUser, @ModelAttribute Wisdom wisdomToAdd) {
+    public String wisdomSubmit(Model model, Principal loggedInUser, @ModelAttribute WisdomJpa wisdomToAdd) {
         if(loggedInUser != null && loggedInUser.getName() != null && !loggedInUser.getName().isEmpty()){
             wisdomToAdd.setAddedByUsername(loggedInUser.getName());
         }
@@ -38,5 +38,4 @@ public class AddWisdomController {
         model.addAttribute("addWisdomStatusCode", wisdomResponseEntity.getStatusCodeValue());
         return wisdomForm(model);
     }
-
 }

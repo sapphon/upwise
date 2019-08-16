@@ -13,6 +13,7 @@ import org.sapphon.personal.upwise.model.datatransfer.NewPasswordRequest;
 import org.sapphon.personal.upwise.model.datatransfer.PasswordResetRequest;
 import org.sapphon.personal.upwise.model.datatransfer.UserRegistration;
 import org.sapphon.personal.upwise.presentation.WisdomPresentation;
+import org.sapphon.personal.upwise.repository.jpa.WisdomJpa;
 import org.sapphon.personal.upwise.service.UserService;
 import org.sapphon.personal.upwise.service.VoteService;
 import org.sapphon.personal.upwise.service.WisdomService;
@@ -87,10 +88,10 @@ public class UserControllerTest {
                 .build();
 
         this.exampleWisdoms = new ArrayList<>();
-        exampleWisdoms.add(new Wisdom("A good programmer is someone who looks both ways before crossing a one-way street.", "Doug Linder", "jcrouc15", TimeLord.getNow()));
-        exampleWisdoms.add(new Wisdom("[Javascript] doesn't exactly allow you to fall into a pit of success.", "Nick Reuter", "cshaugh1", TimeLord.getNow()));
-        exampleWisdoms.add(new Wisdom("It's done, it just doesn't work.", "Chris Boyer", "tsatam", TimeLord.getNow()));
-        exampleWisdoms.add(new Wisdom("May we be judged by the quality of our commits, not by the content of our Google searches.", "Connor Shaughnessy", "awalte35", TimeLord.getNow()));
+        exampleWisdoms.add(new WisdomJpa("A good programmer is someone who looks both ways before crossing a one-way street.", "Doug Linder", "jcrouc15", TimeLord.getNow()));
+        exampleWisdoms.add(new WisdomJpa("[Javascript] doesn't exactly allow you to fall into a pit of success.", "Nick Reuter", "cshaugh1", TimeLord.getNow()));
+        exampleWisdoms.add(new WisdomJpa("It's done, it just doesn't work.", "Chris Boyer", "tsatam", TimeLord.getNow()));
+        exampleWisdoms.add(new WisdomJpa("May we be judged by the quality of our commits, not by the content of our Google searches.", "Connor Shaughnessy", "awalte35", TimeLord.getNow()));
 
         this.exampleVotes = new ArrayList<>();
         exampleVotes.add(RandomObjectFactory.makeRandomVoteForWisdom(exampleWisdoms.get(0)));

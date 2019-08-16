@@ -1,11 +1,11 @@
 package org.sapphon.personal.upwise.presentation;
 
+import org.sapphon.personal.upwise.model.AbstractWisdom;
 import org.sapphon.personal.upwise.model.IWisdom;
-import org.sapphon.personal.upwise.model.Wisdom;
 
 import java.util.List;
 
-public class WisdomPresentation extends Wisdom {
+public class WisdomPresentation extends AbstractWisdom {
 
     private List<VotePresentation> votes;
     private String addedByDisplayName;
