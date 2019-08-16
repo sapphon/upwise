@@ -66,6 +66,17 @@ public class WisdomController {
         return "viewwisdom";
     }
 
+    @GetMapping(value = "/viewwisdomnew", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
+    public String viewWisdom(Model model, Principal loggedInUser, @RequestParam("wisdomId") Long wisdomId)
+    {
+        Optional<IWisdom> wisdomFound = wisdomService.findWisdom(wisdomId);
+        if(wisdomFound.isPresent()) {
+            model.addAttribute("wisdom", wisdomService.getWisdomPresentationForWisdom(wisdomFound.get()));
+            this.analyticsService.saveEvent(AnalyticsFactory.createViewWisdomEvent(loggedInUser == null ? "[anonymous]" : loggedInUser.getName(), wisdomFound.get()));
+        }
+        return "viewwisdom";
+    }
+
     private IWisdom chooseRandomWisdom(List<IWisdom> toChooseFrom){
         return toChooseFrom.get(new Random().nextInt(toChooseFrom.size()));
     }

@@ -217,6 +217,20 @@ public class WisdomControllerTest {
     }
 
     @Test
+    public void viewWisdomWithVotesPopulatesModelAndView_IdStyle() throws Exception {
+        when(mockWisdomService.getWisdomPresentationForWisdom(exampleWisdoms.get(0))).thenReturn(DomainObjectFactory.createWisdomPresentation(exampleWisdoms.get(0), exampleVotesZeroAndOnePresented, ""));
+        //when(mockWisdomService.findWisdomByContentAndAttribution(exampleWisdoms.get(0).getWisdomContent(), exampleWisdoms.get(0).getAttribution())).thenReturn(Optional.of(exampleWisdoms.get(0)));
+        when(mockWisdomService.findWisdom(99354L)).thenReturn(Optional.of(exampleWisdoms.get(0)));
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(String.format("/viewwisdomnew?wisdomId=%s", 99354L)).accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""))
+                .andReturn();
+
+        verifyWisdom(mvcResult);
+        assertEquals("viewwisdom", mvcResult.getModelAndView().getViewName());
+    }
+
+    @Test
     public void testWisdomsWithVotesByRecentPopulatesModelAndView() throws Exception{
         when(mockWisdomService.getAllWisdomPresentationsSortedByTimeAdded()).thenReturn(newArrayList(
                 DomainObjectFactory.createWisdomPresentation(exampleWisdoms.get(3), new ArrayList<>(), ""),

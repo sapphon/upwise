@@ -48,7 +48,8 @@ public class WisdomRepositoryTest {
 		wisdomRepo.save(wisdomWeDoNotWant);
 		wisdomRepo.save(wisdomWeWantToFind);
 
-		assertEquals(wisdomWeWantToFind, wisdomRepo.getById(2L));
+		assertTrue(wisdomRepo.getById(2L).isPresent());
+		assertEquals(wisdomWeWantToFind, wisdomRepo.getById(2L).get());
 	}
 
 	@Test

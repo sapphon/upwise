@@ -26,6 +26,10 @@ public class WisdomService {
         this.userService = userService;
     }
 
+    public Optional<IWisdom> findWisdom(Long wisdomId){
+        return wisdomRepo.getById(wisdomId);
+    }
+
     public List<IWisdom> getAllWisdoms() {
         return this.wisdomRepo.getAll();
     }

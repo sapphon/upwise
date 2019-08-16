@@ -49,8 +49,9 @@ public class WisdomRepository {
         return new ArrayList<>(jpaWisdomRepo.findByAddedByUsernameOrderByTimeAddedDesc(submitter));
     }
 
-    public IWisdom getById(long id) {
-        return jpaWisdomRepo.findOneById(id);
+    public Optional<IWisdom> getById(long id) {
+        Optional<WisdomJpa> repoCopy = jpaWisdomRepo.findOneById(id);
+        return repoCopy.isPresent() ? Optional.of(repoCopy.get()) : Optional.empty();
     }
 
 	void clear() {
