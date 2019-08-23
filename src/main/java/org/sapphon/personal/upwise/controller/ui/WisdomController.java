@@ -41,6 +41,13 @@ public class WisdomController {
         return "wisdomleaderboard";
     }
 
+    @GetMapping(value = "/wisdomleadermatrix", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
+    public String getTopWisdomsWithVotesTiled(Model model, Principal principal){
+        analyticsService.saveEvent(AnalyticsFactory.createViewLeaderboardEvent(principal == null ? "[anonymous]" : principal.getName()));
+        model.addAttribute("allWisdoms", wisdomService.getAllWisdomPresentationsSortedByNumberOfVotes());
+        return "wisdomleadermatrix";
+    }
+
     @GetMapping(value = "/randomwisdom", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
     public String getRandomWisdom(Model model, Principal loggedInUser, @RequestParam(required=false) String upvotedByUsername)
     {

@@ -1,0 +1,16 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/head :: head(pageTitle='Leading Wisdoms')"></head>
+<body>
+
+<div th:replace="fragments/navbar :: navbar"></div>
+<main>
+    <div class="container">
+        <h2 th:text="#{title.leaderboard}">Leading Wisdoms</h2>
+        <div th:replace="fragments/wisdomcardtiles :: wisdomcardtiles(allWisdoms = ${allWisdoms})"></div>
+    </div>
+</main>
+<a th:replace="fragments/footer :: scriptimports"></a>
+</body>
+<footer th:replace="fragments/footer :: footer"></footer>
+</html>

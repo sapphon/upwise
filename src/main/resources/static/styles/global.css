@@ -1,4 +1,4 @@
-html{
+html {
     --color-bg1: #eeeeee;
     --color-bg2: #ACCDFA;
     --color-1: #54647A;
@@ -6,6 +6,7 @@ html{
     --color-placeholder: #BABABA;
 
 }
+
 body {
     display: flex;
     min-height: 100vh;
@@ -25,7 +26,7 @@ a, th {
     color: var(--color-2) !important;
 }
 
-.user-button{
+.user-button {
     color: var(--color-2) !important;
     background-color: var(--color-bg2) !important;
 }
@@ -35,40 +36,40 @@ a, th {
     box-shadow: 0 1px 0 0 var(--color-1);
 }
 
-::placeholder{
+::placeholder {
     color: var(--color-2);
     opacity: 1;
 }
 
-h1, h2, p, td{
+h1, h2, p, td {
     color: var(--color-1);
 }
 
-h3, h4, h5, h6{
+h3, h4, h5, h6 {
     color: var(--color-2);
 }
 
-.wisdomCardAnchor{
+.wisdomCardAnchor {
     position: relative;
     top: -100px;
 }
 
-button, .vote-up-button{
+button, .vote-up-button {
     color: var(--color-1) !important;
     background-color: var(--color-bg1) !important;
 }
 
-.vote-form-div-color2 .vote-up-button{
+.vote-form-div-color2 .vote-up-button {
     color: var(--color-2) !important;
     background-color: var(--color-bg2) !important;
 }
 
-.view-on-leaderboard-button{
+.view-on-leaderboard-button {
     color: var(--color-2) !important;
     background-color: var(--color-bg2) !important;
 }
 
-.toast{
+.toast {
     color: var(--color-2) !important;
     background-color: var(--color-bg2) !important;
 }
@@ -87,7 +88,7 @@ button, .vote-up-button{
     margin-left: 20px;
 }
 
-.submitter-link{
+.submitter-link {
     color: var(--color-1);
 }
 
@@ -113,6 +114,19 @@ button, .vote-up-button{
     color: var(--color-2);
     background-color: var(--color-bg2)
 }
+
+.wisdomtiles {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.wisdomtiles > .tile{
+    flex-grow: 1;
+    margin: 0 8px;
+}
+
 /*region font_definitions*/
 .cinzel {
     font-family: 'Cinzel', serif;
@@ -137,30 +151,36 @@ button, .vote-up-button{
 .almendra {
     font-family: 'Almendra SC', serif;
 }
+
 /*endregion*/
 
 /*region placeholder_color_browser_switch*/
 ::-webkit-input-placeholder {
-    color:    var(--color-placeholder);
+    color: var(--color-placeholder);
 }
+
 :-moz-placeholder {
-    color:    var(--color-placeholder);
-    opacity:  1;
+    color: var(--color-placeholder);
+    opacity: 1;
 }
+
 ::-moz-placeholder {
-    color:    var(--color-placeholder);
-    opacity:  1;
+    color: var(--color-placeholder);
+    opacity: 1;
 }
+
 :-ms-input-placeholder {
-    color:    var(--color-placeholder);
+    color: var(--color-placeholder);
 }
+
 ::-ms-input-placeholder {
-    color:    var(--color-placeholder);
+    color: var(--color-placeholder);
 }
 
 ::placeholder {
-    color:    var(--color-placeholder);
+    color: var(--color-placeholder);
 }
+
 /*endregion*/
 
 /*region screen_size*/
@@ -169,4 +189,5 @@ button, .vote-up-button{
         font-size: 3.5rem;
     }
 }
+
 /*endregion*/

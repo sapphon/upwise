@@ -157,12 +157,12 @@ public class WisdomControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
                 .andReturn();
-        verifyLeaderboard(mvcResult);
+        verifyLeaderboard(mvcResult, "wisdomleaderboard");
     }
 
-    private void verifyLeaderboard(MvcResult mvcResult) {
+    private void verifyLeaderboard(MvcResult mvcResult, String expectedViewName) {
         try {
-            assertEquals("wisdomleaderboard", mvcResult.getModelAndView().getViewName());
+            assertEquals(expectedViewName, mvcResult.getModelAndView().getViewName());
             List<WisdomPresentation> actualWisdoms = (List<WisdomPresentation>) mvcResult.getModelAndView().getModel().values().iterator().next();
             verifyLeaderboardWisdoms(actualWisdoms);
         } catch (Exception e) {
@@ -200,8 +200,19 @@ public class WisdomControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
                 .andReturn();
-        verifyLeaderboard(mvcResult);
+        verifyLeaderboard(mvcResult, "wisdomleaderboard");
     }
+
+    @Test
+    public void getWisdomLeadermatrix_WithWisdomAndVotes_ProducesCorrectOutputOnModel() throws Exception {
+        when(mockWisdomService.getAllWisdomPresentationsSortedByNumberOfVotes()).thenReturn(newArrayList(DomainObjectFactory.createWisdomPresentation(exampleWisdoms.get(0), exampleVotesZeroAndOnePresented, "")));
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/wisdomleadermatrix").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""))
+                .andReturn();
+        verifyLeaderboard(mvcResult, "wisdomleadermatrix");
+    }
+
 
     @Test
     public void viewWisdomWithVotesPopulatesModelAndView() throws Exception {
