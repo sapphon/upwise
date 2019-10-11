@@ -27,5 +27,9 @@ public interface IUser {
 
     String getEmail();
 
+    Boolean getAnalyticsTrackingState();
+
+    IUser setAnalyticsTrackingState(Boolean trackAnalytics);
+
     //endregion
 }

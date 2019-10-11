@@ -61,6 +61,6 @@ public class UserRegistrationTest {
         assertEquals(underTest.getConfirmPassword(), actual.getPassword());
         assertEquals(underTest.getDisplayName(), actual.getDisplayName());
         assertEquals(underTest.getEmail(), actual.getEmail());
-
+        assertEquals(true, actual.getAnalyticsTrackingState());
     }
 }

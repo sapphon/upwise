@@ -41,20 +41,20 @@ public class DomainObjectFactory {
         return createVoteJpa(createWisdomJpa(vote.getWisdom()), vote.getAddedByUsername(), vote.getTimeAdded());
     }
 
-    public static IUser createUser(IUser user){
-        return createUser(user.getLoginUsername(), user.getDisplayName(), user.getTimeAdded(), user.getPassword(), user.getEmail());
+    public static IUser duplicateUser(IUser user){
+        return createUser(user.getLoginUsername(), user.getDisplayName(), user.getTimeAdded(), user.getPassword(), user.getEmail(), user.getAnalyticsTrackingState());
     }
 
-    public static IUser createUserWithCreatedTimeNow(String loginUsername, String displayUsername, String password, String email){
-        return createUser(loginUsername, displayUsername, TimeLord.getNow(), password, email);
+    public static IUser createUserWithCreatedTimeNow(String loginUsername, String displayUsername, String password, String email, Boolean trackAnalytics){
+        return createUser(loginUsername, displayUsername, TimeLord.getNow(), password, email, trackAnalytics);
     }
 
-    public static IUser createUser(String loginUsername, String displayUsername, Timestamp timeAdded, String password, String email) {
-        return new User(loginUsername, displayUsername, timeAdded, password, email);
+    public static IUser createUser(String loginUsername, String displayUsername, Timestamp timeAdded, String password, String email, Boolean trackAnalytics) {
+        return new User(loginUsername, displayUsername, timeAdded, password, email, trackAnalytics);
     }
 
     public static UserJpa createUserJpa(IUser user){
-        return new UserJpa(user.getLoginUsername(), user.getDisplayName(), user.getTimeAdded(), user.getPassword(), user.getEmail());
+        return new UserJpa(user.getLoginUsername(), user.getDisplayName(), user.getTimeAdded(), user.getPassword(), user.getEmail(), user.getAnalyticsTrackingState());
     }
 
     public static IVote createVote(IVote vote) {

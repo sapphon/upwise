@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository("userRepo")
 public class UserRepository {
@@ -45,18 +46,18 @@ public class UserRepository {
 
     public List<IUser> getAll() {
         List<IUser> toReturn = new ArrayList<>();
-        jpaUserRepo.findAll().forEach((j) -> toReturn.add(DomainObjectFactory.createUser(j)));
+        jpaUserRepo.findAll().forEach((j) -> toReturn.add(DomainObjectFactory.duplicateUser(j)));
         return toReturn;
     }
 
     public IUser getByLoginUsername(String loginUsername) {
         final UserJpa foundUser = jpaUserRepo.findTopByLoginUsernameOrderByTimeAddedDesc(loginUsername);
-        return foundUser != null ? DomainObjectFactory.createUser(foundUser) : null;
+        return foundUser != null ? DomainObjectFactory.duplicateUser(foundUser) : null;
     }
 
     public List<IUser> getByDisplayName(String displayUsername) {
         List<IUser> toReturn = new ArrayList<>();
-        jpaUserRepo.findAllByDisplayUsernameOrderByTimeAddedDesc(displayUsername).forEach((j) -> toReturn.add(DomainObjectFactory.createUser(j)));
+        jpaUserRepo.findAllByDisplayUsernameOrderByTimeAddedDesc(displayUsername).forEach((j) -> toReturn.add(DomainObjectFactory.duplicateUser(j)));
         return toReturn;
     }
 
@@ -71,5 +72,9 @@ public class UserRepository {
 
     public IUser getByEmail(String email) {
         return jpaUserRepo.findByEmail(email);
+    }
+
+    public List<IUser> getByAnalyticsTracked() {
+        return jpaUserRepo.findByTrackAnalytics(true).stream().map(DomainObjectFactory::duplicateUser).collect(Collectors.toList());
     }
 }

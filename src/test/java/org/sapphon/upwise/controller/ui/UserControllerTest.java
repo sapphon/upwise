@@ -206,7 +206,7 @@ public class UserControllerTest {
 
     @Test
     public void testRegistrationSuccessSets201StatusCodeOnModel_AndRedirectsToUserPage() throws Exception {
-        User expectedUser = new User("aaa", "bbb", TimeLord.getNow(), "ccc", "ddd");
+        User expectedUser = new User("aaa", "bbb", TimeLord.getNow(), "ccc", "ddd", false);
         when(mockApiController.addUserEndpoint(any())).thenReturn(new ResponseEntity<IUser>(expectedUser, HttpStatus.CREATED));
         when(userService.getUserWithLogin(any())).thenReturn(expectedUser);
             MvcResult result = mvc.perform(addRequestAttributesForUserRegistration(RandomObjectFactory.makeValidButRandomUserRegistration(), MockMvcRequestBuilders.post("/register").accept(MediaType.TEXT_HTML)))

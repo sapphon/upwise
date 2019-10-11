@@ -26,7 +26,7 @@ public class UserRegistration extends AbstractIncomingDataTransfer<IUser> {
     @Override
     public IUser convertToModelObject() {
         if(validateIncomingRegistration()) {
-            return DomainObjectFactory.createUserWithCreatedTimeNow(desiredUsername, displayName, password, email);
+            return DomainObjectFactory.createUserWithCreatedTimeNow(desiredUsername, displayName, password, email, true);
         }
         return null;
     }

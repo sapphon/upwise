@@ -52,7 +52,7 @@ public class RandomObjectFactory {
 
     public static IUser makeRandomUser(){
         Random random = new Random();
-        return DomainObjectFactory.createUser(randomNonEmptyOfMaxLength(32), randomNonEmptyOfMaxLength(128), TimeLord.getTimestampForMillis(random.nextLong()), randomNonEmptyOfMaxLength(16), randomNonEmptyOfMaxLength(32));
+        return DomainObjectFactory.createUser(randomNonEmptyOfMaxLength(32), randomNonEmptyOfMaxLength(128), TimeLord.getTimestampForMillis(random.nextLong()), randomNonEmptyOfMaxLength(16), randomNonEmptyOfMaxLength(32), new Random().nextBoolean());
     }
 
     public static IAnalyticsEvent makeRandomEvent(){

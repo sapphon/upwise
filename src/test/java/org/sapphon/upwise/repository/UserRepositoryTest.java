@@ -33,10 +33,10 @@ public class UserRepositoryTest {
     @Before
     public void setUp() throws Exception {
         testUsers = new IUser[4];
-        testUsers[0] = DomainObjectFactory.createUser("tstone10", "Terrence Austin Stoneridge III", TimeLord.getNow(), "murica", "tstone10@ford.com");
-        testUsers[1] = DomainObjectFactory.createUser("askywalk", "Darth Vader", TimeLord.getNowWithOffset(500000), "dark_$id3", "anakin@starwars.com");
-        testUsers[2] = DomainObjectFactory.createUser("grivia", "The Witcher", TimeLord.getNowWithOffset(-1), "v3ng3rb3rg", "geralt@rivia.gov");
-        testUsers[3] = DomainObjectFactory.createUserWithCreatedTimeNow("jrobiso7", "Jackie Robinson", "butitdo", "jackie@mlb.com");
+        testUsers[0] = DomainObjectFactory.createUser("tstone10", "Terrence Austin Stoneridge III", TimeLord.getNow(), "murica", "tstone10@ford.com", true);
+        testUsers[1] = DomainObjectFactory.createUser("askywalk", "Darth Vader", TimeLord.getNowWithOffset(500000), "dark_$id3", "anakin@starwars.com", false);
+        testUsers[2] = DomainObjectFactory.createUser("grivia", "The Witcher", TimeLord.getNowWithOffset(-1), "v3ng3rb3rg", "geralt@rivia.gov", false);
+        testUsers[3] = DomainObjectFactory.createUserWithCreatedTimeNow("jrobiso7", "Jackie Robinson", "butitdo", "jackie@mlb.com", true);
         userRepository.clear();
     }
 
@@ -125,6 +125,18 @@ public class UserRepositoryTest {
         assertNull(userRepository.getByEmail("tstone10@ford.com"));
         userRepository.save(testUsers[0]);
         assertEquals(testUsers[0], userRepository.getByEmail("tstone10@ford.com"));
+    }
+
+    @Test
+    public void testCanGetByAnalyticsTracked() {
+        for(int i = 0; i < testUsers.length; i++) {
+            userRepository.save(testUsers[i]);
+        }
+        assertEquals(4, userRepository.getCount());
+        List<IUser> actualOptedInUsers = userRepository.getByAnalyticsTracked();
+        assertEquals(2, actualOptedInUsers.size());
+        assertTrue(actualOptedInUsers.contains(testUsers[0]));
+        assertTrue(actualOptedInUsers.contains(testUsers[3]));
     }
 
     private IUser getOrFail(String loginName, String displayName) {
