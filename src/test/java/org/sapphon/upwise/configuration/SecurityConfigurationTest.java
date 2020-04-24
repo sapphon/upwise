@@ -29,7 +29,7 @@ public class SecurityConfigurationTest {
     private static List<String> apiStaticEndpoints = newArrayList("/wisdom/all", "/wisdom/random", "/vote/all", "/health");
 
     private static List<String> uiStateChangingEndpoints = newArrayList("/addwisdom", "/addvote");
-    private static List<String> uiStaticEndpoints = newArrayList("/choosenewpassword", "/choosenewpasswordABC123", "/forgotpassword", "/login", "/randomwisdom", "/viewwisdom?wisdomContent=whatever&wisdomAttribution=whatever", "/", "/user/whatever", "/wisdomleaderboard", "/recentwisdom", "/register", "/scripts/materialize-auto-init.js", "/styles/global.css");
+    private static List<String> uiStaticEndpoints = newArrayList("/choosenewpassword", "/choosenewpasswordABC123", "/forgotpassword", "/login", "/randomwisdom", "/viewwisdom?wisdomContent=whatever&wisdomAttribution=whatever", "/", "/user/whatever", "/wisdomleaderboard", "/wisdomleadermatrix", "/recentwisdom", "/register", "/scripts/materialize-auto-init.js", "/styles/global.css");
 
 
     @Test
