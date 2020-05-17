@@ -56,6 +56,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/choosenewpassword**")).permitAll()
                 //public API endpoints
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/wisdom/all")).permitAll()
+                .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/wisdom/add")).permitAll()
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/vote/all")).permitAll()
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/wisdom/random")).permitAll()
                 .and().authorizeRequests().requestMatchers(new AntPathRequestMatcher("/health")).permitAll()
