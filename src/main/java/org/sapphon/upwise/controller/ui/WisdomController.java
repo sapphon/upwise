@@ -6,6 +6,7 @@ import org.sapphon.upwise.model.IWisdom;
 import org.sapphon.upwise.service.AnalyticsService;
 import org.sapphon.upwise.service.WisdomService;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,10 +66,10 @@ public class WisdomController {
     @GetMapping(value = "/viewwisdom", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.ALL_VALUE)
     public String viewWisdom(Model model, Principal loggedInUser, @RequestParam("wisdomContent") String wisdomContent, @RequestParam("wisdomAttribution") String wisdomAttribution)
     {
-        Optional<IWisdom> wisdomFound = wisdomService.findWisdomByContentAndAttribution(wisdomContent, wisdomAttribution);
-        if(wisdomFound.isPresent()) {
-            model.addAttribute("wisdom", wisdomService.getWisdomPresentationForWisdom(wisdomFound.get()));
-            this.analyticsService.saveEvent(AnalyticsFactory.createViewWisdomEvent(loggedInUser == null ? "[anonymous]" : loggedInUser.getName(), wisdomFound.get()));
+       IWisdom wisdomFound = apiController.getWisdomEndpoint(wisdomContent, wisdomAttribution).getBody();
+        if(wisdomFound != null) {
+            model.addAttribute("wisdom", wisdomService.getWisdomPresentationForWisdom(wisdomFound));
+            this.analyticsService.saveEvent(AnalyticsFactory.createViewWisdomEvent(loggedInUser == null ? "[anonymous]" : loggedInUser.getName(), wisdomFound));
         }
         return "viewwisdom";
     }

@@ -126,6 +126,11 @@ public class APIController {
 
     }
 
+    @RequestMapping(value="/wisdom", method=RequestMethod.GET)
+    public ResponseEntity<IWisdom> getWisdomEndpoint(@RequestParam String wisdomContent, @RequestParam String wisdomAttribution){
+        Optional<IWisdom> wisdomFound = wisdomService.findWisdomByContentAndAttribution(wisdomContent, wisdomAttribution);
+        return wisdomFound.isPresent() ? new ResponseEntity<>(wisdomFound.get(), HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
     @RequestMapping(value = "/wisdom/add", method = RequestMethod.POST)
     public ResponseEntity<IWisdom> addWisdomEndpoint(@RequestBody IWisdom wisdom) {

@@ -24,7 +24,9 @@ import org.sapphon.upwise.time.TimeLord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -220,7 +222,7 @@ public class WisdomControllerTest {
     @Test
     public void viewWisdomWithVotesPopulatesModelAndView() throws Exception {
         when(mockWisdomService.getWisdomPresentationForWisdom(exampleWisdoms.get(0))).thenReturn(DomainObjectFactory.createWisdomPresentation(exampleWisdoms.get(0), exampleVotesZeroAndOnePresented, ""));
-        when(mockWisdomService.findWisdomByContentAndAttribution(exampleWisdoms.get(0).getWisdomContent(), exampleWisdoms.get(0).getAttribution())).thenReturn(Optional.of(exampleWisdoms.get(0)));
+        when(mockApiController.getWisdomEndpoint(exampleWisdoms.get(0).getWisdomContent(), exampleWisdoms.get(0).getAttribution())).thenReturn(new ResponseEntity<IWisdom>(exampleWisdoms.get(0), HttpStatus.OK));
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(String.format("/viewwisdom?wisdomContent=%s&wisdomAttribution=%s", exampleWisdoms.get(0).getWisdomContent(), exampleWisdoms.get(0).getAttribution())).accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
@@ -268,7 +270,7 @@ public class WisdomControllerTest {
         ArgumentCaptor<IAnalyticsEvent> captor = ArgumentCaptor.forClass(IAnalyticsEvent.class);
 
         when(mockWisdomService.getWisdomPresentationForWisdom(exampleWisdoms.get(0))).thenReturn(DomainObjectFactory.createWisdomPresentation(exampleWisdoms.get(0), exampleVotesZeroAndOnePresented, ""));
-        when(mockWisdomService.findWisdomByContentAndAttribution(exampleWisdoms.get(0).getWisdomContent(), exampleWisdoms.get(0).getAttribution())).thenReturn(Optional.of(exampleWisdoms.get(0)));
+        when(mockApiController.getWisdomEndpoint(exampleWisdoms.get(0).getWisdomContent(), exampleWisdoms.get(0).getAttribution())).thenReturn(new ResponseEntity<IWisdom>(exampleWisdoms.get(0), HttpStatus.OK));
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(String.format("/viewwisdom?wisdomContent=%s&wisdomAttribution=%s", exampleWisdoms.get(0).getWisdomContent(), exampleWisdoms.get(0).getAttribution())).accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
@@ -286,7 +288,7 @@ public class WisdomControllerTest {
         ArgumentCaptor<IAnalyticsEvent> captor = ArgumentCaptor.forClass(IAnalyticsEvent.class);
 
         when(mockWisdomService.getWisdomPresentationForWisdom(exampleWisdoms.get(0))).thenReturn(DomainObjectFactory.createWisdomPresentation(exampleWisdoms.get(0), exampleVotesZeroAndOnePresented, ""));
-        when(mockWisdomService.findWisdomByContentAndAttribution(exampleWisdoms.get(0).getWisdomContent(), exampleWisdoms.get(0).getAttribution())).thenReturn(Optional.of(exampleWisdoms.get(0)));
+        when(mockApiController.getWisdomEndpoint(exampleWisdoms.get(0).getWisdomContent(), exampleWisdoms.get(0).getAttribution())).thenReturn(new ResponseEntity<IWisdom>(exampleWisdoms.get(0), HttpStatus.OK));
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(String.format("/viewwisdom?wisdomContent=%s&wisdomAttribution=%s", exampleWisdoms.get(0).getWisdomContent(), exampleWisdoms.get(0).getAttribution())).accept(MediaType.TEXT_HTML).principal(new BasicUserPrincipal("aKindaLongUserLoginNameWithCaps")))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
