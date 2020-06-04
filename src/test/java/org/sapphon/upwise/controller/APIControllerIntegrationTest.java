@@ -469,6 +469,26 @@ public class APIControllerIntegrationTest {
         assertEquals(Optional.empty(), voteService.getByWisdomAndVoterUsername(randomWisdom, randomVote.getAddedByUsername()));
     }
 
+    @Test
+    public void removeWisdomEndpointRemovesWisdomCorrectlyById() throws Exception {
+        IWisdom first = wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandomWisdom());
+        IWisdom second = wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandomWisdom());
+
+        mvc.perform(MockMvcRequestBuilders.delete("/wisdom/remove").param("identifier", first.getIdentifier().toString())).andExpect(status().isOk());
+        assertFalse(wisdomService.findWisdom(first.getIdentifier()).isPresent());
+        assertTrue(wisdomService.findWisdom(second.getIdentifier()).isPresent());
+    }
+
+    @Test
+    public void removeWisdomEndpointFailsGracefully() throws Exception {
+        IWisdom first = wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandomWisdom());
+        IWisdom second = wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandomWisdom());
+
+        mvc.perform(MockMvcRequestBuilders.delete("/wisdom/remove").param("identifier", "25")).andExpect(status().isBadRequest());
+        assertTrue(wisdomService.findWisdom(first.getIdentifier()).isPresent());
+        assertTrue(wisdomService.findWisdom(second.getIdentifier()).isPresent());
+    }
+
 
     private MockHttpServletRequestBuilder buildJsonPostRequest(Object postBodyContent, String uri) throws JsonProcessingException {
         return MockMvcRequestBuilders.post(uri).contentType(MediaType.APPLICATION_JSON).content(inputMapper.writeValueAsString(postBodyContent));

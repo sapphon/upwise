@@ -39,6 +39,12 @@ public class WisdomRepository {
         this.save(DomainObjectFactory.createWisdom(wisdomContent, attribution, addedByUsername, timeAdded));
     }
 
+    public boolean delete(Long identifier){
+        boolean toReturn = jpaWisdomRepo.existsById(identifier);
+        this.jpaWisdomRepo.deleteById(identifier);
+        return toReturn;
+    }
+
     public List<IWisdom> getAll(){
         List<IWisdom> toReturn = new ArrayList<>();
         jpaWisdomRepo.findAll().forEach(toReturn::add);

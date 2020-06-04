@@ -43,6 +43,10 @@ public class WisdomService {
         return this.wisdomRepo.save(wisdom);
     }
 
+    public boolean removeWisdom(Long identifier){
+        return this.wisdomRepo.delete(identifier);
+    }
+
     public Optional<IWisdom> findWisdomByContentAndAttribution(String content, String attribution) {
         return this.wisdomRepo.findWisdom(content, attribution);
     }

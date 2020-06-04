@@ -142,6 +142,17 @@ public class APIController {
         return toReturn;
     }
 
+    @RequestMapping(value = "/wisdom/remove", method = RequestMethod.DELETE)
+    public ResponseEntity removeWisdomEndpoint(@RequestParam Long identifier) {
+        if(wisdomService.findWisdom(identifier).isPresent()){
+            wisdomService.removeWisdom(identifier);
+            return ResponseEntity.ok().build();
+        }
+        else{
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     private boolean validateWisdom(IWisdom wisdom) {
         return wisdom != null && wisdom.getWisdomContent() != null &&
                 !wisdom.getWisdomContent().isEmpty() &&
