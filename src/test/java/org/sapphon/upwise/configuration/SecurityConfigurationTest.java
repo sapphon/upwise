@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
+import java.util.Random;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
@@ -28,6 +29,8 @@ public class SecurityConfigurationTest {
     private static List<String> apiSecuredEndpoints = newArrayList( "/vote/add", "/registration/add", "/analytics/add");
     private static List<String> apiUnsecuredGetEndpoints = newArrayList("/wisdom/all", "/wisdom/random", "/vote/all", "/health");
     private static List<String> apiUnsecuredPostEndpoints = newArrayList("/wisdom/add");
+    private static List<String> apiUnsecuredDeleteEndpoints = newArrayList("/wisdom/remove");
+
 
 
 
@@ -60,9 +63,26 @@ public class SecurityConfigurationTest {
         checkEndpoints("GET", uiUnsecuredEndpoints, MediaType.TEXT_HTML, status().isOk());
     }
 
+    @Test
+    public void testUIAcceptsUnauthenticatedRequestsToDeleteEndpoints()  throws Exception  {
+        checkEndpoints("DELETE", apiUnsecuredDeleteEndpoints, MediaType.TEXT_HTML, status().isBadRequest());
+    }
+
     private void checkEndpoints(String method, List<String> endpoints, MediaType mediaTypesAccepted, ResultMatcher expectation) throws Exception{
         for (String endpoint : endpoints){
-            mvc.perform((method.equalsIgnoreCase("post") ? MockMvcRequestBuilders.post(endpoint).contentType(MediaType.APPLICATION_JSON).content("{}") : MockMvcRequestBuilders.get(endpoint)).accept(mediaTypesAccepted)).andExpect(expectation);
+            switch(method.toLowerCase()){
+                case "post":
+                    mvc.perform(MockMvcRequestBuilders.post(endpoint).contentType(MediaType.APPLICATION_JSON).content("{}")).andExpect(expectation);
+                    break;
+                case "get":
+                    mvc.perform(MockMvcRequestBuilders.get(endpoint).accept(mediaTypesAccepted)).andExpect(expectation);
+                    break;
+                case "delete":
+                    mvc.perform(MockMvcRequestBuilders.delete(endpoint).accept(mediaTypesAccepted).param("identifier", String.valueOf(new Random().nextLong()))).andExpect(expectation);
+                    break;
+                default:
+                    throw new RuntimeException("you fat fingered your request type");
+            }
         }
     }
 
