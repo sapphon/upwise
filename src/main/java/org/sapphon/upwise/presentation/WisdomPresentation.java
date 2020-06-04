@@ -28,5 +28,11 @@ public class WisdomPresentation extends AbstractWisdom {
     public List<VotePresentation> getVotes() {
         return votes;
     }
+
+    @Override
+    public Long getIdentifier() {
+        //If you'd like to treat wisdoms as data, please use the API endpoints
+        return -1L;
+    }
     //endregion
 }

@@ -41,7 +41,7 @@ public class WisdomRepository {
 
     public List<IWisdom> getAll(){
         List<IWisdom> toReturn = new ArrayList<>();
-        jpaWisdomRepo.findAll().forEach((j) -> toReturn.add(DomainObjectFactory.createWisdom(j)));
+        jpaWisdomRepo.findAll().forEach(toReturn::add);
         return toReturn;
     }
 

@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 public interface IWisdom {
 
     //region SettersGetters
+    Long getIdentifier();
 
     String getWisdomContent();
 

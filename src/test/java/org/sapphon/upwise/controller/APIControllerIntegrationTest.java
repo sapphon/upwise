@@ -300,22 +300,19 @@ public class APIControllerIntegrationTest {
 
     @Test
     public void addVoteEndpoint_SaysCreatedInBaseCase() throws Exception {
-        IWisdom randomWisdom = RandomObjectFactory.makeRandomWisdom();
-        wisdomService.addOrUpdateWisdom(randomWisdom);
+        IWisdom randomWisdom = wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandomWisdom());
         IVote randomVote = RandomObjectFactory.makeRandomVoteForWisdom(randomWisdom);
         mvc.perform(buildJsonPostRequest(randomVote, "/vote/add"))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(outputMapper.writeValueAsString(randomVote)));
-
     }
 
     @Test
     public void addVoteEndpoint_TriggersAnalyticsCreation() throws Exception {
         assertEquals(0, analyticsService.getAllEvents().size());
 
-        IWisdom randomWisdom = RandomObjectFactory.makeRandomWisdom();
-        wisdomService.addOrUpdateWisdom(randomWisdom);
+        IWisdom randomWisdom = wisdomService.addOrUpdateWisdom(RandomObjectFactory.makeRandomWisdom());
         IVote randomVote = RandomObjectFactory.makeRandomVoteForWisdom(randomWisdom);
         final MvcResult result = mvc.perform(buildJsonPostRequest(randomVote, "/vote/add"))
                 .andExpect(status().isCreated())

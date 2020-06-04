@@ -19,4 +19,9 @@ public class WisdomJpa extends AbstractWisdom {
     public WisdomJpa(String wisdomContent, String attribution, String addedByUsername, Timestamp timeAdded) {
         super(wisdomContent, attribution, addedByUsername, timeAdded);
     }
+
+    @Override
+    public Long getIdentifier() {
+        return this.id;
+    }
 }
