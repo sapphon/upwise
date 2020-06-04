@@ -27,7 +27,7 @@ public class SecurityConfigurationTest {
     @Autowired
     private MockMvc mvc;
     private static List<String> apiSecuredEndpoints = newArrayList( "/vote/add", "/registration/add", "/analytics/add");
-    private static List<String> apiUnsecuredGetEndpoints = newArrayList("/wisdom/all", "/wisdom/random", "/vote/all", "/health");
+    private static List<String> apiUnsecuredGetEndpoints = newArrayList("/wisdom/all", "/wisdom/random", "/vote/all", "/health", "/wisdom?wisdomContent=whatever&wisdomAttribution=whatever");
     private static List<String> apiUnsecuredPostEndpoints = newArrayList("/wisdom/add");
     private static List<String> apiUnsecuredDeleteEndpoints = newArrayList("/wisdom/remove");
 
@@ -45,7 +45,7 @@ public class SecurityConfigurationTest {
 
     @Test
     public void testAPIAcceptsUnauthenticatedRequestsToGetEndpoints() throws Exception {
-        checkEndpoints("GET", apiUnsecuredGetEndpoints, MediaType.APPLICATION_JSON, status().isOk());
+        checkEndpoints("GET", apiUnsecuredGetEndpoints, MediaType.APPLICATION_JSON, status().is2xxSuccessful());
     }
 
     @Test
