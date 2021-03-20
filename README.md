@@ -6,7 +6,7 @@ Upwise is a voting system for pearls of wisdom.  Submit a saying or vote up some
 
 ## Trying to Use Upwise?
 
-You don't need this Git repo to use the public app, accessible [here.](https://upwise.cfapps.io)  This repo is for people interested in building and running their own Upwise copies.
+You don't need this Git repo to use the public app, accessible [here.](https://upwise.herokuapps.com)  This repo is for people interested in building and running their own Upwise copies.
 
 ## Issues?
 
