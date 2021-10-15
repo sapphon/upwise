@@ -3,7 +3,7 @@ applications:
   path: ./build/libs/upwise-0.0.1-SNAPSHOT.jar
   memory: 768M
   buildpacks:
-    - java_buildpack
+    - java_buildpack_offline
   stack: cflinuxfs3
   services:
     - upwisedb
